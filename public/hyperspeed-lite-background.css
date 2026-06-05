@@ -1,0 +1,118 @@
+/* KAR Labs Hyperspeed Lite Background
+   Lightweight full-site background inspired by ReactBits Hyperspeed.
+   Kept isolated so it does not touch existing catalog/page structure. */
+:root {
+  --hyperspeed-bg-opacity: 0.72;
+}
+
+html,
+body {
+  background: #050705 !important;
+}
+
+#hyperspeed-lite-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -30;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(34, 197, 94, 0.12), transparent 38%),
+    radial-gradient(circle at 78% 42%, rgba(6, 182, 212, 0.08), transparent 30%),
+    #030504;
+}
+
+#hyperspeed-lite-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: var(--hyperspeed-bg-opacity);
+}
+
+#hyperspeed-lite-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 0 38%, rgba(0, 0, 0, 0.45) 72%, rgba(0, 0, 0, 0.82) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.48));
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+/* Make page sections reveal the global background without flattening cards/forms/modals. */
+section.bg-dark,
+section.bg-dark-card,
+main.bg-dark,
+main.bg-dark-card,
+main#demo,
+footer.bg-dark,
+footer.bg-dark-card {
+  background: transparent !important;
+}
+
+section.bg-dark::before,
+section.bg-dark-card::before,
+main#demo::before,
+footer.bg-dark::before,
+footer.bg-dark-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.34));
+}
+
+section.bg-dark,
+section.bg-dark-card,
+main#demo,
+footer.bg-dark,
+footer.bg-dark-card {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Keep navigation and high-density UI readable. */
+#navbar,
+nav.sticky,
+.mobile-menu,
+.modal,
+#landingPreviewModal,
+#lightbox {
+  isolation: isolate;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --hyperspeed-bg-opacity: 0.46;
+  }
+
+  body::before {
+    background: rgba(0, 0, 0, 0.42);
+  }
+
+  section.bg-dark::before,
+  section.bg-dark-card::before,
+  main#demo::before,
+  footer.bg-dark::before,
+  footer.bg-dark-card::before {
+    background: rgba(0, 0, 0, 0.36);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hyperspeed-lite-bg canvas {
+    opacity: 0.42;
+  }
+}

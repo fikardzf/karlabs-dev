@@ -1,0 +1,90 @@
+/* Electric Border for Pricing Cards only
+   Static adaptation of the ReactBits ElectricBorder concept.
+   Active only after user clicks a pricing package card. */
+#harga .pricing-electric-card {
+  --electric-border-color: #22C55E;
+  position: relative;
+  isolation: isolate;
+  overflow: visible !important;
+  cursor: pointer;
+}
+
+#harga .pricing-electric-card .pricing-package-cta {
+  position: relative;
+  z-index: 6;
+}
+
+#harga .pricing-electric-card .electric-border-canvas-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+#harga .pricing-electric-card .electric-border-canvas-wrap canvas {
+  display: block;
+}
+
+#harga .pricing-electric-card::before,
+#harga .pricing-electric-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease, box-shadow 220ms ease;
+}
+
+#harga .pricing-electric-card::before {
+  z-index: 0;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+}
+
+#harga .pricing-electric-card::after {
+  z-index: -1;
+  transform: scale(1.045);
+  background: linear-gradient(-30deg, rgba(34,197,94,.22), transparent 38%, rgba(34,197,94,.14));
+  filter: blur(26px);
+}
+
+#harga .pricing-electric-card.is-electric-active .electric-border-canvas-wrap,
+#harga .pricing-electric-card.is-electric-active::before,
+#harga .pricing-electric-card.is-electric-active::after {
+  opacity: 1;
+}
+
+#harga .pricing-electric-card.is-electric-active {
+  border-color: rgba(34, 197, 94, 0.72) !important;
+  box-shadow: 0 0 0 1px rgba(34,197,94,.18), 0 22px 70px rgba(34,197,94,.13);
+}
+
+#harga .pricing-electric-card > *:not(.electric-border-canvas-wrap) {
+  position: relative;
+  z-index: 3;
+}
+
+@media (max-width: 767px) {
+  #harga .pricing-electric-card .electric-border-canvas-wrap {
+    transform: translate(-50%, -50%) scale(.985);
+  }
+
+  #harga .pricing-electric-card.is-electric-active {
+    box-shadow: 0 0 0 1px rgba(34,197,94,.18), 0 16px 44px rgba(34,197,94,.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #harga .pricing-electric-card .electric-border-canvas-wrap {
+    display: none;
+  }
+
+  #harga .pricing-electric-card.is-electric-active::before,
+  #harga .pricing-electric-card.is-electric-active::after {
+    opacity: 1;
+  }
+}
