@@ -7,7 +7,7 @@
     "dev": "node scripts/dev-server.cjs",
     "build": "node scripts/build.cjs",
     "preview": "node scripts/dev-server.cjs dist 4173",
-    "check": "node scripts/check.cjs && npm run build"
+    "check": "node scripts/check.cjs && npm run build && node scripts/check-dist.cjs"
   },
   "keywords": [
     "static-site",

@@ -3,7 +3,7 @@ const path = require('path');
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
-const filesToCopy = ['index.html', 'catalog.html'];
+const filesToCopy = ['index.html', 'catalog.html', 'robots.txt', 'sitemap.xml'];
 const dirsToCopy = ['public'];
 
 function rmDir(target) {

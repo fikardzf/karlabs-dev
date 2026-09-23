@@ -6,20 +6,49 @@
     <title>KAR Labs.dev - Jasa Website, Chatbot, Dashboard & Automasi Bisnis</title>
     <meta name="description" content="Jasa pembuatan website, katalog produk interaktif, chatbot WhatsApp, dashboard Excel, dan automasi digital untuk bisnis. Dibangun cepat, rapi, responsif, dan siap dipakai untuk operasional maupun promosi.">
     <meta name="theme-color" content="#0A0A0A">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://karlabs.dev/">
 
     <!-- Open Graph -->
     <meta property="og:title" content="KAR Labs.dev - Jasa Website, Chatbot, Dashboard & Automasi">
     <meta property="og:description" content="Bangun website, chatbot, dashboard, automasi, dan katalog digital yang lebih siap dipakai untuk bantu bisnis tampil profesional dan mudah dihubungi.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://karlabs.dev">
+    <meta property="og:url" content="https://karlabs.dev/">
+    <meta property="og:site_name" content="KAR Labs.dev">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:image" content="https://karlabs.dev/public/karlabs-social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="KAR Labs.dev — Digital Systems, Automation, and Web">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="KAR Labs.dev - Jasa Website, Chatbot, Dashboard & Automasi">
+    <meta name="twitter:description" content="Website, chatbot, dashboard, katalog digital, Point Of Sales, dan automasi untuk kebutuhan bisnis.">
+    <meta name="twitter:image" content="https://karlabs.dev/public/karlabs-social-preview.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "KAR Labs.dev",
+      "url": "https://karlabs.dev/",
+      "image": "https://karlabs.dev/public/karlabs-social-preview.png",
+      "email": "mailto:karlabs.dev@gmail.com",
+      "sameAs": ["https://www.instagram.com/karlabs.dev/"],
+      "description": "Jasa website, katalog interaktif, chatbot, dashboard, Point Of Sales, dan automasi digital untuk bisnis."
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -46,7 +75,7 @@
     </script>
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.js" defer></script>
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
@@ -1115,7 +1144,7 @@
                     <h4 class="font-semibold text-white mb-4">Kontak</h4>
                     <div class="space-y-2">
                         <!-- Nomor WhatsApp KAR Labs.dev -->
-                        <a href="https://wa.me/6285777345985" target="_blank" class="flex items-center gap-2 text-gray-400 hover:text-accent text-sm transition-colors">
+                        <a href="https://wa.me/6285777345985" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-400 hover:text-accent text-sm transition-colors">
                             <i data-lucide="smartphone" class="w-4 h-4"></i>
                             WhatsApp
                         </a>
@@ -1147,191 +1176,7 @@
     </footer>
 
     <!-- ==================== JAVASCRIPT ==================== -->
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // ===== Navbar Scroll Effect =====
-        const navbar = document.getElementById('navbar');
-        let lastScroll = 0;
-
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-
-            if (currentScroll > 50) {
-                navbar.classList.add('nav-scrolled');
-            } else {
-                navbar.classList.remove('nav-scrolled');
-            }
-
-            lastScroll = currentScroll;
-        });
-
-        // ===== Smooth Scroll with Offset =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offset = 80;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-                // Close mobile menu if open
-                closeMobileMenu();
-            });
-        });
-
-        // ===== Mobile Menu =====
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMenuBtn = document.getElementById('close-menu');
-        const overlay = document.getElementById('overlay');
-
-        function openMobileMenu() {
-            document.body.classList.add('mobile-menu-open');
-            mobileMenu.classList.add('open');
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            mobileMenuBtn.setAttribute('aria-expanded', 'true');
-            const spans = mobileMenuBtn.querySelectorAll('span');
-            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-        }
-
-        function closeMobileMenu() {
-            document.body.classList.remove('mobile-menu-open');
-            mobileMenu.classList.remove('open');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            const spans = mobileMenuBtn.querySelectorAll('span');
-            spans[0].style.transform = '';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = '';
-        }
-
-        mobileMenuBtn.addEventListener('click', () => {
-            if (mobileMenu.classList.contains('open')) closeMobileMenu();
-            else openMobileMenu();
-        });
-        closeMenuBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            closeMobileMenu();
-        });
-        closeMenuBtn.addEventListener('touchend', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            closeMobileMenu();
-        }, { passive: false });
-        overlay.addEventListener('click', closeMobileMenu);
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') closeMobileMenu();
-        });
-
-        // Close mobile menu on link click
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-
-        // ===== Scroll Animations (Intersection Observer) =====
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    // Add stagger delay for grid items
-                    const parent = entry.target.parentElement;
-                    const siblings = parent ? Array.from(parent.querySelectorAll('.fade-in-up')) : [];
-                    const siblingIndex = siblings.indexOf(entry.target);
-
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, siblingIndex * 100);
-
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
-
-        // ===== Active Nav Link on Scroll =====
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        function updateActiveNav() {
-            const scrollPosition = window.scrollY + 100;
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }
-
-        window.addEventListener('scroll', updateActiveNav);
-
-        // ===== FAQ Accordion =====
-        document.querySelectorAll('.faq-trigger').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                const icon = button.querySelector('.accordion-icon');
-                const isOpen = content.classList.contains('open');
-
-                // Toggle current accordion
-                content.classList.toggle('open');
-                icon.classList.toggle('open');
-            });
-        });
-
-        // ===== Contact Form =====
-        const contactForm = document.getElementById('contact-form');
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const nama = document.getElementById('nama').value.trim();
-            const kontak = document.getElementById('kontak-calon-client').value.trim();
-            const jasa = document.getElementById('jasa').value;
-            const pesan = document.getElementById('pesan').value.trim();
-
-            if (!nama || !kontak) {
-                alert('Nama dan Email / WhatsApp wajib diisi!');
-                return;
-            }
-
-            const detailKebutuhan = pesan ? ` Kebutuhan saya: ${pesan}` : '';
-            let message = `Halo KAR Labs, saya ${nama}. Saya tertarik dengan ${jasa || 'layanan digital KAR Labs'}.${detailKebutuhan} Kontak saya: ${kontak}`;
-            message = encodeURIComponent(message);
-
-            const waNumber = '6285777345985';
-            window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
-        });
-
-        // ===== Typing Animation for Code Editor (Optional Enhancement) =====
-        // Already handled via CSS animations for simplicity
-    </script>
+    <script src="./public/index.js" defer></script>
     <script src="./public/electric-border-pricing.js" defer></script>
 </body>
 </html>

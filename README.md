@@ -1,192 +1,85 @@
-# KAR Labs.dev Static Preserved UI + Interactive Catalog
+# KAR Labs.dev — Static Production Site
 
-Versi ini dibuat untuk meminimalisir error development sampai production. Website tetap mempertahankan CSS styling, animation, glow, gradient, dan feel template asli, tetapi sekarang bisa berjalan tanpa dependency framework.
+Production website KAR Labs.dev menggunakan **static HTML, CSS, dan Vanilla JavaScript**. Build production tidak bergantung pada Vite/React.
 
-## Jalankan di localhost
+## Development
 
 ```bash
 npm run dev
 ```
 
-Buka:
+Default local URL:
 
-```bash
+```text
 http://localhost:5173/
 http://localhost:5173/catalog.html
 ```
 
-## Build production
+## Production checks
+
+Sebelum deploy jalankan:
+
+```bash
+npm run check
+```
+
+Flow `npm run check`:
+
+1. Validasi source dan SEO/hardening (`scripts/check.cjs`)
+2. Build static production (`scripts/build.cjs`)
+3. Validasi output `dist/` (`scripts/check-dist.cjs`)
+
+Build manual tetap tersedia:
 
 ```bash
 npm run build
 ```
 
-Hasil production ada di folder `dist/`.
+Output production: `dist/`.
 
-## Package tambahan
+## Production architecture
 
-Tidak ada package npm tambahan. Semua fitur demo memakai CDN di dalam HTML:
+- `index.html` — landing page utama
+- `catalog.html` — katalog/demo interaktif
+- `public/index.js` — interaction script homepage yang cacheable
+- `public/catalog.css` — styling katalog
+- `public/catalog-*.js` — module Vanilla JS katalog per fitur
+- `scripts/build.cjs` — static copy build ke `dist/`
+- `scripts/check.cjs` — source integrity checks
+- `scripts/check-dist.cjs` — production output checks
+- `robots.txt` / `sitemap.xml` — technical SEO
+- `netlify.toml` — Netlify build + security headers
 
-- Tailwind CSS CDN
-- Chart.js CDN
-- Lucide Icons CDN
-- Google Fonts
+Folder `src/`, konfigurasi Vite/TypeScript/PostCSS, dan scaffold terkait masih dipertahankan sebagai legacy reference tetapi **bukan bagian dari production build**. Jangan memindahkan production kembali ke Vite/React tanpa keputusan arsitektur terpisah.
 
-## File utama
+## External dependencies
 
-- `index.html` — website utama
-- `catalog.html` — halaman katalog/demo interaktif
-- `scripts/dev-server.cjs` — local static server tanpa Vite
-- `scripts/build.cjs` — copy file production ke `dist/`
+Website masih memakai CDN untuk:
 
----
+- Tailwind CSS Play CDN **3.4.17 pinned** — masih menjadi legacy production dependency; static compilation tetap menjadi technical debt terpisah agar migrasinya bisa diuji visual secara khusus
+- Chart.js **4.5.1 pinned + lazy-loaded** — baru di-download ketika Calculator/Dashboard dibuka
+- Lucide Icons **1.47.0 pinned + defer-loaded**
+- Google Fonts — tetap memakai satu request gabungan dengan `preconnect` dan `display=swap`
 
-# KAR Labs.dev Landing Page — Production-ready static version
+Asset lokal di `/public/*` memakai cache browser 1 hari + `stale-while-revalidate` 7 hari. HTML tetap `must-revalidate` agar deploy baru tidak tertahan cache browser.
 
-Versi ini mempertahankan CSS styling, layout, gradient, animation, floating code editor, accordion, mobile menu, dan feel UI/UX dari template asli. Perubahan hanya difokuskan untuk membuat project lebih aman dijalankan dari development sampai production.
+## Deployment
 
-## Cara menjalankan di localhost
-
-Pastikan terminal berada di folder yang berisi `package.json`, lalu jalankan:
-
-```bash
-npm install
-npm run dev
-```
-
-Buka URL yang muncul di terminal, biasanya:
-
-```bash
-http://localhost:5173/
-```
-
-## Cara cek sebelum production
-
-```bash
-npm run check
-```
-
-Command ini menjalankan:
-
-1. `npm run typecheck`
-2. `npm run lint`
-3. `npm run build`
-
-Jika berhasil, hasil production ada di folder:
-
-```bash
-dist/
-```
-
-## File utama untuk customize UI/UX dan basic information
-
-Edit file:
-
-```bash
-index.html
-```
-
-Bagian yang paling sering diubah:
-
-- `<title>` untuk judul website
-- `<meta name="description">` untuk SEO description
-- `og:title`, `og:description`, `og:url` untuk preview link
-- Logo teks di navbar dan footer
-- Hero headline dan subheadline
-- Section layanan
-- Section harga
-- FAQ
-- Email, Instagram, dan nomor WhatsApp
-
-## Ganti nomor WhatsApp
-
-Cari di `index.html`:
-
-```js
-const waNumber = '6285777345985';
-```
-
-Ganti dengan nomor asli tanpa `+`, tanpa spasi, dan tanpa angka `0` di depan.
-
-Contoh:
-
-```js
-const waNumber = '6281234567890';
-```
-
-## Menghapus watermark / branding bawaan
-
-Folder `.bolt` dan badge README dari template sudah dihapus pada versi ini.
-
-Jika ingin mengganti branding KAR Labs.dev, gunakan fitur search di VS Code:
+Production flow:
 
 ```text
-Ctrl + Shift + F
+GitHub main -> Netlify -> npm run build -> dist/
 ```
 
-Cari dan ganti keyword berikut:
+Netlify publish directory: `dist`. Node version: `20`.
 
-```text
-KAR Labs.dev
-KAR Labs
-karlabs.dev
-karlabs.dev@gmail.com
-@karlabs.dev
-```
+## Version notes
 
-## Catatan struktur
+### v2.6.0 — Catalog Modularization
+`catalog.html` dipisah menjadi CSS dan module JavaScript per fitur tanpa mengubah static build architecture.
 
-Project ini tetap memakai Vite agar bisa dijalankan dengan `npm run dev` dan dibuild dengan `npm run build`.
+### v2.7.0 — Production Hardening & SEO Foundation
+Menambahkan source/dist validation, SEO metadata, canonical URLs, robots/sitemap, social preview, pinned Chart.js/Lucide versions, Netlify security headers, modal HTML/accessibility cleanup, dan chatbot DOM escaping.
 
-Landing page utama tetap berada di:
-
-```bash
-index.html
-```
-
-Folder `src/` dibiarkan sebagai fallback bawaan Vite/React, tetapi UI utama tidak dipindahkan ke React agar styling dan animasi asli tidak berubah.
-
-## Update Patch: Interactive Catalog Demo
-
-Patch ini menambahkan halaman baru `catalog.html` yang mempertahankan feel UI template utama: dark background, accent green, rounded cards, glow effect, fade transition, dan responsive behavior.
-
-### Isi `catalog.html`
-
-- 7 tab demo layanan:
-  1. Landing Page Preview
-  2. Chatbot WhatsApp dengan quick reply buttons
-  3. Tool/Calculator Online: KPR, BMI, Ongkir
-  4. Dashboard Excel Preview interaktif
-  5. Desain AI Gallery dengan masonry grid dan lightbox
-  6. Automasi Workflow dengan clickable node
-  7. Web Scraping Demo dengan progress, table, sort, search, pagination, CSV, copy
-- Shared components:
-  - Back to top button
-  - Skeleton loading saat ganti tab
-  - Toast notification
-  - CTA WhatsApp di setiap tab
-
-### Package Tambahan
-
-Tidak ada package npm tambahan yang wajib di-install untuk patch ini.
-
-`catalog.html` memakai CDN agar bisa dibuka langsung di browser tanpa build step:
-
-- Tailwind CDN
-- Chart.js CDN
-- Lucide Icons CDN
-
-Untuk development project tetap gunakan command standar:
-
-```bash
-npm install
-npm run dev
-```
-
-Untuk production:
-
-```bash
-npm run check
-```
-
-`vite.config.ts` sudah di-update agar `catalog.html` ikut masuk ke hasil `dist/` saat `npm run build`.
+### v2.8.0 — Frontend Asset Optimization
+Memindahkan JavaScript homepage dari inline ke asset cacheable, lazy-load Chart.js hanya pada fitur yang membutuhkan chart, pin Tailwind CDN ke 3.4.17, defer Lucide, menambahkan resource preconnect, WebP + lazy decoding untuk preview BUDS Motor, dan cache policy Netlify yang aman untuk asset non-fingerprinted.
