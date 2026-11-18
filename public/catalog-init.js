@@ -2,17 +2,29 @@
 'use strict';
   let calculatorsInitialized=false;
   let dashboardInitialized=false;
+  let landingInitialized=false;
 
   async function ensureChartFeature(target){
     if(target!=='calculator' && target!=='dashboard') return;
+    const status=$('#chartFeatureStatus'), retry=$('#retryChartFeature');
+    status.hidden=false;retry.hidden=true;
+    $('#chartFeatureMessage').textContent='Memuat grafik demo. Fitur lain tetap dapat dipilih.';
+    document.getElementById(target).setAttribute('aria-busy','true');
     try{
       await ensureChartJs();
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)window.Chart.defaults.animation=false;
       if(target==='calculator' && !calculatorsInitialized){ initCalculators(); calculatorsInitialized=true; }
       if(target==='dashboard' && !dashboardInitialized){ initDashboard(); dashboardInitialized=true; }
+      if(!document.getElementById(target).hidden)status.hidden=true;
     }catch(err){
-      console.error('[KAR Labs vendor load error]', err);
-      toast('Chart.js gagal dimuat. Coba refresh atau cek koneksi internet.');
+      if(!document.getElementById(target).hidden){
+        status.hidden=false;
+        $('#chartFeatureMessage').textContent='Grafik belum bisa dimuat. Periksa koneksi lalu coba lagi, atau pilih demo lainnya.';
+        retry.hidden=false;
+      }
       throw err;
+    }finally{
+      document.getElementById(target).setAttribute('aria-busy','false');
     }
   }
 
@@ -21,36 +33,46 @@
     const valid=serviceCatalog.map(item=>item.id);
     function targetFromHash(){
       const clean=String(location.hash||'').replace('#','').trim().toLowerCase();
-      return valid.includes(clean) ? clean : aliases[clean] || 'landing';
+      return valid.includes(clean) ? clean : aliases[clean] || 'product-catalog';
     }
+    let navigation=0;
     async function activateTarget(shouldScroll=true){
+      const token=++navigation;
       const target=targetFromHash();
-      $$('.service-panel').forEach(panel=>panel.classList.toggle('active',panel.id===target));
+      $$('.service-panel').forEach(panel=>{panel.classList.toggle('active',panel.id===target);panel.hidden=panel.id!==target;});
       $$('[data-service-link]').forEach(link=>link.classList.toggle('active',link.dataset.serviceLink===target));
       const activeService=serviceCatalog.find(item=>item.id===target);
-      if(activeService) document.title = `${activeService.label} Demo - KAR Labs.dev`;
+      if(activeService && location.hash) document.title = `${activeService.label} Demo - KAR Labs.dev`;
+      updateShowroom(target);
+      $('#chartFeatureStatus').hidden=true;
+      if(target==='landing'&&!landingInitialized){initLanding();landingInitialized=true;}
 
       if(target==='calculator' || target==='dashboard'){
         try{ await ensureChartFeature(target); } catch(_){}
       }
+      if(token!==navigation)return;
       if(target==='calculator' && calculatorsInitialized) setTimeout(()=>{ [kprChart,bmiGauge,bepChart,adsChart,inventoryChart].filter(Boolean).forEach(c=>c.resize()); const active=document.querySelector('.sub-tab-btn.active'); if(active) refreshCalculator(active.dataset.calc); },120);
       if(target==='dashboard' && dashboardInitialized) setTimeout(()=>{ if(financeBar)financeBar.resize(); if(financePie)financePie.resize(); updateDashboard(); },120);
       if(shouldScroll){
-        const el=document.getElementById(target);
-        if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+        const el=document.getElementById('serviceGuide');
+        if(el) el.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
       }
     }
     activateTarget(false);
-    window.addEventListener('hashchange',()=>activateTarget(true));
+    window.addEventListener('hashchange',()=>{
+      if(location.hash==='#serviceDiscovery'){navigation++;return;}
+      activateTarget(true);
+    });
+    $('#retryChartFeature').onclick=()=>{const target=targetFromHash();if(target==='calculator'||target==='dashboard')activateTarget(false);};
   }
 
-  function initShared(){ createCtas(); const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12}); $$('.fade-in-up').forEach(el=>obs.observe(el)); const top=$('#backTop'); window.addEventListener('scroll',()=>top.classList.toggle('show',window.scrollY>300)); top.onclick=()=>window.scrollTo({top:0,behavior:'smooth'}); }
+  function initShared(){ createCtas();initShowroom();const top=$('#backTop');window.addEventListener('scroll',()=>top.classList.toggle('show',window.scrollY>300),{passive:true});top.onclick=()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}); }
   document.addEventListener('DOMContentLoaded',()=>{
     const safeInit=(name,fn)=>{ try{ fn(); } catch(err){ console.error('[KAR Labs init error]', name, err); } };
     safeInit('icons', refreshIcons);
     safeInit('shared', initShared);
     safeInit('tabs', initTabs);
-    safeInit('landing', initLanding);
+    safeInit('product-catalog', initProductCatalog);
     safeInit('chat', initChat);
     safeInit('pos', initPosDemo);
     safeInit('workflow', initWorkflow);

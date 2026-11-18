@@ -39,6 +39,10 @@ for (const dir of dirsToCopy) {
   copyDir(path.join(root, dir), path.join(dist, dir));
 }
 
+// v2.9.0: the old browser Tailwind config is retained in source only for overwrite compatibility.
+// It must not ship to production because Tailwind is compiled locally before this copy step.
+fs.rmSync(path.join(dist, 'public', 'catalog-tailwind-config.js'), { force: true });
+
 // Put favicon at dist root if available, so existing links keep working.
 const favicon = path.join(root, 'public', 'favicon.svg');
 if (fs.existsSync(favicon)) copyFile(favicon, path.join(dist, 'favicon.svg'));

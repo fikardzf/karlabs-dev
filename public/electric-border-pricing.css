@@ -79,6 +79,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  #pricing-motion-toggle { display:none; }
   #harga .pricing-electric-card .electric-border-canvas-wrap {
     display: none;
   }

@@ -79,17 +79,34 @@
         {icon:'📊',title:'Update Dashboard',sub:'Output',type:'Output',platform:'Google Sheets / Looker Studio',config:'Update trend spend, ROAS, CAC, profit, dan product performance.',condition:'Setelah report selesai.',output:'Dashboard marketing terupdate.'}
       ]
     }
-  }; let currentPreset='email';
+  }; let currentPreset='lead';
+  Object.assign(workflowCatalog, {
+    lead:{label:'Pertanyaan pelanggan',icon:'',title:'Pertanyaan pelanggan menjadi catatan follow-up',short:'Ikuti perubahan pertanyaan contoh menjadi catatan calon pelanggan dan draft tindak lanjut.',complexity:'Alur dasar',tools:['Form','Catatan lead','Draft follow-up'],outcomes:['Kebutuhan pelanggan dicatat secara terstruktur.','Admin dapat memeriksa kontak sebelum tindak lanjut.','Pesan follow-up disiapkan untuk ditinjau.'],nodes:[
+      {title:'Pertanyaan masuk',sub:'Terima kebutuhan',type:'Trigger',platform:'Form atau chat sesuai scope',config:'Terima kebutuhan dari data contoh.',condition:'Ada pertanyaan baru.',output:'Kebutuhan katalog dicatat sebagai input.'},
+      {title:'Catat calon pelanggan',sub:'Periksa kontak',type:'Action',platform:'Catatan atau spreadsheet sesuai scope',config:'Periksa kelengkapan kontak dan kebutuhan.',condition:'Kontak contoh sudah lengkap.',output:'Catatan lead siap ditinjau admin.'},
+      {title:'Siapkan follow-up',sub:'Tinjau draft',type:'Output',platform:'Draft untuk admin',config:'Susun tindak lanjut dari kebutuhan yang dicatat.',condition:'Admin memeriksa isi sebelum mengirim.',output:'Draft pertanyaan lanjutan tersedia. Tidak ada pesan dikirim.'}
+    ]},
+    'order-basic':{label:'Pencatatan order',icon:'',title:'Order masuk, data dicatat, admin diberi tahu',short:'Lihat contoh pemeriksaan data order hingga draft pemberitahuan untuk admin.',complexity:'Alur dasar',tools:['Form order','Catatan order','Draft notifikasi'],outcomes:['Detail order memiliki satu catatan acuan.','Data yang belum lengkap diperiksa sebelum proses lanjut.','Admin mempunyai draft pembaruan untuk ditinjau.'],nodes:[
+      {title:'Order diterima',sub:'Terima data',type:'Trigger',platform:'Form atau platform usaha sesuai scope',config:'Baca pesanan contoh dari browser.',condition:'Ada data order contoh.',output:'Input order tersedia.'},
+      {title:'Periksa dan catat',sub:'Validasi data',type:'Action',platform:'Catatan order sesuai scope',config:'Periksa kontak sebelum mencatat status order.',condition:'Data order contoh lengkap.',output:'Order contoh tercatat dalam simulasi.'},
+      {title:'Siapkan notifikasi',sub:'Tinjau hasil',type:'Output',platform:'Draft notifikasi',config:'Siapkan pemberitahuan untuk admin.',condition:'Catatan contoh sudah diperiksa.',output:'Draft pemberitahuan tersedia. Tidak ada pesan dikirim.'}
+    ]}
+  });
+  let workflowGuideStep=-1;
   function borderByType(t){return t==='Trigger'?'border-green-500/70':t==='Action'?'border-blue-500/70':t==='Delay'?'border-orange-500/70':t==='Decision'?'border-yellow-500/70':'border-purple-500/70'}
   function typeBadge(t){ const m={Trigger:'bg-green-500/10 text-green-300 border-green-500/30',Action:'bg-blue-500/10 text-blue-300 border-blue-500/30',Decision:'bg-yellow-500/10 text-yellow-200 border-yellow-500/30',Delay:'bg-orange-500/10 text-orange-300 border-orange-500/30',Output:'bg-purple-500/10 text-purple-300 border-purple-500/30'}; return m[t]||'bg-white/5 text-gray-300 border-white/10'; }
   function renderWorkflowCatalog(){
-    const entries=Object.entries(workflowCatalog);
+    const entries=Object.entries(workflowCatalog).sort(([a],[b])=>Number(!['lead','order-basic'].includes(a))-Number(!['lead','order-basic'].includes(b)));
     $('#workflowCatalog').innerHTML=entries.map(([key,w])=>`<button data-preset="${key}" class="workflow-catalog-card text-left glass rounded-3xl p-5 border border-dark-border hover:border-accent/70 transition-all ${key===currentPreset?'border-accent bg-accent/10':''}">
       <div class="flex items-start justify-between gap-3 mb-4"><div class="w-11 h-11 rounded-2xl bg-accent/10 text-2xl flex items-center justify-center">${w.icon}</div><span class="text-[11px] border border-dark-border rounded-full px-2 py-1 text-gray-400">${w.complexity}</span></div>
       <h4 class="font-heading text-lg font-bold mb-2">${w.label}</h4><p class="text-sm text-gray-400 leading-relaxed mb-4">${w.short}</p>
       <div class="flex flex-wrap gap-2">${w.tools.slice(0,3).map(t=>`<span class="text-[11px] rounded-full bg-black/35 border border-dark-border px-2 py-1 text-gray-400">${t}</span>`).join('')}</div>
     </button>`).join('');
-    $$('.workflow-catalog-card').forEach(card=>card.onclick=()=>{currentPreset=card.dataset.preset; renderWorkflowAll(); document.getElementById('workflowSummary')?.scrollIntoView({behavior:'smooth',block:'nearest'});});
+    $$('.workflow-catalog-card').forEach(card=>card.onclick=()=>{currentPreset=card.dataset.preset; renderWorkflowAll();});
+    const picker=$('#workflowScenario');
+    picker.innerHTML=entries.map(([key,w])=>`<option value="${key}">${w.label}</option>`).join('');
+    picker.value=currentPreset;
+    picker.onchange=()=>{currentPreset=picker.value;renderWorkflowAll();};
   }
   function renderWorkflowTabs(){
     $('#workflowPresetTabs').innerHTML=Object.entries(workflowCatalog).map(([key,w])=>`<button data-preset="${key}" class="preset-btn ${key===currentPreset?'active btn-primary':'btn-outline'} py-2 px-4 whitespace-nowrap">${w.icon} ${w.label}</button>`).join('');
@@ -99,7 +116,7 @@
     const w=workflowCatalog[currentPreset];
     $('#workflowSummary').innerHTML=`<div class="grid lg:grid-cols-[1.15fr_.85fr] gap-5 items-start">
       <div><p class="text-accent text-xs font-bold uppercase tracking-wider mb-2">Selected Workflow</p><h4 class="font-heading text-2xl md:text-3xl font-bold mb-3">${w.icon} ${w.title}</h4><p class="text-gray-400 leading-relaxed">${w.short}</p><div class="flex flex-wrap gap-2 mt-4">${w.tools.map(t=>`<span class="landing-pill">${t}</span>`).join('')}</div></div>
-      <div class="grid grid-cols-3 gap-3">${w.metrics.map(([k,v])=>`<div class="bg-dark border border-dark-border rounded-2xl p-3 text-center"><p class="text-[11px] text-gray-500 mb-1">${k}</p><b class="text-accent text-sm">${v}</b></div>`).join('')}<div class="bg-dark border border-dark-border rounded-2xl p-3 text-center col-span-3"><p class="text-[11px] text-gray-500 mb-1">Estimasi setup</p><b class="text-white text-sm">${w.time}</b></div></div>
+      <p class="showroom-note">Platform di sini adalah contoh ruang lingkup. Tidak ada integrasi aktif atau estimasi hasil bisnis yang dijanjikan.</p>
     </div>`;
   }
   function renderWorkflowUseCases(){
@@ -110,12 +127,46 @@
     const w=workflowCatalog[currentPreset]; const nodes=w.nodes;
     $('#workflowTitle').textContent=w.title;
     $('#workflowComplexity').innerHTML=`<span class="landing-pill">${w.complexity}</span><span class="landing-pill">${nodes.length} steps</span>`;
-    $('#workflowViz').innerHTML=nodes.map((n,i)=>`<div class="flex flex-col md:flex-row items-center justify-center gap-4 w-full md:w-auto"><div class="workflow-node bg-dark border ${borderByType(n.type)} rounded-2xl p-4 w-full max-w-[210px] md:w-36 text-center" data-i="${i}"><div class="text-3xl mb-2">${n.icon}</div><b class="block text-sm md:text-base leading-tight">${n.title}</b><span class="inline-flex mt-2 text-[11px] border rounded-full px-2 py-1 ${typeBadge(n.type)}">${n.sub}</span></div>${i<nodes.length-1?'<div class="connector"><span class="flow-dot"></span></div>':''}</div>`).join('');
+    $('#workflowViz').innerHTML=nodes.map((n,i)=>`<button type="button" class="workflow-node" data-i="${i}" aria-pressed="false"><span class="workflow-step-number">Langkah ${i+1}</span><b>${n.title}</b><span>${n.sub}</span></button>`).join('');
     $$('.workflow-node').forEach(n=>n.onclick=()=>showNode(Number(n.dataset.i))); showNode(0);
   }
   function showNode(i){
-    $$('.workflow-node').forEach(n=>n.classList.remove('active')); const node=$$('.workflow-node')[i]; if(node)node.classList.add('active'); const n=workflowCatalog[currentPreset].nodes[i];
+    $$('.workflow-node').forEach(n=>{n.classList.remove('active');n.setAttribute('aria-pressed','false');}); const node=$$('.workflow-node')[i]; if(node){node.classList.add('active');node.setAttribute('aria-pressed','true');} const n={icon:'',...workflowCatalog[currentPreset].nodes[i]};
     $('#nodeDetail').innerHTML=`<div class="flex justify-between gap-4 mb-4"><div><p class="text-accent text-sm font-bold">${n.type.toUpperCase()}</p><h4 class="font-heading text-2xl font-bold">${n.icon} ${n.title}</h4></div><button id="closeNode" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div><div class="space-y-4 text-sm"><div><p class="text-gray-500">Platform</p><b>${n.platform}</b></div><div><p class="text-gray-500">Konfigurasi</p><p class="text-gray-300">${n.config}</p></div><div><p class="text-gray-500">Condition</p><p class="text-gray-300">${n.condition}</p></div><div><p class="text-gray-500">Output</p><p class="text-gray-300">${n.output||'-'}</p></div></div>`; refreshIcons(); $('#closeNode').onclick=()=>$('#nodeDetail').innerHTML='<p class="text-gray-500">Panel ditutup. Klik node untuk membuka detail lagi.</p>';
+    $('#closeNode').setAttribute('aria-label','Tutup detail langkah');
   }
-  function renderWorkflowAll(){ renderWorkflowCatalog(); renderWorkflowTabs(); renderWorkflowSummary(); renderWorkflowUseCases(); renderWorkflow(); }
-  function initWorkflow(){ renderWorkflowAll(); }
+  function renderWorkflowRecord(){
+    const started=workflowGuideStep>=0;
+    const order=currentPreset.startsWith('order');
+    const status=workflowGuideStep<0?'Belum dimulai':workflowGuideStep===0?'Data contoh diterima':workflowGuideStep===1?'Catatan contoh diperiksa':'Draft tindak lanjut tersedia';
+    $('#workflowRecord').innerHTML=started?`<h4>Catatan ${order?'order':'calon pelanggan'} contoh</h4><dl><div><dt>Usaha</dt><dd>Usaha Contoh (simulasi)</dd></div><div><dt>Kebutuhan</dt><dd>${order?'Pesanan minuman contoh':'Katalog produk untuk pelanggan'}</dd></div><div><dt>Status</dt><dd>${status}</dd></div></dl><p class="showroom-note">${workflowGuideStep===workflowCatalog[currentPreset].nodes.length-1?'Selesai di browser. Draft belum dikirim ke siapa pun.':'Lanjutkan untuk melihat perubahan catatan.'}</p>`:'<p>Belum ada catatan contoh. Tekan Mulai panduan untuk melihat alurnya.</p>';
+    $('#nextWorkflowStep').disabled=!started||workflowGuideStep>=workflowCatalog[currentPreset].nodes.length-1;
+    $('#startWorkflowGuide').disabled=started;
+  }
+  function resetWorkflowGuide(){
+    workflowGuideStep=-1;
+    $('#workflowGuideError').hidden=true;
+    $('#workflowDataState').value='valid';
+    $('#workflowGuideStatus').textContent='Pilih skenario, lalu mulai panduan. Kamu juga bisa membuka tiap langkah untuk membaca detail.';
+    renderWorkflowRecord();
+    showNode(0);
+  }
+  function renderWorkflowAll(){ renderWorkflowCatalog(); renderWorkflowTabs(); renderWorkflowSummary(); renderWorkflowUseCases(); renderWorkflow(); resetWorkflowGuide(); }
+  function initWorkflow(){
+    renderWorkflowAll();
+    $('#startWorkflowGuide').onclick=()=>{workflowGuideStep=0;showNode(0);renderWorkflowRecord();$('#workflowGuideStatus').textContent='Data contoh diterima. Lanjutkan untuk memeriksa catatan.';};
+    $('#nextWorkflowStep').onclick=()=>{
+      if(workflowGuideStep<0||workflowGuideStep>=workflowCatalog[currentPreset].nodes.length-1)return;
+      if(workflowGuideStep===0&&$('#workflowDataState').value==='missing'){
+        $('#workflowGuideError').hidden=false;
+        $('#workflowGuideStatus').textContent='Proses berhenti sebelum pencatatan karena kontak contoh belum lengkap.';
+        return;
+      }
+      workflowGuideStep++;
+      $('#workflowGuideError').hidden=true;
+      showNode(workflowGuideStep);renderWorkflowRecord();
+      $('#workflowGuideStatus').textContent=`Langkah ${workflowGuideStep+1} dari ${workflowCatalog[currentPreset].nodes.length}: ${workflowCatalog[currentPreset].nodes[workflowGuideStep].title}.`;
+    };
+    $('#repairWorkflowData').onclick=()=>{$('#workflowDataState').value='valid';$('#workflowGuideError').hidden=true;$('#workflowGuideStatus').textContent='Kontak contoh sudah dilengkapi. Tekan Langkah berikutnya untuk mencoba lagi.';$('#nextWorkflowStep').focus();};
+    $('#resetWorkflowGuide').onclick=resetWorkflowGuide;
+  }

@@ -38,7 +38,7 @@
   function renderPosCart(){
     const box=$('#posCartItems'); if(!box)return;
     if(!posCart.length)box.innerHTML='<div class="pos-demo-empty"><div><i data-lucide="shopping-cart" class="w-9 h-9"></i><b class="block text-sm text-zinc-400">Cart masih kosong</b><p class="text-xs mt-1">Klik produk di sebelah kiri untuk mulai simulasi.</p></div></div>';
-    else box.innerHTML=posCart.map(x=>`<div class="pos-cart-item"><div><b class="block text-sm">${x.name}</b><span class="text-xs text-gray-500">${posFmt(x.price)} / item</span><div class="pos-qty"><button data-pos-minus="${x.id}">−</button><span>${x.qty}</span><button data-pos-plus="${x.id}">+</button></div></div><b class="text-sm">${posFmt(x.price*x.qty)}</b></div>`).join('');
+    else box.innerHTML=posCart.map(x=>`<div class="pos-cart-item"><div><b class="block text-sm">${x.name}</b><span class="text-xs text-gray-500">${posFmt(x.price)} / item</span><div class="pos-qty"><button type="button" aria-label="Kurangi jumlah ${x.name}" data-pos-minus="${x.id}">−</button><span>${x.qty}</span><button type="button" aria-label="Tambah jumlah ${x.name}" data-pos-plus="${x.id}">+</button></div></div><b class="text-sm">${posFmt(x.price*x.qty)}</b></div>`).join('');
     $$('[data-pos-minus]').forEach(b=>b.onclick=()=>updatePosQty(b.dataset.posMinus,-1)); $$('[data-pos-plus]').forEach(b=>b.onclick=()=>updatePosQty(b.dataset.posPlus,1)); refreshIcons();
   }
   function renderPosTotals(){const t=posTotals(); if(!$('#posSubtotal'))return; $('#posSubtotal').textContent=posFmt(t.subtotal);$('#posDiscountValue').textContent='- '+posFmt(t.discount);$('#posTax').textContent=posFmt(t.tax);$('#posTotal').textContent=posFmt(t.total)}
