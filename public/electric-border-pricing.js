@@ -7,7 +7,7 @@
   const DISPLACEMENT = 42;
   const THICKNESS = 2;
 
-  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const random = (x) => {
     const value = Math.sin(x * 12.9898) * 43758.5453;
@@ -205,14 +205,12 @@
     ctx.shadowColor = 'rgba(34, 197, 94, 0.45)';
     ctx.stroke();
 
-    tracePath();
     ctx.strokeStyle = 'rgba(34, 197, 94, 0.48)';
     ctx.lineWidth = THICKNESS + 3;
     ctx.shadowBlur = 14;
     ctx.shadowColor = 'rgba(34, 197, 94, 0.6)';
     ctx.stroke();
 
-    tracePath();
     ctx.strokeStyle = COLOR;
     ctx.lineWidth = THICKNESS;
     ctx.shadowBlur = 6;
@@ -226,26 +224,32 @@
 
     let activeCard = null;
     let rafId = 0;
+    let paused = false;
+    let lastFrame = 0;
+    const visibleCards = new Set();
+    const toggle = document.getElementById('pricing-motion-toggle');
 
     const deactivateAll = () => {
       cards.forEach((card) => {
         card.classList.remove('is-electric-active');
-        card.setAttribute('aria-pressed', 'false');
       });
     };
 
     const loop = (time) => {
-      if (!activeCard) {
-        rafId = 0;
-        return;
+      if (time - lastFrame >= 33) {
+        draw(activeCard, createLayer(activeCard), time);
+        lastFrame = time;
       }
-
-      if (!prefersReducedMotion) {
-        const layer = createLayer(activeCard);
-        draw(activeCard, layer, time);
-      }
-
       rafId = requestAnimationFrame(loop);
+    };
+
+    const syncAnimation = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+      if (activeCard?.__electricLayer) activeCard.__electricLayer.lastTime = 0;
+      if (activeCard && visibleCards.has(activeCard) && !paused && !motionPreference.matches && !document.hidden) {
+        rafId = requestAnimationFrame(loop);
+      }
     };
 
     const activate = (card) => {
@@ -253,29 +257,36 @@
       deactivateAll();
       activeCard = card;
       card.classList.add('is-electric-active');
-      card.setAttribute('aria-pressed', 'true');
-      createLayer(card);
-      if (!rafId) rafId = requestAnimationFrame(loop);
+      syncAnimation();
     };
 
     cards.forEach((card) => {
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('aria-pressed', 'false');
-
       card.addEventListener('click', (event) => {
         if (event.target.closest('.pricing-package-cta')) return;
         activate(card);
       });
 
-      card.addEventListener('keydown', (event) => {
-        if (event.target.closest('.pricing-package-cta')) return;
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          activate(card);
-        }
-      });
+      card.addEventListener('focusin', () => activate(card));
     });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) visibleCards.add(entry.target);
+        else visibleCards.delete(entry.target);
+      });
+      syncAnimation();
+    });
+    cards.forEach(card => observer.observe(card));
+    if (toggle) {
+      toggle.hidden = false;
+      toggle.addEventListener('click', () => {
+        paused = !paused;
+        toggle.setAttribute('aria-pressed', String(paused));
+        toggle.textContent = paused ? 'Lanjutkan animasi border' : 'Jeda animasi border';
+        syncAnimation();
+      });
+    }
+    motionPreference.addEventListener('change', syncAnimation);
 
     window.addEventListener('resize', () => {
       if (activeCard?.__electricLayer) {
@@ -284,13 +295,6 @@
       }
     }, { passive: true });
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      } else if (!document.hidden && activeCard && !rafId) {
-        rafId = requestAnimationFrame(loop);
-      }
-    });
+    document.addEventListener('visibilitychange', syncAnimation);
   });
 })();

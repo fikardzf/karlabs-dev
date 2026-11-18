@@ -1,0 +1,13 @@
+/* KAR Labs v2.9.0 — production Tailwind theme overrides.
+   Compiled by scripts/build-tailwind.cjs; do not serve this file directly. */
+@theme {
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --color-dark: #f8fafc;
+  --color-dark-card: #ffffff;
+  --color-dark-alt: #f1f5f9;
+  --color-dark-border: #dbe5e1;
+  --color-accent: #006847;
+  --color-accent-hover: #005036;
+}

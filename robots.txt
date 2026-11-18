@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://karlabs.dev/sitemap.xml
+Sitemap: https://karlabs-dev.netlify.app/sitemap.xml

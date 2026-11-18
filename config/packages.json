@@ -1,0 +1,44 @@
+{
+  "currency": "IDR",
+  "priceLabel": "Start From",
+  "priceNotice": "Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati.",
+  "premiumAutomationLimit": 1,
+  "packages": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "price": 500000,
+      "positioning": "Website dasar",
+      "target": "Untuk usaha yang mulai memperkenalkan bisnis dan produknya secara online.",
+      "included": ["Website atau katalog produk dasar", "Tampilan ponsel dan desktop", "Informasi produk dari materi usaha", "Tautan WhatsApp", "Konfigurasi dasar sesuai kesepakatan tertulis"],
+      "optional": ["Tambahan materi, halaman, atau produk di luar kesepakatan: penawaran terpisah"],
+      "excluded": ["Backend custom, ERP, CRM, dan database kompleks", "Workflow automasi dan integrasi AI", "Integrasi sistem pihak ketiga khusus"],
+      "automation": "Tidak termasuk workflow automasi"
+    },
+    {
+      "id": "professional",
+      "name": "Professional",
+      "price": 1500000,
+      "positioning": "Katalog lebih lengkap",
+      "target": "Untuk usaha yang membutuhkan katalog dengan susunan produk lebih terarah.",
+      "included": ["Website dan katalog lebih lengkap", "Kategori sesuai data produk", "Pencarian atau filter sesuai kebutuhan dan data", "Penyesuaian tampilan dan alur pertanyaan", "Bagian tambahan sesuai kesepakatan"],
+      "optional": ["Fitur di luar proposal: penilaian dan penawaran terpisah"],
+      "excluded": ["ERP atau CRM lengkap", "Automasi proses bisnis tingkat lanjut dan integrasi AI kompleks", "Fitur custom atau integrasi pihak ketiga tanpa batas"],
+      "automation": "Workflow automasi dibahas melalui penawaran terpisah"
+    },
+    {
+      "id": "premium",
+      "name": "Premium",
+      "price": 3000000,
+      "positioning": "Website & automasi",
+      "target": "Untuk usaha yang membutuhkan website khusus dan satu alur automasi sederhana.",
+      "included": ["Website dan katalog sesuai kebutuhan", "Fungsi khusus yang dipilih dalam proposal", "Maksimal 1 workflow sederhana setelah dinilai layak", "Integrasi dasar dengan alat yang didukung, bila memungkinkan", "Alur, hasil, dan batas pekerjaan disepakati tertulis"],
+      "optional": ["Workflow, fitur, atau integrasi tambahan: analisis dan penawaran terpisah"],
+      "excluded": ["ERP, CRM lengkap, backend custom, infrastruktur kompleks, atau dashboard enterprise", "AI agent kompleks, training/fine-tuning model, dan integrasi AI API tingkat lanjut", "Automasi lintas departemen, banyak workflow mandiri, atau integrasi API tanpa batas", "Aplikasi mobile custom, database skala besar, payment gateway kompleks, atau autentikasi enterprise", "Monitoring automasi terus-menerus, revisi unlimited, atau support seumur hidup"],
+      "automation": "Maksimal 1 workflow sederhana yang disepakati bersama"
+    }
+  ],
+  "premiumNotice": "Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah.",
+  "additionalNotice": "Fitur di luar paket dinilai dan ditawarkan terpisah.",
+  "commercialNotice": "Jumlah halaman dan produk, materi, revisi, jadwal, serah terima, serta dukungan disepakati tertulis. Domain, hosting, lisensi, API, langganan pihak ketiga, dan maintenance belum otomatis termasuk."
+}

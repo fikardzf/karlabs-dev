@@ -2,19 +2,21 @@
   "name": "kar-labs-static-catalog",
   "private": true,
   "version": "1.0.2",
-  "description": "Static KAR Labs.dev landing page with interactive service catalog. No framework dependencies required.",
+  "description": "Static KAR Labs.dev landing page with interactive service catalog and locally compiled production Tailwind CSS.",
   "scripts": {
-    "dev": "node scripts/dev-server.cjs",
-    "build": "node scripts/build.cjs",
+    "dev": "npm run build:content && npm run build:css && node scripts/dev-server.cjs",
+    "build": "npm run build:content && npm run build:css && node scripts/build.cjs",
     "preview": "node scripts/dev-server.cjs dist 4173",
-    "check": "node scripts/check.cjs && npm run build && node scripts/check-dist.cjs"
+    "check": "npm run build:content && node scripts/check.cjs && node scripts/check-leads.cjs && node scripts/check-quality.cjs && node scripts/check-packages.cjs && npm run build && node scripts/check-dist.cjs && node scripts/check-quality.cjs dist && node scripts/check-packages.cjs dist",
+    "build:css": "node scripts/build-tailwind.cjs",
+    "build:content": "node scripts/build-content.cjs"
   },
   "keywords": [
     "static-site",
     "landing-page",
     "catalog",
-    "tailwind-cdn",
-    "chartjs-cdn"
+    "chartjs-cdn",
+    "tailwind-static-css"
   ],
   "license": "UNLICENSED"
 }
