@@ -96,7 +96,7 @@ window.matchMedia('(min-width: 1024px)').addEventListener('change', event => {
 });
 // Native anchor navigation keeps URL history and respects reduced-motion CSS.
 const sections = document.querySelectorAll('main > section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
+const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
 let scrollPending = false;
 function updateNavigation() {
     navbar.classList.toggle('nav-scrolled', window.scrollY > 50);

@@ -41,9 +41,9 @@
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="public/brand/apple-touch-icon.png" sizes="180x180">
 
-  <link rel="stylesheet" href="public/tailwind.css?v=20261118-light-1">
+  <link rel="stylesheet" href="public/tailwind.css?v=20261119-ux-1">
   <link rel="stylesheet" href="public/catalog.css?v=20261118-light-1">
-  <link rel="stylesheet" href="public/site.css?v=20261118-copy-1">
+  <link rel="stylesheet" href="public/site.css?v=20261119-ux-1">
 </head>
 <body class="font-body">
   <a href="#serviceDiscovery" class="catalog-skip">Lewati ke pilihan demo</a>
@@ -69,17 +69,16 @@
   </div>
 
   <div class="catalog-backdrop" aria-hidden="true"></div>
-  <nav class="sticky top-0 z-50 bg-dark/90 backdrop-blur-xl border-b border-dark-border">
+  <nav class="catalog-navigation sticky top-0 z-50 bg-dark/90 backdrop-blur-xl border-b border-dark-border" aria-label="Navigasi utama">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="index.html" class="catalog-brand flex items-center gap-3 text-xl md:text-2xl font-heading font-bold uppercase tracking-wide"><img class="brand-logo" src="public/brand/karlabs-logo-96.webp" srcset="public/brand/karlabs-logo-96.webp 1x, public/brand/karlabs-logo-192.webp 2x" width="56" height="56" alt="KAR Labs" decoding="async"><span class="brand-name" aria-hidden="true">KAR Labs<span>.dev</span></span></a>
-      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
-        <a href="index.html#layanan" class="hover:text-accent transition-colors">Layanan</a>
-        <a href="index.html#proses" class="hover:text-accent transition-colors">Proses</a>
+      <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-300">
+        <a href="index.html#layanan" class="hover:text-accent transition-colors">Solusi</a>
+        <a href="#serviceDiscovery" aria-current="page" class="text-link">Demo</a>
         <a href="index.html#harga" class="hover:text-accent transition-colors">Harga</a>
-        <a href="index.html#faq" class="hover:text-accent transition-colors">FAQ</a>
-        <a href="index.html#kontak" class="hover:text-accent transition-colors">Kontak</a>
+        <a href="index.html#kontak" class="hover:text-accent transition-colors">Konsultasi</a>
       </div>
-      <a href="index.html#layanan" class="btn-outline py-2 px-4 text-sm">← Kembali ke Layanan</a>
+      <details class="catalog-mobile-nav lg:hidden" data-catalog-menu><summary>Menu</summary><div><a href="index.html">Beranda</a><a href="index.html#layanan">Solusi</a><a href="#serviceDiscovery" aria-current="page">Demo</a><a href="index.html#harga">Harga</a><a href="index.html#kontak">Konsultasi</a></div></details>
     </div>
   </nav>
 
@@ -490,9 +489,7 @@
         <label class="workflow-picker">Pilih skenario<select id="workflowScenario"></select></label>
         <details class="reference-details"><summary>Lihat semua referensi workflow</summary><div id="workflowCatalog" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div></details>
 
-        <div id="workflowSummary" class="glass rounded-3xl p-5 md:p-6 mb-6"></div>
-
-        <div id="workflowPresetTabs" hidden></div>
+        <div id="workflowSummary" class="workflow-summary"></div>
         <div class="workflow-controls"><button id="startWorkflowGuide" type="button" class="btn-primary">Mulai panduan</button><button id="nextWorkflowStep" type="button" class="btn-outline" disabled>Langkah berikutnya</button><button id="resetWorkflowGuide" type="button" class="btn-outline">Reset simulasi</button><label>Data contoh<select id="workflowDataState"><option value="valid">Lengkap</option><option value="missing">Kontak belum lengkap</option></select></label></div>
         <p id="workflowGuideStatus" class="showroom-status" role="status">Pilih skenario, lalu mulai panduan.</p>
         <div id="workflowGuideError" class="showroom-status" role="alert" hidden><p>Kontak pada data contoh belum lengkap. Perbaiki data sebelum melanjutkan.</p><button id="repairWorkflowData" type="button" class="btn-outline">Lengkapi data contoh</button></div>
@@ -509,10 +506,10 @@
             </div>
             <div id="workflowViz" class="flex flex-col md:flex-row items-center justify-center gap-4 min-h-[270px]"></div>
           </div>
-          <div id="nodeDetail" aria-label="Detail langkah workflow" class="glass rounded-3xl p-6 transition-all"><p class="text-gray-500">Pilih node untuk melihat detail konfigurasi.</p></div>
+          <div id="nodeDetail" role="region" aria-label="Detail langkah workflow" class="glass rounded-3xl p-6"><p class="text-gray-500">Pilih langkah untuk melihat cara kerjanya.</p></div>
         </div>
 
-        <div id="workflowUseCases" class="grid md:grid-cols-3 gap-4 mt-6"></div>
+        <div id="workflowUseCases" class="workflow-outcomes"></div>
         <div class="trust-note mt-5">
           <b class="text-accent">Implementasi bertahap.</b> Mulai dari satu alur yang disepakati. Persetujuan, pengingat, dan pemantauan tambahan mengikuti penawaran.
         </div>
@@ -569,12 +566,12 @@
   <script src="public/catalog-chatbot.js?v=20261118-light-1" defer></script>
   <script src="public/catalog-calculators.js?v=20261118-light-1" defer></script>
   <script src="public/catalog-dashboard.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-workflow.js?v=20261118-light-1" defer></script>
+  <script src="public/catalog-workflow.js?v=20261119-ux-1" defer></script>
   <script src="public/catalog-pos.js?v=20261118-light-1" defer></script>
   <script src="public/catalog-scraping.js?v=20261118-light-1" defer></script>
   <script src="public/catalog-product.js?v=20261118-copy-1" defer></script>
   <script src="public/catalog-showroom.js?v=20261118-copy-1" defer></script>
   <script src="public/catalog-init.js?v=20261118-light-1" defer></script>
-  <script src="public/site.js?v=20261118-copy-1" defer></script>
+  <script src="public/site.js?v=20261119-ux-1" defer></script>
 </body>
 </html>

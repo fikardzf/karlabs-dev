@@ -13,7 +13,7 @@ function cards() {
     <div class="package-overview"><header><p class="package-tier">${escape(p.name)}</p><h3 id="package-${p.id}-title">${escape(p.positioning)}</h3><p class="package-price"><span class="package-start-label" lang="en">${escape(data.priceLabel)}</span><span>${money(p.price)}</span></p><p>${escape(p.target)}</p></header>
     <h4>Cakupan paket</h4>${list(p.included)}
     <p class="${p.id === 'premium' ? 'premium-limit' : 'package-limit'}">${escape(p.automation)}.</p>
-    </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body">${p.id === 'premium' ? '<p class="premium-limit">' + escape(data.premiumNotice) + '</p>' : ''}<h4>Opsional · penawaran terpisah</h4>${list(p.optional)}<h4>Tidak otomatis termasuk</h4>${list(p.excluded)}</div></details>
+    </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4>${list(p.optional)}<h4>Tidak otomatis termasuk</h4>${list(p.excluded)}</div></details>
     <a class="pricing-package-cta btn-primary-theme" href="index.html?package=${p.id}#contact-form" data-inquiry-package="${p.name}">Bahas Paket ${p.name}</a>
   </article>`).join('') + '</div>';
 }
@@ -29,16 +29,13 @@ function comparison() {
     ['Revisi, jadwal dan support', 'Disepakati tertulis', 'Disepakati tertulis', 'Disepakati tertulis; bukan unlimited / seumur hidup'],
     ['Maintenance dan monitoring', 'Perjanjian terpisah', 'Perjanjian terpisah', 'Perjanjian terpisah']
   ];
-  return `<div class="package-comparison" role="region" aria-label="Perbandingan paket, geser tabel pada layar kecil" tabindex="0"><table><caption>Perbandingan paket</caption><thead><tr><th scope="col">Cakupan</th>${data.packages.map(p => '<th scope="col">' + p.name + '</th>').join('')}</tr></thead><tbody>${rows.map(row => '<tr><th scope="row">' + escape(row[0]) + '</th>' + row.slice(1).map(cell => '<td>' + escape(cell) + '</td>').join('') + '</tr>').join('')}</tbody></table></div>`;
+  return `<details class="package-comparison-details"><summary>Bandingkan rincian paket</summary><p class="showroom-note">Pada layar kecil, geser tabel untuk melihat semua paket.</p><div class="package-comparison" role="region" aria-label="Perbandingan paket, geser tabel pada layar kecil" tabindex="0"><table><caption>Perbandingan paket</caption><thead><tr><th scope="col">Cakupan</th>${data.packages.map(p => '<th scope="col">' + p.name + '</th>').join('')}</tr></thead><tbody>${rows.map(row => '<tr><th scope="row">' + escape(row[0]) + '</th>' + row.slice(1).map(cell => '<td>' + escape(cell) + '</td>').join('') + '</tr>').join('')}</tbody></table></div></details>`;
 }
 function faq() {
   const items = [
-    ['Apa perbedaan setiap paket?', `Starter mulai ${money(data.packages[0].price)} untuk website dasar. Professional mulai ${money(data.packages[1].price)} untuk katalog lebih lengkap. Premium mulai ${money(data.packages[2].price)} untuk website khusus dan maksimal 1 workflow sederhana yang disepakati. ${data.priceNotice}`],
+    ['Bagaimana menentukan biaya akhir?', `${data.priceNotice} Jumlah halaman, produk, fitur, dan integrasi dirinci dalam penawaran tertulis sebelum pengerjaan.`],
     ['Apakah harga termasuk domain dan hosting?', 'Domain, hosting, lisensi, API, dan langganan pihak ketiga belum otomatis termasuk. Pilihan layanan, kepemilikan akun, biaya awal dan perpanjangan dikonfirmasi pada penawaran.'],
-    ['Apakah Premium termasuk ERP atau CRM?', 'ERP, CRM lengkap, backend kompleks, database skala besar, aplikasi mobile, payment gateway kompleks, dan autentikasi enterprise memerlukan penawaran terpisah.'],
-    ['Apakah paket Premium termasuk integrasi AI?', 'AI agent kompleks, training atau fine-tuning model, dan integrasi AI API tingkat lanjut tidak otomatis termasuk. Jika dibutuhkan, kelayakan teknis, izin, biaya API, dan scope dibahas melalui penawaran terpisah.'],
-    ['Berapa workflow automasi yang termasuk?', 'Premium mencakup maksimal 1 workflow sederhana yang dinilai layak: satu pemicu, aksi berurutan, pemetaan data standar, dan integrasi yang didukung. Alurnya didokumentasikan dan disetujui tertulis. Automasi untuk Starter dan Professional ditawarkan terpisah.'],
-    ['Bagaimana jika membutuhkan fitur tambahan?', data.additionalNotice],
+    ['Apa batas automasi pada paket Premium?', data.premiumNotice + ' Satu workflow berarti satu pemicu dengan aksi berurutan dan integrasi yang didukung. Automasi untuk Starter dan Professional ditawarkan terpisah. Rincian pengecualian tersedia pada setiap kartu paket.'],
     ['Bagaimana biaya maintenance?', 'Maintenance, pemantauan automasi, pembaruan konten, dan perpanjangan layanan belum otomatis termasuk. Biaya, periode, serta cakupan dukungan mengikuti perjanjian terpisah.'],
     ['Bagaimana ketentuan revisi dan pengerjaan?', 'Cakupan, hasil, revisi, jadwal, pembayaran, dan dukungan disepakati tertulis. Perbaikan bug dibedakan dari perubahan kebutuhan. Revisi dan dukungan memiliki batas sesuai kesepakatan.'],
     ['Apakah demo terhubung ke sistem nyata?', 'Demo memakai data contoh di browser. Integrasi nyata membutuhkan layanan yang mendukung, akses akun, izin, dan pembahasan biaya tambahan.']
@@ -52,7 +49,7 @@ function replaceBlock(html, marker, content) {
 }
 
 let home = fs.readFileSync('index.html', 'utf8');
-home = replaceBlock(home, 'packages', `<p class="package-price-notice">${escape(data.priceNotice)}</p>` + cards() + comparison() + `<p class="commercial-notice">${escape(data.additionalNotice)}</p><p class="commercial-notice">${escape(data.commercialNotice)}</p>`);
+home = replaceBlock(home, 'packages', `<p class="package-price-notice">${escape(data.priceNotice)}</p>` + cards() + `<p class="commercial-notice premium-scope-notice">${escape(data.premiumNotice)}</p>` + comparison() + `<p class="commercial-notice">${escape(data.additionalNotice)}</p><p class="commercial-notice">${escape(data.commercialNotice)}</p>`);
 home = replaceBlock(home, 'package-faq', faq());
 let catalog = fs.readFileSync('catalog.html', 'utf8');
 catalog = replaceBlock(catalog, 'package-summary', `<section class="catalog-packages" aria-labelledby="catalog-packages-title"><h2 id="catalog-packages-title">Paket implementasi</h2><div class="catalog-package-links">${data.packages.map(p => `<a href="index.html?package=${p.id}#contact-form" data-inquiry-package="${p.name}"><span>${p.name}</span><strong>Mulai ${money(p.price)}</strong></a>`).join('')}</div><p>${escape(data.priceNotice)} <a href="index.html#harga">Bandingkan cakupan paket</a>.</p><p class="premium-limit">${escape(data.premiumNotice)}</p></section>`);

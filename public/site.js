@@ -1,5 +1,20 @@
 'use strict';
 (() => {
+    const catalogMenu = document.querySelector('[data-catalog-menu]');
+    if (catalogMenu) {
+        catalogMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { catalogMenu.open = false; }));
+        document.addEventListener('click', event => {
+            if (!catalogMenu.contains(event.target)) catalogMenu.open = false;
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Escape' || !catalogMenu.open) return;
+            catalogMenu.open = false;
+            catalogMenu.querySelector('summary').focus();
+        });
+        window.matchMedia('(min-width:1024px)').addEventListener('change', event => {
+            if (event.matches) catalogMenu.open = false;
+        });
+    }
     const overviews = [...document.querySelectorAll('.package-overview')];
     const grid = document.querySelector('.package-grid');
     function alignPackages() {

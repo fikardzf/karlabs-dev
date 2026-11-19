@@ -41,6 +41,7 @@ assert(schema.makesOffer.every(offer => !('price' in offer) && !('maxPrice' in o
 assert.equal((home.match(/class="package-start-label"/g) || []).length, 3);
 assert.equal((home.match(/name="package-options"/g) || []).length, 3);
 assert.equal((home.match(/class="package-overview"/g) || []).length, 3);
+assert(home.includes('<p class="commercial-notice premium-scope-notice">' + data.premiumNotice), 'Core Premium limitations must remain outside optional package details');
 assert(schema.logo.endsWith('/public/brand/karlabs-logo-384.webp'));
 assert(home.indexOf('public/packages.js') < home.indexOf('public/consultation.js'));
 assert(read('public/consultation.js').includes('info.formattedStartingPrice'));

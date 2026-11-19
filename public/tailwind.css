@@ -6,19 +6,9 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
   --color-red-400: oklch(70.4% 0.191 22.216);
-  --color-orange-300: oklch(83.7% 0.128 66.29);
-  --color-orange-500: oklch(70.5% 0.213 47.604);
-  --color-yellow-200: oklch(94.5% 0.129 101.54);
   --color-yellow-300: oklch(90.5% 0.182 98.111);
-  --color-yellow-500: oklch(79.5% 0.184 86.047);
-  --color-green-300: oklch(87.1% 0.15 154.449);
   --color-green-400: oklch(79.2% 0.209 151.711);
-  --color-green-500: oklch(72.3% 0.219 149.579);
-  --color-blue-300: oklch(80.9% 0.105 251.813);
   --color-blue-400: oklch(70.7% 0.165 254.624);
-  --color-blue-500: oklch(62.3% 0.214 259.815);
-  --color-purple-300: oklch(82.7% 0.119 306.383);
-  --color-purple-500: oklch(62.7% 0.265 303.9);
   --color-gray-300: oklch(87.2% 0.01 258.338);
   --color-gray-400: oklch(70.7% 0.022 261.325);
   --color-gray-500: oklch(55.1% 0.027 264.364);
@@ -639,9 +629,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 1px;
 }
-.border-accent {
-  border-color: var(--color-accent);
-}
 .border-accent\/20 {
   border-color: color-mix(in srgb, #006847 20%, transparent);
   @supports (color: color-mix(in lab, red, red)) {
@@ -660,74 +647,8 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
   }
 }
-.border-blue-500\/30 {
-  border-color: color-mix(in srgb, oklch(62.3% 0.214 259.815) 30%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-blue-500) 30%, transparent);
-  }
-}
-.border-blue-500\/70 {
-  border-color: color-mix(in srgb, oklch(62.3% 0.214 259.815) 70%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-blue-500) 70%, transparent);
-  }
-}
 .border-dark-border {
   border-color: var(--color-dark-border);
-}
-.border-green-500\/30 {
-  border-color: color-mix(in srgb, oklch(72.3% 0.219 149.579) 30%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-green-500) 30%, transparent);
-  }
-}
-.border-green-500\/70 {
-  border-color: color-mix(in srgb, oklch(72.3% 0.219 149.579) 70%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-green-500) 70%, transparent);
-  }
-}
-.border-orange-500\/30 {
-  border-color: color-mix(in srgb, oklch(70.5% 0.213 47.604) 30%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-orange-500) 30%, transparent);
-  }
-}
-.border-orange-500\/70 {
-  border-color: color-mix(in srgb, oklch(70.5% 0.213 47.604) 70%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-orange-500) 70%, transparent);
-  }
-}
-.border-purple-500\/30 {
-  border-color: color-mix(in srgb, oklch(62.7% 0.265 303.9) 30%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-purple-500) 30%, transparent);
-  }
-}
-.border-purple-500\/70 {
-  border-color: color-mix(in srgb, oklch(62.7% 0.265 303.9) 70%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-purple-500) 70%, transparent);
-  }
-}
-.border-white\/10 {
-  border-color: color-mix(in srgb, #fff 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-white) 10%, transparent);
-  }
-}
-.border-yellow-500\/30 {
-  border-color: color-mix(in srgb, oklch(79.5% 0.184 86.047) 30%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-yellow-500) 30%, transparent);
-  }
-}
-.border-yellow-500\/70 {
-  border-color: color-mix(in srgb, oklch(79.5% 0.184 86.047) 70%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--color-yellow-500) 70%, transparent);
-  }
 }
 .border-zinc-300 {
   border-color: var(--color-zinc-300);
@@ -783,12 +704,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     background-color: color-mix(in oklab, var(--color-black) 85%, transparent);
   }
 }
-.bg-blue-500\/10 {
-  background-color: color-mix(in srgb, oklch(62.3% 0.214 259.815) 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-blue-500) 10%, transparent);
-  }
-}
 .bg-dark {
   background-color: var(--color-dark);
 }
@@ -804,41 +719,11 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     background-color: color-mix(in oklab, var(--color-dark) 90%, transparent);
   }
 }
-.bg-green-500\/10 {
-  background-color: color-mix(in srgb, oklch(72.3% 0.219 149.579) 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-green-500) 10%, transparent);
-  }
-}
-.bg-orange-500\/10 {
-  background-color: color-mix(in srgb, oklch(70.5% 0.213 47.604) 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-orange-500) 10%, transparent);
-  }
-}
-.bg-purple-500\/10 {
-  background-color: color-mix(in srgb, oklch(62.7% 0.265 303.9) 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-purple-500) 10%, transparent);
-  }
-}
 .bg-transparent {
   background-color: transparent;
 }
 .bg-white {
   background-color: var(--color-white);
-}
-.bg-white\/5 {
-  background-color: color-mix(in srgb, #fff 5%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-white) 5%, transparent);
-  }
-}
-.bg-yellow-500\/10 {
-  background-color: color-mix(in srgb, oklch(79.5% 0.184 86.047) 10%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-yellow-500) 10%, transparent);
-  }
 }
 .bg-\[radial-gradient\(circle_at_top_right\,rgba\(0\,104\,71\,\.08\)\,transparent_35\%\)\,linear-gradient\(135deg\,rgba\(255\,255\,255\,\.02\)\,transparent\)\] {
   background-image: radial-gradient(circle at top right,rgba(0,104,71,.08),transparent 35%),linear-gradient(135deg,rgba(255,255,255,.02),transparent);
@@ -1003,9 +888,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .text-accent {
   color: var(--color-accent);
 }
-.text-blue-300 {
-  color: var(--color-blue-300);
-}
 .text-blue-400 {
   color: var(--color-blue-400);
 }
@@ -1021,26 +903,14 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .text-gray-600 {
   color: var(--color-gray-600);
 }
-.text-green-300 {
-  color: var(--color-green-300);
-}
 .text-green-400 {
   color: var(--color-green-400);
-}
-.text-orange-300 {
-  color: var(--color-orange-300);
-}
-.text-purple-300 {
-  color: var(--color-purple-300);
 }
 .text-red-400 {
   color: var(--color-red-400);
 }
 .text-white {
   color: var(--color-white);
-}
-.text-yellow-200 {
-  color: var(--color-yellow-200);
 }
 .text-yellow-300 {
   color: var(--color-yellow-300);
@@ -1289,11 +1159,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     margin-bottom: calc(var(--spacing) * 20);
   }
 }
-.md\:flex {
-  @media (width >= 48rem) {
-    display: flex;
-  }
-}
 .md\:h-20 {
   @media (width >= 48rem) {
     height: calc(var(--spacing) * 20);
@@ -1488,11 +1353,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .lg\:grid-cols-\[1\.05fr_\.95fr\] {
   @media (width >= 64rem) {
     grid-template-columns: 1.05fr .95fr;
-  }
-}
-.lg\:grid-cols-\[1\.15fr_\.85fr\] {
-  @media (width >= 64rem) {
-    grid-template-columns: 1.15fr .85fr;
   }
 }
 .lg\:grid-cols-\[1fr_380px\] {
