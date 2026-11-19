@@ -100,6 +100,8 @@ Harga awal (Start From): Starter **mulai Rp500.000**, Professional **mulai Rp1.5
 
 Penyempurnaan mobile, badge harga awal, dan tinggi kartu sejajar: [`docs/MOBILE_PRICING_REVIEW.md`](docs/MOBILE_PRICING_REVIEW.md).
 
+Audit UX 19 November 2026, perbaikan ikon workflow, navigasi katalog mobile, dan penyederhanaan konten: [`docs/UX_REVIEW_2026-11-19.md`](docs/UX_REVIEW_2026-11-19.md).
+
 Asset lokal di `/public/*` memakai cache browser 1 hari + `stale-while-revalidate` 7 hari. HTML tetap `must-revalidate` agar deploy baru tidak tertahan cache browser.
 
 ## Deployment

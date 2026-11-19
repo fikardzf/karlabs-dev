@@ -69,10 +69,10 @@ nav, #navbar, #navbar.nav-scrolled { background:rgba(255,255,255,.97)!important;
 section h2 { line-height:1.18!important; }
 #layanan, #harga, #kontak { background:var(--surface-soft)!important; }
 #demo, #proses, #faq { background:var(--surface)!important; }
-.offer-card, .demo-card, .problem-card { background:var(--surface); border-color:var(--line); }
+.offer-card, .demo-card { background:var(--surface); border-color:var(--line); }
 .offer-card { border-top:3px solid var(--accent); padding:1.75rem; }
 .offer-card h3, .demo-card h3 { font-size:1.5rem; font-weight:700; }
-.offer-card p, .demo-card p, .problem-card p { font-size:.93rem; }
+.offer-card p, .demo-card p { font-size:.93rem; }
 .offer-price { font-size:.93rem; }
 .offer-actions { width:100%; }
 .service-scope-label { font-size:.85rem; font-weight:550; color:var(--muted); }
@@ -80,8 +80,6 @@ section h2 { line-height:1.18!important; }
 #layanan .grid>a::after { display:none; }
 #layanan .grid>a:hover { transform:translateY(-3px)!important; box-shadow:var(--shadow)!important; border-color:var(--accent)!important; }
 #layanan .grid>a>div:first-child { background:var(--accent-soft)!important; border-color:var(--line); }
-.problem-card { background:var(--surface); }
-.problem-measure { color:var(--muted); }
 .process-index { color:var(--accent); font-size:3rem; }
 .process-card { background:var(--surface); border-color:var(--line); }
 .process-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); }
@@ -113,7 +111,9 @@ section h2 { line-height:1.18!important; }
 .package-details h4 { margin-top:.8rem; }
 .package-details-body { padding-bottom:.5rem; }
 .pricing-package-cta { margin-top:0; width:100%; padding:.8rem; text-align:center; }
-.package-comparison { margin-top:2.5rem; overflow-x:auto; border:1px solid var(--line); border-radius:.75rem; background:var(--surface); }
+.package-comparison-details { margin-top:1.5rem; padding-block:.5rem; border-block:1px solid var(--line); }
+.package-comparison-details>summary { min-height:44px; padding:.75rem 0; font-weight:600; }
+.package-comparison { margin-top:.75rem; overflow-x:auto; border:1px solid var(--line); border-radius:.75rem; background:var(--surface); }
 .package-comparison table { width:100%; min-width:680px; text-align:left; border-collapse:collapse; font-size:.9rem; line-height:1.7; }
 .package-comparison caption { text-align:left; padding:1.25rem; font-size:1.1rem; color:var(--ink); font-weight:650; }
 .package-comparison :is(th,td) { padding:1rem; border-top:1px solid var(--line); vertical-align:top; }
@@ -151,6 +151,19 @@ footer a { min-height:44px; }
 .catalog-hero .catalog-title { font-size:clamp(2rem,4vw,3.3rem); font-weight:750; line-height:1.15; text-wrap:balance; }
 .catalog-hero>p:last-child, .showroom-note, .guide-instructions :is(p,ol), .discovery-links span { color:var(--muted); }
 .catalog-skip, .skip-link { background:var(--ink); color:#fff; }
+.no-js-navigation { display:flex; flex-wrap:wrap; gap:.5rem 1rem; padding:5.5rem 1rem 0; }
+.no-js-navigation a { display:inline-flex; align-items:center; min-height:44px; color:var(--accent); text-decoration:underline; }
+.catalog-mobile-nav>summary { min-height:44px; padding:.6rem .85rem; border:1px solid var(--control-line); border-radius:.65rem; font-size:.9rem; font-weight:600; }
+.catalog-mobile-nav[open]>summary { background:var(--accent-soft); }
+.catalog-mobile-nav>div { position:absolute; right:1rem; top:calc(100% + .5rem); width:min(20rem,calc(100vw - 2rem)); max-height:calc(100dvh - 6rem); overflow-y:auto; padding:.5rem; background:var(--surface); border:1px solid var(--control-line); border-radius:.75rem; box-shadow:var(--shadow); }
+.catalog-mobile-nav a { display:flex; align-items:center; min-height:48px; padding:.7rem 1rem; border-radius:.4rem; color:var(--ink); }
+.catalog-mobile-nav a:hover, .catalog-mobile-nav a[aria-current] { background:var(--accent-soft); color:var(--accent); }
+.workflow-reference-icon { display:grid; place-items:center; flex:none; width:44px; height:44px; border-radius:.65rem; background:var(--accent-soft); font:1.5rem/1 'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif; }
+.workflow-catalog-card[aria-pressed="true"] { border-color:var(--accent)!important; background:var(--accent-soft)!important; }
+.workflow-summary { margin-block:1rem; color:var(--muted); font-size:.95rem; line-height:1.7; }
+.workflow-outcomes { margin-top:1.5rem; border-top:1px solid var(--line); padding-top:1rem; }
+.workflow-outcomes h4 { font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+.workflow-outcomes ul { list-style:disc; padding-left:1.25rem; color:var(--muted); line-height:1.8; font-size:.9rem; }
 .catalog-packages { max-width:1200px; padding:2rem 1.5rem; margin:2rem auto; border-top:1px solid var(--line); }
 .catalog-packages h2 { font-size:1.6rem; font-weight:700; margin-bottom:1rem; }
 .catalog-packages p { line-height:1.9; color:var(--muted); }
@@ -242,9 +255,7 @@ dialog::backdrop { background:rgba(15,23,42,.45); }
   .offer-card, .demo-card { padding:1rem; }
   .offer-card h3, .demo-card h3 { font-size:1.25rem; margin:.5rem 0; }
   .offer-card p, .demo-card p { line-height:1.65; }
-  .offer-grid, .demo-grid, .problem-grid { gap:.75rem; }
-  .problem-block { margin-top:1.5rem; }
-  .problem-card { padding:1rem; }
+  .offer-grid, .demo-grid { gap:.75rem; }
   .demo-step { padding:.75rem; margin:.75rem 0; }
   .consultation-strip { padding:1rem; margin-top:1.25rem; gap:.75rem; }
   .process-step { padding-bottom:1.25rem; }
@@ -257,7 +268,7 @@ dialog::backdrop { background:rgba(15,23,42,.45); }
   .package-grid { gap:1rem; }
   .brand-logo { width:48px; height:48px; }
   .brand-name { font-size:1.1rem; }
-  .catalog-brand .brand-name { display:none; }
+  .catalog-brand .brand-name { display:inline; }
   .package-card, .package-premium { padding:1rem; }
   .package-card h3 { font-size:1.18rem; margin:.4rem 0; }
   .package-price { margin:.75rem 0; font-size:1.85rem; }
@@ -267,7 +278,6 @@ dialog::backdrop { background:rgba(15,23,42,.45); }
   .package-limit, .premium-limit { padding:.75rem; margin:1rem 0; line-height:1.65; }
   .package-card>.package-details { margin-top:0; margin-bottom:.75rem; }
   .package-details summary { min-height:44px; padding:.7rem 0; }
-  .package-comparison { margin-top:1.5rem; }
   .package-comparison :is(th,td) { padding:.75rem; }
   .package-comparison caption { padding:1rem; }
   .faq-list { margin-top:1.25rem; }

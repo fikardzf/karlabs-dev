@@ -98,7 +98,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Compiled Tailwind CSS (v2.9.0 production build) -->
-    <link rel="stylesheet" href="./public/tailwind.css?v=20261118-light-1">
+    <link rel="stylesheet" href="./public/tailwind.css?v=20261119-ux-1">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.min.js" integrity="sha384-v15JX+vZHMR3T6LQR9N6e6wIKrKOdNTbdj8j+e5irqq3L9gCauJz2vGlUzomWyUp" crossorigin="anonymous" defer></script>
@@ -107,8 +107,8 @@
     <link rel="icon" href="public/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="public/brand/apple-touch-icon.png" sizes="180x180">
 
-    <link rel="stylesheet" href="public/home.css?v=20261118-light-1">
-    <link rel="stylesheet" href="public/site.css?v=20261118-copy-1">
+    <link rel="stylesheet" href="public/home.css?v=20261119-ux-1">
+    <link rel="stylesheet" href="public/site.css?v=20261119-ux-1">
     <!-- KAR Labs Full Visual Theme Migration Patch v2.0.0 -->
 </head>
 <body class="font-body">
@@ -125,11 +125,10 @@
 
                 <!-- Desktop Nav -->
                 <div class="hidden lg:flex items-center gap-8">
-                    <a href="#layanan" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Layanan</a>
+                    <a href="#layanan" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Solusi</a>
                     <a href="#demo" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Demo</a>
                     <a href="#harga" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Harga</a>
-                    <a href="#faq" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">FAQ</a>
-                    <a href="#kontak" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Kontak</a>
+                    <a href="#kontak" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Konsultasi</a>
                 </div>
 
                 <!-- CTA Button -->
@@ -157,15 +156,14 @@
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
                 <div class="flex flex-col gap-6 mt-12">
-                    <a href="#layanan" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Layanan</a>
+                    <a href="#layanan" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Solusi</a>
                     <a href="#demo" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Demo interaktif</a>
                     <a href="#harga" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Harga</a>
-                    <a href="#faq" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">FAQ</a>
-                    <a href="#kontak" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Kontak</a>
+                    <a href="#kontak" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Konsultasi</a>
                     <hr class="border-dark-border my-4">
-                    <a href="#kontak" class="btn-primary-theme">
+                    <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20ingin%20konsultasi%20katalog%20produk%20atau%20automasi." target="_blank" rel="noopener noreferrer" class="btn-primary-theme">
                         <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        Bahas Kebutuhan
+                        WhatsApp langsung
                     </a>
                 </div>
             </div>
@@ -176,6 +174,7 @@
     </nav>
 
     <main id="main-content" tabindex="-1">
+        <noscript><nav class="no-js-navigation" aria-label="Navigasi halaman"><a href="#layanan">Solusi</a><a href="#demo">Demo</a><a href="#harga">Harga</a><a href="#kontak">Konsultasi</a></nav></noscript>
         <!-- ==================== HERO SECTION ==================== -->
         <section id="hero" class="hero-shell" aria-labelledby="hero-title">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
@@ -239,7 +238,7 @@
                     <article class="offer-card" aria-labelledby="catalog-offer-title">
                         <span class="offer-label">Produk lebih mudah ditemukan</span>
                         <h3 id="catalog-offer-title">Website Katalog Produk</h3>
-                        <p>Satu tautan untuk melihat produk, memilih varian, dan bertanya melalui WhatsApp.</p>
+                        <p>Masih mengirim foto produk berulang kali? Bagikan satu katalog agar pelanggan bisa memilih sebelum bertanya melalui WhatsApp.</p>
                         <ul class="offer-list">
                             <li>Susunan brand, kategori, dan detail produk</li>
                             <li>Tampilan yang nyaman dibuka dari ponsel</li>
@@ -254,11 +253,11 @@
                     <article class="offer-card" aria-labelledby="automation-offer-title">
                         <span class="offer-label">Administrasi lebih terarah</span>
                         <h3 id="automation-offer-title">Business Automation</h3>
-                        <p>Hubungkan pencatatan pesanan, rekap, atau pengingat melalui satu alur sederhana.</p>
+                        <p>Pesanan dicatat ulang, data tersebar, atau tindak lanjut terlewat? Mulai dari satu alur pencatatan, rekap, atau pengingat.</p>
                         <ul class="offer-list">
                             <li>Pemetaan proses yang masih dikerjakan manual</li>
-                            <li>Alur trigger, aksi, dan output sesuai kebutuhan</li>
-                            <li>Integrasi ditentukan sesuai platform dan scope</li>
+                            <li>Pemicu, langkah, dan hasil sesuai kebutuhan</li>
+                            <li>Integrasi mengikuti platform dan cakupan</li>
                         </ul>
                         <p class="offer-price"><strong>Premium mulai <span data-package-price="premium">Rp3.000.000</span> - maks. 1 workflow sederhana</strong> · Kebutuhan integrasi dibahas di awal.</p>
                         <div class="offer-actions">
@@ -267,39 +266,9 @@
                         </div>
                     </article>
                 </div>
-                <div class="problem-block" aria-labelledby="problem-title">
-                    <h3 id="problem-title">Solusi untuk pekerjaan sehari-hari.</h3>
-                    <div class="problem-grid">
-                        <article class="problem-card">
-                            <span class="offer-label">Produk &amp; pertanyaan pelanggan</span>
-                            <h4>Mengirim foto produk berulang kali?</h4>
-                            <p class="problem-solution">Bagikan katalog berisi kategori dan detail produk.</p>
-                            <p class="problem-measure"><b>Evaluasi:</b> pertanyaan produk yang masih perlu dijawab admin.</p>
-                        </article>
-                        <article class="problem-card">
-                            <span class="offer-label">Administrasi order</span>
-                            <h4>Pesanan masih dicatat ulang?</h4>
-                            <p class="problem-solution">Susun alur pencatatan sesuai platform usaha.</p>
-                            <p class="problem-measure"><b>Evaluasi:</b> input ulang dan waktu penanganan pesanan.</p>
-                        </article>
-                        <article class="problem-card">
-                            <span class="offer-label">Data bisnis</span>
-                            <h4>Data penjualan tersebar?</h4>
-                            <p class="problem-solution">Satukan data dalam rekap yang terstruktur.</p>
-                            <p class="problem-measure"><b>Evaluasi:</b> kelengkapan data dan waktu penyusunan rekap.</p>
-                        </article>
-                        <article class="problem-card">
-                            <span class="offer-label">Tugas operasional</span>
-                            <h4>Tindak lanjut mudah terlewat?</h4>
-                            <p class="problem-solution">Atur pengingat dan langkah persetujuan admin.</p>
-                            <p class="problem-measure"><b>Evaluasi:</b> tugas tertunda dan konsistensi tindak lanjut.</p>
-                        </article>
-                    </div>
-                    <p class="hero-note mt-4">Hasil dievaluasi dari proses usaha Anda, tanpa janji peningkatan tertentu.</p>
-                </div>
                 <details class="supporting-services">
                     <summary>Jelajahi layanan lainnya</summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Service Card 1 -->
                     <a href="catalog.html#landing" aria-label="Lihat preview Landing Page" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
                         <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
@@ -308,21 +277,6 @@
                         <h3 class="font-heading text-xl font-semibold mb-3">Landing Page</h3>
                         <p class="text-gray-400 text-sm leading-relaxed mb-5">
                             Halaman promosi untuk profil usaha, produk, atau kampanye.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card: Website Katalog Produk -->
-                    <a href="catalog.html#product-catalog" aria-label="Lihat preview Website Katalog Produk" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="shopping-bag" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Website Katalog Produk</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Kategori, detail produk, dan tautan WhatsApp dalam satu katalog.
                         </p>
                         <div class="flex items-center justify-between mt-auto pt-3">
                             <span class="service-scope-label">Scope dan penawaran terpisah</span>
@@ -385,21 +339,6 @@
                         </p>
                         <div class="flex items-center justify-between mt-auto pt-3">
                             <span class="service-scope-label">Penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card 6 -->
-                    <a href="catalog.html#workflow" aria-label="Lihat preview Automasi Workflow" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="zap" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Automasi Workflow</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Alur otomatis untuk mengurangi pekerjaan admin yang berulang.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
                             <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </div>
                     </a>
@@ -547,14 +486,14 @@
     <div class="package-overview"><header><p class="package-tier">Premium</p><h3 id="package-premium-title">Website &amp; automasi</h3><p class="package-price"><span class="package-start-label" lang="en">Start From</span><span>Rp3.000.000</span></p><p>Untuk usaha yang membutuhkan website khusus dan satu alur automasi sederhana.</p></header>
     <h4>Cakupan paket</h4><ul><li>Website dan katalog sesuai kebutuhan</li><li>Fungsi khusus yang dipilih dalam proposal</li><li>Maksimal 1 workflow sederhana setelah dinilai layak</li><li>Integrasi dasar dengan alat yang didukung, bila memungkinkan</li><li>Alur, hasil, dan batas pekerjaan disepakati tertulis</li></ul>
     <p class="premium-limit">Maksimal 1 workflow sederhana yang disepakati bersama.</p>
-    </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><p class="premium-limit">Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah.</p><h4>Opsional · penawaran terpisah</h4><ul><li>Workflow, fitur, atau integrasi tambahan: analisis dan penawaran terpisah</li></ul><h4>Tidak otomatis termasuk</h4><ul><li>ERP, CRM lengkap, backend custom, infrastruktur kompleks, atau dashboard enterprise</li><li>AI agent kompleks, training/fine-tuning model, dan integrasi AI API tingkat lanjut</li><li>Automasi lintas departemen, banyak workflow mandiri, atau integrasi API tanpa batas</li><li>Aplikasi mobile custom, database skala besar, payment gateway kompleks, atau autentikasi enterprise</li><li>Monitoring automasi terus-menerus, revisi unlimited, atau support seumur hidup</li></ul></div></details>
+    </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4><ul><li>Workflow, fitur, atau integrasi tambahan: analisis dan penawaran terpisah</li></ul><h4>Tidak otomatis termasuk</h4><ul><li>ERP, CRM lengkap, backend custom, infrastruktur kompleks, atau dashboard enterprise</li><li>AI agent kompleks, training/fine-tuning model, dan integrasi AI API tingkat lanjut</li><li>Automasi lintas departemen, banyak workflow mandiri, atau integrasi API tanpa batas</li><li>Aplikasi mobile custom, database skala besar, payment gateway kompleks, atau autentikasi enterprise</li><li>Monitoring automasi terus-menerus, revisi unlimited, atau support seumur hidup</li></ul></div></details>
     <a class="pricing-package-cta btn-primary-theme" href="index.html?package=premium#contact-form" data-inquiry-package="Premium">Bahas Paket Premium</a>
-  </article></div><div class="package-comparison" role="region" aria-label="Perbandingan paket, geser tabel pada layar kecil" tabindex="0"><table><caption>Perbandingan paket</caption><thead><tr><th scope="col">Cakupan</th><th scope="col">Starter</th><th scope="col">Professional</th><th scope="col">Premium</th></tr></thead><tbody><tr><th scope="row">Harga mulai dari</th><td>Mulai Rp500.000</td><td>Mulai Rp1.500.000</td><td>Mulai Rp3.000.000</td></tr><tr><th scope="row">Kebutuhan utama</th><td>Presentasi website / produk dasar</td><td>Website dan katalog lebih lengkap</td><td>Website personal dan fungsi terpilih</td></tr><tr><th scope="row">Kategori, pencarian / filter</th><td>Informasi produk standar</td><td>Bila sesuai data dan kebutuhan</td><td>Custom sesuai proposal</td></tr><tr><th scope="row">Workflow automasi</th><td>Tidak termasuk</td><td>Penawaran terpisah</td><td>Maksimal 1 workflow sederhana yang disepakati</td></tr><tr><th scope="row">ERP, CRM lengkap, AI kompleks</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Penawaran terpisah; bukan isi otomatis paket</td></tr><tr><th scope="row">Integrasi / fitur tambahan</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Integrasi dasar terpilih bila layak; sisanya ditawarkan terpisah</td></tr><tr><th scope="row">Domain, hosting, lisensi dan API</th><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td></tr><tr><th scope="row">Revisi, jadwal dan support</th><td>Disepakati tertulis</td><td>Disepakati tertulis</td><td>Disepakati tertulis; bukan unlimited / seumur hidup</td></tr><tr><th scope="row">Maintenance dan monitoring</th><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td></tr></tbody></table></div><p class="commercial-notice">Fitur di luar paket dinilai dan ditawarkan terpisah.</p><p class="commercial-notice">Jumlah halaman dan produk, materi, revisi, jadwal, serah terima, serta dukungan disepakati tertulis. Domain, hosting, lisensi, API, langganan pihak ketiga, dan maintenance belum otomatis termasuk.</p>
+  </article></div><p class="commercial-notice premium-scope-notice">Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah.</p><details class="package-comparison-details"><summary>Bandingkan rincian paket</summary><p class="showroom-note">Pada layar kecil, geser tabel untuk melihat semua paket.</p><div class="package-comparison" role="region" aria-label="Perbandingan paket, geser tabel pada layar kecil" tabindex="0"><table><caption>Perbandingan paket</caption><thead><tr><th scope="col">Cakupan</th><th scope="col">Starter</th><th scope="col">Professional</th><th scope="col">Premium</th></tr></thead><tbody><tr><th scope="row">Harga mulai dari</th><td>Mulai Rp500.000</td><td>Mulai Rp1.500.000</td><td>Mulai Rp3.000.000</td></tr><tr><th scope="row">Kebutuhan utama</th><td>Presentasi website / produk dasar</td><td>Website dan katalog lebih lengkap</td><td>Website personal dan fungsi terpilih</td></tr><tr><th scope="row">Kategori, pencarian / filter</th><td>Informasi produk standar</td><td>Bila sesuai data dan kebutuhan</td><td>Custom sesuai proposal</td></tr><tr><th scope="row">Workflow automasi</th><td>Tidak termasuk</td><td>Penawaran terpisah</td><td>Maksimal 1 workflow sederhana yang disepakati</td></tr><tr><th scope="row">ERP, CRM lengkap, AI kompleks</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Penawaran terpisah; bukan isi otomatis paket</td></tr><tr><th scope="row">Integrasi / fitur tambahan</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Integrasi dasar terpilih bila layak; sisanya ditawarkan terpisah</td></tr><tr><th scope="row">Domain, hosting, lisensi dan API</th><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td></tr><tr><th scope="row">Revisi, jadwal dan support</th><td>Disepakati tertulis</td><td>Disepakati tertulis</td><td>Disepakati tertulis; bukan unlimited / seumur hidup</td></tr><tr><th scope="row">Maintenance dan monitoring</th><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td></tr></tbody></table></div></details><p class="commercial-notice">Fitur di luar paket dinilai dan ditawarkan terpisah.</p><p class="commercial-notice">Jumlah halaman dan produk, materi, revisi, jadwal, serah terima, serta dukungan disepakati tertulis. Domain, hosting, lisensi, API, langganan pihak ketiga, dan maintenance belum otomatis termasuk.</p>
 <!-- packages:end --></div></section>
 
         <!-- ==================== FAQ SECTION ==================== -->
         <section id="faq" class="py-20 md:py-28" aria-labelledby="faq-title"><div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"><div class="section-heading"><p class="section-kicker">Sebelum mulai</p><h2 id="faq-title">Pertanyaan tentang paket<br>dan pengerjaan.</h2></div><!-- package-faq:start -->
-<div class="faq-list"><div class="faq-item"><h3><button class="faq-trigger"><span>Apa perbedaan setiap paket?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Starter mulai Rp500.000 untuk website dasar. Professional mulai Rp1.500.000 untuk katalog lebih lengkap. Premium mulai Rp3.000.000 untuk website khusus dan maksimal 1 workflow sederhana yang disepakati. Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah harga termasuk domain dan hosting?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Domain, hosting, lisensi, API, dan langganan pihak ketiga belum otomatis termasuk. Pilihan layanan, kepemilikan akun, biaya awal dan perpanjangan dikonfirmasi pada penawaran.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah Premium termasuk ERP atau CRM?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>ERP, CRM lengkap, backend kompleks, database skala besar, aplikasi mobile, payment gateway kompleks, dan autentikasi enterprise memerlukan penawaran terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah paket Premium termasuk integrasi AI?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>AI agent kompleks, training atau fine-tuning model, dan integrasi AI API tingkat lanjut tidak otomatis termasuk. Jika dibutuhkan, kelayakan teknis, izin, biaya API, dan scope dibahas melalui penawaran terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Berapa workflow automasi yang termasuk?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Premium mencakup maksimal 1 workflow sederhana yang dinilai layak: satu pemicu, aksi berurutan, pemetaan data standar, dan integrasi yang didukung. Alurnya didokumentasikan dan disetujui tertulis. Automasi untuk Starter dan Professional ditawarkan terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana jika membutuhkan fitur tambahan?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Fitur di luar paket dinilai dan ditawarkan terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana biaya maintenance?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Maintenance, pemantauan automasi, pembaruan konten, dan perpanjangan layanan belum otomatis termasuk. Biaya, periode, serta cakupan dukungan mengikuti perjanjian terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana ketentuan revisi dan pengerjaan?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Cakupan, hasil, revisi, jadwal, pembayaran, dan dukungan disepakati tertulis. Perbaikan bug dibedakan dari perubahan kebutuhan. Revisi dan dukungan memiliki batas sesuai kesepakatan.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah demo terhubung ke sistem nyata?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Demo memakai data contoh di browser. Integrasi nyata membutuhkan layanan yang mendukung, akses akun, izin, dan pembahasan biaya tambahan.</p></div></div></div>
+<div class="faq-list"><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana menentukan biaya akhir?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati. Jumlah halaman, produk, fitur, dan integrasi dirinci dalam penawaran tertulis sebelum pengerjaan.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah harga termasuk domain dan hosting?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Domain, hosting, lisensi, API, dan langganan pihak ketiga belum otomatis termasuk. Pilihan layanan, kepemilikan akun, biaya awal dan perpanjangan dikonfirmasi pada penawaran.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apa batas automasi pada paket Premium?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah. Satu workflow berarti satu pemicu dengan aksi berurutan dan integrasi yang didukung. Automasi untuk Starter dan Professional ditawarkan terpisah. Rincian pengecualian tersedia pada setiap kartu paket.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana biaya maintenance?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Maintenance, pemantauan automasi, pembaruan konten, dan perpanjangan layanan belum otomatis termasuk. Biaya, periode, serta cakupan dukungan mengikuti perjanjian terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana ketentuan revisi dan pengerjaan?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Cakupan, hasil, revisi, jadwal, pembayaran, dan dukungan disepakati tertulis. Perbaikan bug dibedakan dari perubahan kebutuhan. Revisi dan dukungan memiliki batas sesuai kesepakatan.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah demo terhubung ke sistem nyata?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Demo memakai data contoh di browser. Integrasi nyata membutuhkan layanan yang mendukung, akses akun, izin, dan pembahasan biaya tambahan.</p></div></div></div>
 <!-- package-faq:end --></div></section>
 
         <!-- ==================== KONTAK / LEAD FORM SECTION ==================== -->
@@ -755,9 +694,9 @@
 
     <!-- ==================== JAVASCRIPT ==================== -->
     <script src="./public/lead-events.js?v=20261118-light-1" defer></script>
-    <script src="./public/index.js?v=20261118-light-1" defer></script>
+    <script src="./public/index.js?v=20261119-ux-1" defer></script>
     <script src="public/packages.js?v=20261118-copy-1" defer></script>
     <script src="./public/consultation.js?v=20261118-compact-1" defer></script>
-    <script src="public/site.js?v=20261118-copy-1" defer></script>
+    <script src="public/site.js?v=20261119-ux-1" defer></script>
 </body>
 </html>

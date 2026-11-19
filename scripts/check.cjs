@@ -1,4 +1,5 @@
 const fs = require('fs');
+const vm = require('node:vm');
 
 const requiredFiles = [
   'index.html', 'catalog.html', 'package.json', 'netlify.toml', 'robots.txt', 'sitemap.xml',
@@ -43,6 +44,15 @@ for (const [file, html] of [['index.html', indexHtml], ['catalog.html', catalogH
 }
 if (!/<script src=["']\.\/public\/consultation\.js\?v=[a-z0-9.-]+["'] defer/i.test(indexHtml)) fail('Versioned consultation module missing');
 const coreJs = read('public/catalog-core.js');
+try {
+  const workflows = vm.runInNewContext(read('public/catalog-workflow.js') + ';workflowCatalog', {}, { timeout:1000 });
+  if (Object.keys(workflows).length !== 7) fail('Expected seven workflow references');
+  for (const [id, workflow] of Object.entries(workflows)) {
+    if (!workflow.icon?.trim()) fail(`Workflow reference icon missing: ${id}`);
+    if ('metrics' in workflow || 'time' in workflow) fail(`Unverified workflow metrics or delivery estimate: ${id}`);
+    if (!workflow.nodes.length || workflow.nodes.some(node => !node.title || !node.output)) fail(`Incomplete workflow steps: ${id}`);
+  }
+} catch (error) { fail('Workflow data validation failed: ' + error.message); }
 const initJs = read('public/catalog-init.js');
 const netlify = read('netlify.toml');
 const pkg = JSON.parse(read('package.json'));
