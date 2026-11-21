@@ -4,7 +4,9 @@ const path = require('path');
 const root = process.cwd();
 const dist = path.join(root, 'dist');
 const filesToCopy = ['index.html', 'catalog.html', 'robots.txt', 'sitemap.xml'];
+const { projects } = require('../config/portfolio.cjs');
 const dirsToCopy = ['public'];
+filesToCopy.push('portfolio/index.html', ...projects.map(p => 'portfolio/' + p.slug + '/index.html'));
 
 function rmDir(target) {
   if (fs.existsSync(target)) fs.rmSync(target, { recursive: true, force: true });

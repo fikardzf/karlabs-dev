@@ -5,7 +5,7 @@
     const events = new Set(['whatsapp_cta_clicked', 'contact_form_started', 'contact_form_handoff_clicked', 'service_selected', 'consultation_cta_clicked', 'catalog_viewed', 'demo_interacted']);
     const services = new Set(['product-catalog', 'workflow', 'landing', 'chatbot', 'calculator', 'dashboard', 'pos', 'scraping', 'help', 'other']);
     const placements = new Set(['header', 'hero', 'mobile', 'service', 'pricing', 'catalog', 'contact', 'footer', 'context', 'unknown']);
-    const page = /\/catalog(?:\.html)?\/?$/.test(location.pathname) ? 'catalog' : 'home';
+    const page = /^(?:\/catalog(?:\.html)?\/?|\/portfolio\/[a-z0-9-]+\/?)$/.test(location.pathname) ? 'catalog' : 'home';
     const demoActions = new Map([
         ['product_detail', 'product-catalog'], ['product_filter', 'product-catalog'],
         ['workflow_guide', 'workflow'], ['workflow_preset', 'workflow'],

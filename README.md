@@ -17,6 +17,16 @@ http://localhost:5173/
 http://localhost:5173/catalog.html
 ```
 
+## Galeri dan halaman demo
+
+Rute, hasil pengujian dan tangkapan layar tersedia dalam [laporan serah terima showroom](docs/PORTFOLIO_HANDOFF.md).
+
+Hasil per persona, scorecard sebelum dan sesudah, serta cara menjalankan uji Chromium dan WebKit tersedia dalam [audit pengalaman final](docs/AUDIT_PENGALAMAN_FINAL.md).
+
+Beranda menampilkan galeri. Jalur `/portfolio/` membuka indeks dan `/portfolio/<slug>/` membuka satu demo. URL menyimpan kategori aktif melalui `?filter=` dan pilihan galeri melalui `?project=`.
+
+Urutan, kategori, teks, nama modul dan fungsi inisialisasi berasal dari `config/portfolio.cjs`. Untuk menambahkan demo, daftarkan panel dari `catalog.html` dan modulnya, lalu simpan sampul 4:3 di `public/portfolio-art/<slug>.webp`. Jika ada dialog terpisah, tandai bloknya dengan komentar `canvas-dialog:<nama>` seperti contoh POS. Jalankan `npm run build:content`. Generator mengisi blok galeri pada beranda dan menghasilkan direktori `portfolio/` dari `templates/project.html`. Edit sumber panel atau templat untuk mengubah hasilnya.
+
 ## Production checks
 
 Sebelum deploy jalankan:
@@ -51,8 +61,8 @@ Output production: `dist/`.
 
 ## Production architecture
 
-- `index.html` — landing page utama
-- `catalog.html` — katalog/demo interaktif
+- `index.html` — galeri demo, harga dan formulir konsultasi
+- `catalog.html` — katalog interaktif dan tautan hash lama
 - `public/tailwind.css` — generated Tailwind production CSS
 - `public/index.js` — interaction script homepage yang cacheable
 - `public/home.css` — styling komponen homepage, diekstrak dari inline CSS
@@ -81,8 +91,8 @@ Folder `src/`, konfigurasi Vite/TypeScript/PostCSS, dan scaffold terkait masih d
 Runtime website sekarang memakai CDN hanya untuk:
 
 - Chart.js **4.5.1 pinned + lazy-loaded** — baru di-download ketika Calculator/Dashboard dibuka
-- Lucide Icons **1.47.0 pinned, minified, SRI + defer-loaded**
-- Google Fonts — satu request gabungan dengan `preconnect` dan `display=swap`
+- Lucide Icons **1.47.0**, minified dengan SRI. Beranda memuatnya saat pengunjung membuka informasi paket, FAQ, atau konsultasi.
+- Galeri, indeks dan identitas canvas memakai sans-serif sistem. Katalog lama dan beberapa pratinjau landing page masih menggunakan Google Fonts.
 
 **Tailwind Play CDN sudah dihapus dari runtime sejak v2.9.0.** Tailwind utility CSS di-compile secara lokal menjadi `public/tailwind.css` saat `npm run dev`, `npm run build:css`, atau `npm run build` dijalankan.
 

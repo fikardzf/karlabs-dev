@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <style>@media (prefers-reduced-motion:no-preference) { @view-transition { navigation:auto; } }</style>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Katalog Produk & Automasi UMKM | KAR Labs.dev</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Galeri Demo Website & Automasi UMKM | KAR Labs.dev</title>
     <meta name="description" content="Website katalog produk dan automasi bisnis untuk UMKM Indonesia. Lihat demo, bantu pelanggan memilih produk, lalu lanjutkan konsultasi lewat WhatsApp.">
     <meta name="theme-color" content="#ffffff">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://karlabs-dev.netlify.app/">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Website Katalog Produk & Automasi UMKM | KAR Labs.dev">
+    <meta property="og:title" content="Galeri Demo Website & Automasi UMKM | KAR Labs.dev">
     <meta property="og:description" content="Website katalog produk dan automasi bisnis untuk UMKM. Coba demo, lalu konsultasikan kebutuhan usaha Anda melalui WhatsApp.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://karlabs-dev.netlify.app/">
@@ -23,7 +24,7 @@
 
     <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Website Katalog Produk & Automasi UMKM | KAR Labs.dev">
+    <meta name="twitter:title" content="Galeri Demo Website & Automasi UMKM | KAR Labs.dev">
     <meta name="twitter:description" content="Website katalog produk dan automasi bisnis untuk UMKM. Lihat demo dan konsultasikan kebutuhan lewat WhatsApp.">
     <meta name="twitter:image" content="https://karlabs-dev.netlify.app/public/karlabs-social-preview.png?v=20261118-light-1">
     <meta name="twitter:image:alt" content="KAR Labs — katalog produk, automasi bisnis, dan website untuk UMKM">
@@ -91,17 +92,16 @@
 }
 </script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Compiled Tailwind CSS (v2.9.0 production build) -->
-    <link rel="stylesheet" href="./public/tailwind.css?v=20261119-ux-1">
+    <!-- portfolio-preload:start -->
+<link rel="preload" as="image" href="/public/portfolio-art/product-catalog.webp" imagesrcset="/public/portfolio-art/product-catalog-480.webp 480w, /public/portfolio-art/product-catalog-640.webp 640w, /public/portfolio-art/product-catalog.webp 960w" imagesizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" fetchpriority="high">
+<!-- portfolio-preload:end -->
+    <link rel="stylesheet" href="./public/tailwind.css?v=20261121-gallery">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.min.js" integrity="sha384-v15JX+vZHMR3T6LQR9N6e6wIKrKOdNTbdj8j+e5irqq3L9gCauJz2vGlUzomWyUp" crossorigin="anonymous" defer></script>
+    <script src="/public/portfolio-gallery.js?v=4" defer></script>
+    <template id="consultation-icons">
+        <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.min.js" integrity="sha384-v15JX+vZHMR3T6LQR9N6e6wIKrKOdNTbdj8j+e5irqq3L9gCauJz2vGlUzomWyUp" crossorigin="anonymous" defer></script>
+    </template>
 
     <!-- Favicon -->
     <link rel="icon" href="public/favicon.svg" type="image/svg+xml">
@@ -110,393 +110,112 @@
     <link rel="stylesheet" href="public/home.css?v=20261119-ux-1">
     <link rel="stylesheet" href="public/site.css?v=20261119-ux-1">
     <!-- KAR Labs Full Visual Theme Migration Patch v2.0.0 -->
+    <link rel="stylesheet" href="/public/portfolio.css?v=4">
 </head>
 <body class="font-body">
     <a href="#main-content" class="skip-link">Lewati ke konten utama</a>
-    <div class="site-backdrop" aria-hidden="true"></div>
-    <!-- ==================== NAVBAR ==================== -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 md:h-20">
-                <!-- Logo -->
-                <a href="#hero" class="brand-link flex items-center gap-3 text-xl md:text-2xl font-heading font-bold uppercase tracking-wide">
-                    <img class="brand-logo" src="public/brand/karlabs-logo-96.webp" srcset="public/brand/karlabs-logo-96.webp 1x, public/brand/karlabs-logo-192.webp 2x" width="56" height="56" alt="KAR Labs" decoding="async"><span class="brand-name" aria-hidden="true">KAR Labs<span>.dev</span></span>
-                </a>
-
-                <!-- Desktop Nav -->
-                <div class="hidden lg:flex items-center gap-8">
-                    <a href="#layanan" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Solusi</a>
-                    <a href="#demo" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Demo</a>
-                    <a href="#harga" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Harga</a>
-                    <a href="#kontak" class="nav-link relative text-gray-300 hover:text-white transition-colors text-sm font-medium">Konsultasi</a>
-                </div>
-
-                <!-- CTA Button -->
-                <div class="hidden lg:block">
-                    <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20ingin%20konsultasi%20gratis%20katalog%20produk%20atau%20automasi%20untuk%20usaha%20saya." class="btn-primary-theme" target="_blank" rel="noopener noreferrer" aria-label="Konsultasi Gratis via WhatsApp">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        Konsultasi Gratis
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="mobile-menu" class="lg:hidden flex flex-col gap-1.5 p-2">
-                    <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-                    <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-                    <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu navigasi" aria-hidden="true" inert class="mobile-menu fixed top-0 right-0 bottom-0 w-72 bg-dark-card z-50 shadow-2xl">
-            <div class="p-6">
-                <img src="public/brand/karlabs-logo-96.webp" width="72" height="72" alt="KAR Labs" class="menu-logo">
-                <button id="close-menu" type="button" aria-label="Tutup menu" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-                <div class="flex flex-col gap-6 mt-12">
-                    <a href="#layanan" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Solusi</a>
-                    <a href="#demo" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Demo interaktif</a>
-                    <a href="#harga" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Harga</a>
-                    <a href="#kontak" class="mobile-nav-link text-lg text-gray-300 hover:text-accent transition-colors">Konsultasi</a>
-                    <hr class="border-dark-border my-4">
-                    <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20ingin%20konsultasi%20katalog%20produk%20atau%20automasi." target="_blank" rel="noopener noreferrer" class="btn-primary-theme">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        WhatsApp langsung
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Overlay -->
-        <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
-    </nav>
-
+    <!-- portfolio-header:start -->
+<header class="studio-header">
+  <a class="studio-brand" href="/" aria-label="KAR Labs.dev — Beranda"><img src="/public/brand/karlabs-logo-96.webp" alt="KAR Labs" width="42" height="42"><span>KAR Labs<span>.dev</span></span></a>
+  <nav aria-label="Navigasi utama"><a class="index-link" aria-label="Indeks demo" href="/portfolio/"><span class="grid-symbol" aria-hidden="true"></span><span>Indeks demo</span></a><a class="price-link" href="/#harga">Paket &amp; harga</a></nav>
+  <a class="consult-link" data-lead-placement="header" href="https://wa.me/6285777345985" target="_blank" rel="noopener noreferrer">Konsultasi Gratis</a>
+</header>
+<!-- portfolio-header:end -->
     <main id="main-content" tabindex="-1">
-        <noscript><nav class="no-js-navigation" aria-label="Navigasi halaman"><a href="#layanan">Solusi</a><a href="#demo">Demo</a><a href="#harga">Harga</a><a href="#kontak">Konsultasi</a></nav></noscript>
-        <!-- ==================== HERO SECTION ==================== -->
-        <section id="hero" class="hero-shell" aria-labelledby="hero-title">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-                <div class="hero-grid">
-                    <div>
-                        <div class="eyebrow mb-6">Solusi digital untuk UMKM Indonesia</div>
-                        <h1 id="hero-title" class="hero-title">Website Katalog Produk<br><span>&amp; Automasi Bisnis</span><br><span class="hero-audience">untuk UMKM.</span></h1>
-                        <p class="hero-copy">Bantu pelanggan memilih produk sebelum menghubungi WhatsApp. Sederhanakan pencatatan pesanan dan pekerjaan admin dengan automasi sesuai kebutuhan.</p>
-                        <div class="hero-actions">
-                            <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20ingin%20konsultasi%20gratis%20katalog%20produk%20atau%20automasi.%20Jenis%20usaha%20saya%3A%20" class="btn-primary-theme" target="_blank" rel="noopener noreferrer">Konsultasi Gratis via WhatsApp <i data-lucide="message-circle" class="w-4 h-4" aria-hidden="true"></i></a>
-                            <a href="#demo" class="btn-outline-theme">Lihat Demo Interaktif <i data-lucide="arrow-right" class="w-4 h-4" aria-hidden="true"></i></a>
-                        </div>
-                        <p class="hero-note">Konsultasikan kebutuhan. Sepakati fitur, biaya, dan jadwal sebelum mulai.</p>
-                    </div>
-                    <div class="hero-preview">
-                        <div class="preview-tabs" role="tablist" aria-label="Pilih preview layanan" hidden>
-                            <button id="preview-tab-catalog" type="button" role="tab" aria-selected="true" aria-controls="preview-catalog" data-preview="catalog">Katalog Produk</button>
-                            <button id="preview-tab-workflow" type="button" role="tab" aria-selected="false" aria-controls="preview-workflow" tabindex="-1" data-preview="workflow">Automasi Bisnis</button>
-                        </div>
-                        <div id="preview-catalog" class="preview-panel" role="tabpanel" aria-label="Preview katalog produk" tabindex="0">
-                            <figure>
-                            <div class="preview-label"><span>Contoh tampilan katalog kendaraan</span><span>Preview demo</span></div>
-                            <a href="catalog.html#product-catalog" aria-label="Lihat detail demo website katalog produk">
-                                <img src="public/case-studies/buds-motor-catalog-preview.webp" alt="Contoh katalog kendaraan dengan pilihan brand, kategori, dan kartu produk" width="1234" height="788" fetchpriority="high" decoding="async">
-                            </a>
-                            <figcaption>Pilih kategori, lihat detail produk, lalu lanjut chat. <a href="catalog.html#product-catalog">Pelajari contoh alurnya →</a></figcaption>
-                            </figure>
-                        </div>
-                        <div id="preview-workflow" class="preview-panel" role="tabpanel" aria-label="Preview automasi bisnis" tabindex="0" hidden>
-                            <div class="preview-label"><span>Contoh alur administrasi order</span><span>Simulasi</span></div>
-                            <ol class="workflow-preview">
-                                <li><i data-lucide="shopping-bag" aria-hidden="true"></i><div><b>Order masuk</b><span>Data pesanan diterima dari form atau platform usaha.</span></div></li>
-                                <li><i data-lucide="clipboard-list" aria-hidden="true"></i><div><b>Order dicatat</b><span>Detail dan status masuk ke catatan yang terstruktur.</span></div></li>
-                                <li><i data-lucide="bell" aria-hidden="true"></i><div><b>Admin menindaklanjuti</b><span>Notifikasi dan pembaruan mengikuti aturan yang disepakati.</span></div></li>
-                            </ol>
-                            <p class="preview-description">Ilustrasi alur, tanpa memproses order atau mengirim notifikasi. Platform dan integrasi ditentukan saat konsultasi.</p>
-                            <a href="catalog.html#workflow" class="text-link">Coba skenario automasi di katalog →</a>
-                        </div>
-                    </div>
-                </div>
+        <section id="hero" class="exhibition" aria-labelledby="gallery-title">
+            <div class="gallery-intro" id="layanan">
+                <h1 id="gallery-title">Coba sebelum bikin.</h1>
+                <p>Jelajahi demo katalog, kasir, dan automasi yang bisa kami buat untuk usahamu.</p>
+            </div>
+            <div id="demo" class="gallery-room">
+                <!-- portfolio-gallery:start -->
+<div class="room-toolbar"><div class="filter-bar" aria-label="Filter demo" role="group"><button type="button" data-filter="all" aria-pressed="true">Semua</button>
+<button type="button" data-filter="website" aria-pressed="false">Website</button>
+<button type="button" data-filter="tools" aria-pressed="false">Alat bisnis</button>
+<button type="button" data-filter="automation" aria-pressed="false">Automasi</button>
+<button type="button" data-filter="dashboard" aria-pressed="false">Dashboard</button></div></div>
+  <div class="gallery-stage" tabindex="0" role="region" aria-label="Galeri proyek, gunakan tombol panah untuk menjelajah">
+    <div class="room-wall" aria-hidden="true"></div>
+    <div class="gallery-track"><a class="exhibit" href="/portfolio/product-catalog/" data-slug="product-catalog" data-category="website" aria-label="Buka demo Website Katalog Produk">
+    <span class="art-frame"><img src="/public/portfolio-art/product-catalog.webp" srcset="/public/portfolio-art/product-catalog-480.webp 480w, /public/portfolio-art/product-catalog-640.webp 640w, /public/portfolio-art/product-catalog.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Menu contoh dengan secangkir Americano seharga Rp28.000" draggable="false" width="960" height="720" fetchpriority="high" decoding="async"></span>
+    <span class="art-label"><span class="art-number">01</span><span class="art-name">Website Katalog Produk</span><span class="art-category">Website</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/workflow/" data-slug="workflow" data-category="automation" aria-label="Buka demo Business Automation">
+    <span class="art-frame"><img src="/public/portfolio-art/workflow.webp" srcset="/public/portfolio-art/workflow-480.webp 480w, /public/portfolio-art/workflow-640.webp 640w, /public/portfolio-art/workflow.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Sampul alur kerja pesanan usaha" draggable="false" width="960" height="720" loading="lazy" decoding="async"></span>
+    <span class="art-label"><span class="art-number">02</span><span class="art-name">Business Automation</span><span class="art-category">Automasi</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/pos/" data-slug="pos" data-category="tools" aria-label="Buka demo Point of Sales">
+    <span class="art-frame"><template><img src="/public/portfolio-art/pos.webp" srcset="/public/portfolio-art/pos-480.webp 480w, /public/portfolio-art/pos-640.webp 640w, /public/portfolio-art/pos.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Detail struk kasir dari transaksi simulasi" draggable="false" width="960" height="720" loading="lazy" decoding="async"></template></span>
+    <span class="art-label"><span class="art-number">03</span><span class="art-name">Point of Sales</span><span class="art-category">Alat bisnis</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/landing/" data-slug="landing" data-category="website" aria-label="Buka demo Landing Page">
+    <span class="art-frame"><template><img src="/public/portfolio-art/landing.webp" srcset="/public/portfolio-art/landing-480.webp 480w, /public/portfolio-art/landing-640.webp 640w, /public/portfolio-art/landing.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Pratinjau landing page Warteg Ami" draggable="false" width="960" height="720" loading="lazy" decoding="async"></template></span>
+    <span class="art-label"><span class="art-number">04</span><span class="art-name">Landing Page</span><span class="art-category">Website</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/dashboard/" data-slug="dashboard" data-category="dashboard" aria-label="Buka demo Dashboard Usaha">
+    <span class="art-frame"><template><img src="/public/portfolio-art/dashboard.webp" srcset="/public/portfolio-art/dashboard-480.webp 480w, /public/portfolio-art/dashboard-640.webp 640w, /public/portfolio-art/dashboard.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Visualisasi data dashboard contoh" draggable="false" width="960" height="720" loading="lazy" decoding="async"></template></span>
+    <span class="art-label"><span class="art-number">05</span><span class="art-name">Dashboard Usaha</span><span class="art-category">Dashboard</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/chatbot/" data-slug="chatbot" data-category="automation" aria-label="Buka demo Chatbot WhatsApp">
+    <span class="art-frame"><template><img src="/public/portfolio-art/chatbot.webp" srcset="/public/portfolio-art/chatbot-480.webp 480w, /public/portfolio-art/chatbot-640.webp 640w, /public/portfolio-art/chatbot.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Percakapan contoh dengan balasan otomatis" draggable="false" width="960" height="720" loading="lazy" decoding="async"></template></span>
+    <span class="art-label"><span class="art-number">06</span><span class="art-name">Chatbot WhatsApp</span><span class="art-category">Automasi</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/calculator/" data-slug="calculator" data-category="tools" aria-label="Buka demo Kalkulator Bisnis">
+    <span class="art-frame"><template><img src="/public/portfolio-art/calculator.webp" srcset="/public/portfolio-art/calculator-480.webp 480w, /public/portfolio-art/calculator-640.webp 640w, /public/portfolio-art/calculator.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Ilustrasi perhitungan biaya usaha" draggable="false" width="960" height="720" loading="lazy" decoding="async"></template></span>
+    <span class="art-label"><span class="art-number">07</span><span class="art-name">Kalkulator Bisnis</span><span class="art-category">Alat bisnis</span></span>
+  </a>
+<a class="exhibit" href="/portfolio/scraping/" data-slug="scraping" data-category="automation" aria-label="Buka demo Web Scraping">
+    <span class="art-frame"><img src="/public/portfolio-art/scraping.webp" srcset="/public/portfolio-art/scraping-480.webp 480w, /public/portfolio-art/scraping-640.webp 640w, /public/portfolio-art/scraping.webp 960w" sizes="(max-width: 650px) 72vw, (max-width: 850px) 43vw, (min-width: 1800px) 560px, 31vw" alt="Data produk contoh disusun sebagai tabel" draggable="false" width="960" height="720" loading="lazy" decoding="async"></span>
+    <span class="art-label"><span class="art-number">08</span><span class="art-name">Web Scraping</span><span class="art-category">Automasi</span></span>
+  </a></div>
+  </div>
+  <div class="gallery-desk">
+    <div class="selection"><p class="folio-meta"><i aria-hidden="true"></i> Demo terpilih</p><h2 id="selected-title">Website Katalog Produk</h2><p id="selected-desc">Pilih menu, lihat harga, lalu susun contoh pesan untuk penjual.</p></div>
+    <a id="open-project" class="ink-button" href="/portfolio/product-catalog/">Buka demo <span aria-hidden="true">↗</span></a>
+    <div class="gallery-controls"><div class="step-controls"><button type="button" data-step="-1" aria-label="Demo sebelumnya">‹</button><output aria-live="polite" aria-atomic="true"><span class="sr-only">Website Katalog Produk, </span><span class="gallery-count">01 / 08</span></output><button type="button" data-step="1" aria-label="Demo berikutnya">›</button></div><span>Geser untuk menjelajah</span></div>
+  </div>
+  <script type="application/json" id="exhibit-descriptions">{"product-catalog":"Pilih menu, lihat harga, lalu susun contoh pesan untuk penjual.","workflow":"Ikuti perjalanan satu pesanan, dari data masuk sampai tindak lanjut admin.","pos":"Jalankan transaksi kasir dari pilihan menu sampai struk pembayaran contoh.","landing":"Bandingkan cara usaha kuliner, toko, dan jasa memperkenalkan penawaran mereka.","dashboard":"Baca arus kas dan penjualan, lalu lihat dampak transaksi contoh pada ringkasan usaha.","chatbot":"Coba percakapan pelanggan dan susun jawaban untuk pertanyaan yang sering muncul.","calculator":"Ubah biaya dan harga jual untuk melihat berapa unit yang perlu terjual agar impas.","scraping":"Ikuti simulasi pengambilan data produk hingga hasilnya siap dibaca di spreadsheet."}</script>
+<!-- portfolio-gallery:end -->
             </div>
         </section>
-
-        <!-- ==================== LAYANAN SECTION ==================== -->
-        <section id="layanan" class="py-20 md:py-28 bg-dark">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Section Header -->
-                <div class="text-center mb-12 md:mb-16 fade-in-up">
-                    <div class="section-kicker inline-block mb-4">
-                        Layanan
-                    </div>
-                    <h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                        Katalog produk dan automasi bisnis.
-                    </h2>
-                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-                        Mulai dari kebutuhan utama usaha Anda.
-                    </p>
-                </div>
-
-                <div class="offer-grid">
-                    <article class="offer-card" aria-labelledby="catalog-offer-title">
-                        <span class="offer-label">Produk lebih mudah ditemukan</span>
-                        <h3 id="catalog-offer-title">Website Katalog Produk</h3>
-                        <p>Masih mengirim foto produk berulang kali? Bagikan satu katalog agar pelanggan bisa memilih sebelum bertanya melalui WhatsApp.</p>
-                        <ul class="offer-list">
-                            <li>Susunan brand, kategori, dan detail produk</li>
-                            <li>Tampilan yang nyaman dibuka dari ponsel</li>
-                            <li>Tombol WhatsApp untuk melanjutkan pertanyaan</li>
-                        </ul>
-                        <p class="offer-price"><strong>Starter mulai <span data-package-price="starter">Rp500.000</span></strong> · Fitur mengikuti scope yang disepakati.</p>
-                        <div class="offer-actions">
-                            <a href="catalog.html#product-catalog" class="btn-primary-theme">Lihat contoh katalog</a>
-                            <a href="index.html?service=product-catalog#contact-form" data-inquiry-service="Website Katalog Produk" class="text-link">Bahas kebutuhan katalog</a>
-                        </div>
-                    </article>
-                    <article class="offer-card" aria-labelledby="automation-offer-title">
-                        <span class="offer-label">Administrasi lebih terarah</span>
-                        <h3 id="automation-offer-title">Business Automation</h3>
-                        <p>Pesanan dicatat ulang, data tersebar, atau tindak lanjut terlewat? Mulai dari satu alur pencatatan, rekap, atau pengingat.</p>
-                        <ul class="offer-list">
-                            <li>Pemetaan proses yang masih dikerjakan manual</li>
-                            <li>Pemicu, langkah, dan hasil sesuai kebutuhan</li>
-                            <li>Integrasi mengikuti platform dan cakupan</li>
-                        </ul>
-                        <p class="offer-price"><strong>Premium mulai <span data-package-price="premium">Rp3.000.000</span> - maks. 1 workflow sederhana</strong> · Kebutuhan integrasi dibahas di awal.</p>
-                        <div class="offer-actions">
-                            <a href="catalog.html#workflow" class="btn-primary-theme">Coba demo automasi</a>
-                            <a href="index.html?service=workflow#contact-form" data-inquiry-service="Automasi Workflow" class="text-link">Bahas kebutuhan automasi</a>
-                        </div>
-                    </article>
-                </div>
-                <details class="supporting-services">
-                    <summary>Jelajahi layanan lainnya</summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Service Card 1 -->
-                    <a href="catalog.html#landing" aria-label="Lihat preview Landing Page" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="globe" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Landing Page</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Halaman promosi untuk profil usaha, produk, atau kampanye.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card 2 -->
-                    <a href="catalog.html#chatbot" aria-label="Lihat preview Chatbot WhatsApp" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="message-square" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Chatbot WhatsApp</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Alur jawaban untuk pertanyaan rutin dan pengalihan ke admin.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card 3 -->
-                    <a href="catalog.html#calculator" aria-label="Lihat preview Tool/Calculator Online" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="calculator" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Tool/Calculator Online</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Kalkulator interaktif dengan rumus sesuai kebutuhan.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card 4 -->
-                    <a href="catalog.html#dashboard" aria-label="Lihat preview Dashboard Excel" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="table" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Dashboard Excel</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Ringkasan data usaha dalam Excel atau Google Sheets.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-                    <!-- Service Card: Point Of Sales -->
-                    <a href="catalog.html#pos" aria-label="Lihat demo Point Of Sales" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="monitor-smartphone" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Point Of Sales</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Alur kasir, keranjang, struk, dan pencatatan penjualan.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-
-                    <!-- Service Card 7 -->
-                    <a href="catalog.html#scraping" aria-label="Lihat preview Web Scraping" class="fade-in-up group bg-dark-card border border-dark-border hover:border-accent/30 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 glow-hover cursor-pointer block h-full focus:outline-none focus:ring-2 focus:ring-accent/60 flex flex-col">
-                        <div class="w-12 h-12 flex items-center justify-center bg-accent/10 rounded-xl mb-6 group-hover:bg-accent/20 transition-colors">
-                            <i data-lucide="database" class="w-6 h-6 text-accent"></i>
-                        </div>
-                        <h3 class="font-heading text-xl font-semibold mb-3">Web Scraping</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                            Ambil dan rapikan data publik untuk riset harga, produk, atau kompetitor.
-                        </p>
-                        <div class="flex items-center justify-between mt-auto pt-3">
-                            <span class="service-scope-label">Scope dan penawaran terpisah</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </div>
-                    </a>
-                </div>
-                </details>
-                <p class="hero-note mt-6 text-center">Coba demo untuk menentukan fitur yang Anda perlukan.</p>
-            </div>
-        </section>
-
-        <!-- ==================== DEMO SECTION ==================== -->
-        <section id="demo" class="py-20 md:py-28 bg-dark-card" aria-labelledby="demo-title">
-            <span id="testimoni" aria-hidden="true"></span>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <div class="section-kicker inline-block mb-4">Demo interaktif</div>
-                    <h2 id="demo-title" class="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Coba sebelum menentukan kebutuhan.</h2>
-                    <p class="text-gray-400 max-w-2xl mx-auto">Jelajahi contoh alur dengan data simulasi. Demo bukan transaksi atau bukti hasil pelanggan.</p>
-                </div>
-                <div class="demo-grid">
-                    <article class="demo-card">
-                        <span class="offer-label">Website Katalog Produk</span>
-                        <h3>Temukan produk yang sesuai.</h3>
-                        <p>Cari produk, pilih kategori, lalu buka detail dan contoh pertanyaan WhatsApp.</p>
-                        <p class="demo-step">Cari · Pilih · Lihat detail</p>
-                        <a href="catalog.html#product-catalog" class="text-link">Coba demo katalog</a>
-                    </article>
-                    <article class="demo-card">
-                        <span class="offer-label">Business Automation</span>
-                        <h3>Ikuti alur administrasi.</h3>
-                        <p>Jalankan skenario pencatatan data dan tindak lanjut tanpa menghubungkan akun.</p>
-                        <p class="demo-step">Pilih alur · Jalankan · Tinjau hasil</p>
-                        <a href="catalog.html#workflow" class="text-link">Coba demo automasi</a>
-                    </article>
-                    <article class="demo-card">
-                        <span class="offer-label">Chatbot</span>
-                        <h3>Coba jawaban otomatis.</h3>
-                        <p>Pilih jenis usaha dan ajukan pertanyaan pada simulasi percakapan.</p>
-                        <p class="demo-step">Pilih usaha · Bertanya · Lihat balasan</p>
-                        <a href="catalog.html#chatbot" class="text-link">Coba demo chatbot</a>
-                    </article>
-                </div>
-                <div class="consultation-strip">
-                    <p>Temukan alur yang sesuai? Bahas penerapannya untuk usaha Anda.</p>
-                    <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20sudah%20melihat%20demo%20dan%20ingin%20konsultasi%20gratis.%20Jenis%20usaha%20saya%3A%20" class="btn-primary-theme" target="_blank" rel="noopener noreferrer">Konsultasi Gratis via WhatsApp</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== CARA KERJA SECTION ==================== -->
-        <section id="proses" class="py-20 md:py-28 bg-dark-card">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-14 md:mb-20 fade-in-up">
-                    <div class="section-kicker inline-block mb-4">Proses kerja</div>
-                    <h2 class="font-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-5">Dari kebutuhan<br><span class="text-zinc-500">ke implementasi.</span></h2>
-                    <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">Setiap tahap memiliki cakupan dan hasil yang disepakati.</p>
-                </div>
-
-                <div class="process-timeline">
-                    <article class="process-step fade-in-up">
-                        <div class="process-content process-left">
-                            <span class="process-index">01</span>
-                            <div class="process-card">
-                                <div class="process-icon"><i data-lucide="message-circle" class="w-5 h-5"></i></div>
-                                <h3>Konsultasi Gratis</h3>
-                                <p>Ceritakan kendala dan tujuan usaha. Kami bantu menilai solusi yang sesuai.</p>
-                                <span class="process-meta">Identifikasi kebutuhan</span>
-                            </div>
-                        </div>
-                        <span class="process-node" aria-hidden="true"></span>
-                        <div class="process-spacer" aria-hidden="true"></div>
-                    </article>
-                    <article class="process-step fade-in-up">
-                        <div class="process-spacer" aria-hidden="true"></div>
-                        <span class="process-node" aria-hidden="true"></span>
-                        <div class="process-content process-right">
-                            <span class="process-index">02</span>
-                            <div class="process-card">
-                                <div class="process-icon"><i data-lucide="clipboard-list" class="w-5 h-5"></i></div>
-                                <h3>Penawaran</h3>
-                                <p>Sepakati fitur, hasil, biaya, dan jadwal secara tertulis.</p>
-                                <span class="process-meta">Cakupan & kesepakatan</span>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="process-step fade-in-up">
-                        <div class="process-content process-left">
-                            <span class="process-index">03</span>
-                            <div class="process-card">
-                                <div class="process-icon"><i data-lucide="zap" class="w-5 h-5"></i></div>
-                                <h3>Pengerjaan</h3>
-                                <p>Kami mengembangkan solusi dan meninjau hasil sesuai kesepakatan.</p>
-                                <span class="process-meta">Pengembangan & pengujian</span>
-                            </div>
-                        </div>
-                        <span class="process-node" aria-hidden="true"></span>
-                        <div class="process-spacer" aria-hidden="true"></div>
-                    </article>
-                    <article class="process-step fade-in-up">
-                        <div class="process-spacer" aria-hidden="true"></div>
-                        <span class="process-node" aria-hidden="true"></span>
-                        <div class="process-content process-right">
-                            <span class="process-index">04</span>
-                            <div class="process-card">
-                                <div class="process-icon"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
-                                <h3>Review & serah terima</h3>
-                                <p>Tinjau hasil dan ajukan revisi sesuai cakupan sebelum serah terima.</p>
-                                <span class="process-meta">Tinjauan akhir</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== HARGA SECTION ==================== -->
-        <section id="harga" class="py-20 md:py-28" aria-labelledby="pricing-title"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="pricing-intro"><p class="section-kicker">Paket dan ruang lingkup</p><h2 id="pricing-title">Paket sesuai kebutuhan usaha.</h2><p>Pilih titik awal. Rincian fitur dan biaya dikonfirmasi dalam penawaran.</p></div><!-- packages:start -->
-<p class="package-price-notice">Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati.</p><div class="package-grid"><article class="package-card" data-package="starter" aria-labelledby="package-starter-title">
+        <div class="studio-links">
+          <ol id="proses" aria-label="Cara memulai proyek"><li>Pilih demo</li><li>Diskusikan kebutuhan</li><li>Kami bangun</li></ol>
+          <a href="#harga">Paket mulai <span data-package-price="starter">Rp500.000</span></a>
+        </div>
+        <div class="studio-info">
+        <details class="studio-disclosure"><summary>Paket dan ruang lingkup <small>Mulai <span data-package-price="starter">Rp500.000</span></small></summary>
+        <section id="harga" aria-labelledby="pricing-title"><div class="max-w-7xl mx-auto"><div class="pricing-intro"><h2 id="pricing-title">Paket sesuai kebutuhan usaha.</h2></div><!-- packages:start -->
+<p class="package-price-notice">Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati.</p><div class="package-picker filter-bar" role="group" aria-label="Pilih paket" hidden><button type="button" aria-controls="offer-starter" aria-pressed="false">Starter</button><button type="button" aria-controls="offer-professional" aria-pressed="false">Professional</button><button type="button" aria-controls="offer-premium" aria-pressed="false">Premium</button></div><div class="package-grid"><article class="package-card" id="offer-starter" data-package="starter" aria-labelledby="package-starter-title">
     <div class="package-overview"><header><p class="package-tier">Starter</p><h3 id="package-starter-title">Website dasar</h3><p class="package-price"><span class="package-start-label" lang="en">Start From</span><span>Rp500.000</span></p><p>Untuk usaha yang mulai memperkenalkan bisnis dan produknya secara online.</p></header>
     <h4>Cakupan paket</h4><ul><li>Website atau katalog produk dasar</li><li>Tampilan ponsel dan desktop</li><li>Informasi produk dari materi usaha</li><li>Tautan WhatsApp</li><li>Konfigurasi dasar sesuai kesepakatan tertulis</li></ul>
     <p class="package-limit">Tidak termasuk workflow automasi.</p>
     </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4><ul><li>Tambahan materi, halaman, atau produk di luar kesepakatan: penawaran terpisah</li></ul><h4>Tidak otomatis termasuk</h4><ul><li>Backend custom, ERP, CRM, dan database kompleks</li><li>Workflow automasi dan integrasi AI</li><li>Integrasi sistem pihak ketiga khusus</li></ul></div></details>
-    <a class="pricing-package-cta btn-primary-theme" href="index.html?package=starter#contact-form" data-inquiry-package="Starter">Bahas Paket Starter</a>
-  </article><article class="package-card" data-package="professional" aria-labelledby="package-professional-title">
+    <a class="pricing-package-cta ink-button" href="index.html?package=starter#contact-form" data-inquiry-package="Starter">Bahas Paket Starter</a>
+  </article><article class="package-card" id="offer-professional" data-package="professional" aria-labelledby="package-professional-title">
     <div class="package-overview"><header><p class="package-tier">Professional</p><h3 id="package-professional-title">Katalog lebih lengkap</h3><p class="package-price"><span class="package-start-label" lang="en">Start From</span><span>Rp1.500.000</span></p><p>Untuk usaha yang membutuhkan katalog dengan susunan produk lebih terarah.</p></header>
     <h4>Cakupan paket</h4><ul><li>Website dan katalog lebih lengkap</li><li>Kategori sesuai data produk</li><li>Pencarian atau filter sesuai kebutuhan dan data</li><li>Penyesuaian tampilan dan alur pertanyaan</li><li>Bagian tambahan sesuai kesepakatan</li></ul>
     <p class="package-limit">Workflow automasi dibahas melalui penawaran terpisah.</p>
     </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4><ul><li>Fitur di luar proposal: penilaian dan penawaran terpisah</li></ul><h4>Tidak otomatis termasuk</h4><ul><li>ERP atau CRM lengkap</li><li>Automasi proses bisnis tingkat lanjut dan integrasi AI kompleks</li><li>Fitur custom atau integrasi pihak ketiga tanpa batas</li></ul></div></details>
-    <a class="pricing-package-cta btn-primary-theme" href="index.html?package=professional#contact-form" data-inquiry-package="Professional">Bahas Paket Professional</a>
-  </article><article class="package-card package-premium" data-package="premium" aria-labelledby="package-premium-title">
+    <a class="pricing-package-cta ink-button" href="index.html?package=professional#contact-form" data-inquiry-package="Professional">Bahas Paket Professional</a>
+  </article><article class="package-card package-premium" id="offer-premium" data-package="premium" aria-labelledby="package-premium-title">
     <div class="package-overview"><header><p class="package-tier">Premium</p><h3 id="package-premium-title">Website &amp; automasi</h3><p class="package-price"><span class="package-start-label" lang="en">Start From</span><span>Rp3.000.000</span></p><p>Untuk usaha yang membutuhkan website khusus dan satu alur automasi sederhana.</p></header>
     <h4>Cakupan paket</h4><ul><li>Website dan katalog sesuai kebutuhan</li><li>Fungsi khusus yang dipilih dalam proposal</li><li>Maksimal 1 workflow sederhana setelah dinilai layak</li><li>Integrasi dasar dengan alat yang didukung, bila memungkinkan</li><li>Alur, hasil, dan batas pekerjaan disepakati tertulis</li></ul>
     <p class="premium-limit">Maksimal 1 workflow sederhana yang disepakati bersama.</p>
     </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4><ul><li>Workflow, fitur, atau integrasi tambahan: analisis dan penawaran terpisah</li></ul><h4>Tidak otomatis termasuk</h4><ul><li>ERP, CRM lengkap, backend custom, infrastruktur kompleks, atau dashboard enterprise</li><li>AI agent kompleks, training/fine-tuning model, dan integrasi AI API tingkat lanjut</li><li>Automasi lintas departemen, banyak workflow mandiri, atau integrasi API tanpa batas</li><li>Aplikasi mobile custom, database skala besar, payment gateway kompleks, atau autentikasi enterprise</li><li>Monitoring automasi terus-menerus, revisi unlimited, atau support seumur hidup</li></ul></div></details>
-    <a class="pricing-package-cta btn-primary-theme" href="index.html?package=premium#contact-form" data-inquiry-package="Premium">Bahas Paket Premium</a>
+    <a class="pricing-package-cta ink-button" href="index.html?package=premium#contact-form" data-inquiry-package="Premium">Bahas Paket Premium</a>
   </article></div><p class="commercial-notice premium-scope-notice">Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah.</p><details class="package-comparison-details"><summary>Bandingkan rincian paket</summary><p class="showroom-note">Pada layar kecil, geser tabel untuk melihat semua paket.</p><div class="package-comparison" role="region" aria-label="Perbandingan paket, geser tabel pada layar kecil" tabindex="0"><table><caption>Perbandingan paket</caption><thead><tr><th scope="col">Cakupan</th><th scope="col">Starter</th><th scope="col">Professional</th><th scope="col">Premium</th></tr></thead><tbody><tr><th scope="row">Harga mulai dari</th><td>Mulai Rp500.000</td><td>Mulai Rp1.500.000</td><td>Mulai Rp3.000.000</td></tr><tr><th scope="row">Kebutuhan utama</th><td>Presentasi website / produk dasar</td><td>Website dan katalog lebih lengkap</td><td>Website personal dan fungsi terpilih</td></tr><tr><th scope="row">Kategori, pencarian / filter</th><td>Informasi produk standar</td><td>Bila sesuai data dan kebutuhan</td><td>Custom sesuai proposal</td></tr><tr><th scope="row">Workflow automasi</th><td>Tidak termasuk</td><td>Penawaran terpisah</td><td>Maksimal 1 workflow sederhana yang disepakati</td></tr><tr><th scope="row">ERP, CRM lengkap, AI kompleks</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Penawaran terpisah; bukan isi otomatis paket</td></tr><tr><th scope="row">Integrasi / fitur tambahan</th><td>Penawaran terpisah</td><td>Penawaran terpisah</td><td>Integrasi dasar terpilih bila layak; sisanya ditawarkan terpisah</td></tr><tr><th scope="row">Domain, hosting, lisensi dan API</th><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td><td>Konfirmasi pada penawaran</td></tr><tr><th scope="row">Revisi, jadwal dan support</th><td>Disepakati tertulis</td><td>Disepakati tertulis</td><td>Disepakati tertulis; bukan unlimited / seumur hidup</td></tr><tr><th scope="row">Maintenance dan monitoring</th><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td><td>Perjanjian terpisah</td></tr></tbody></table></div></details><p class="commercial-notice">Fitur di luar paket dinilai dan ditawarkan terpisah.</p><p class="commercial-notice">Jumlah halaman dan produk, materi, revisi, jadwal, serah terima, serta dukungan disepakati tertulis. Domain, hosting, lisensi, API, langganan pihak ketiga, dan maintenance belum otomatis termasuk.</p>
 <!-- packages:end --></div></section>
 
         <!-- ==================== FAQ SECTION ==================== -->
+        </details>
+        <details class="studio-disclosure"><summary>Pertanyaan sebelum mulai</summary>
         <section id="faq" class="py-20 md:py-28" aria-labelledby="faq-title"><div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"><div class="section-heading"><p class="section-kicker">Sebelum mulai</p><h2 id="faq-title">Pertanyaan tentang paket<br>dan pengerjaan.</h2></div><!-- package-faq:start -->
 <div class="faq-list"><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana menentukan biaya akhir?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Harga awal. Biaya akhir dapat lebih tinggi sesuai kebutuhan dan ruang lingkup yang disepakati. Jumlah halaman, produk, fitur, dan integrasi dirinci dalam penawaran tertulis sebelum pengerjaan.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah harga termasuk domain dan hosting?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Domain, hosting, lisensi, API, dan langganan pihak ketiga belum otomatis termasuk. Pilihan layanan, kepemilikan akun, biaya awal dan perpanjangan dikonfirmasi pada penawaran.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apa batas automasi pada paket Premium?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Premium mencakup maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati tertulis. ERP, CRM lengkap, AI kompleks, dan fitur di luar cakupan memerlukan biaya tambahan melalui penawaran terpisah. Satu workflow berarti satu pemicu dengan aksi berurutan dan integrasi yang didukung. Automasi untuk Starter dan Professional ditawarkan terpisah. Rincian pengecualian tersedia pada setiap kartu paket.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana biaya maintenance?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Maintenance, pemantauan automasi, pembaruan konten, dan perpanjangan layanan belum otomatis termasuk. Biaya, periode, serta cakupan dukungan mengikuti perjanjian terpisah.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Bagaimana ketentuan revisi dan pengerjaan?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Cakupan, hasil, revisi, jadwal, pembayaran, dan dukungan disepakati tertulis. Perbaikan bug dibedakan dari perubahan kebutuhan. Revisi dan dukungan memiliki batas sesuai kesepakatan.</p></div></div><div class="faq-item"><h3><button class="faq-trigger"><span>Apakah demo terhubung ke sistem nyata?</span><i data-lucide="chevron-down" class="accordion-icon w-5 h-5" aria-hidden="true"></i></button></h3><div class="accordion-content"><p>Demo memakai data contoh di browser. Integrasi nyata membutuhkan layanan yang mendukung, akses akun, izin, dan pembahasan biaya tambahan.</p></div></div></div>
 <!-- package-faq:end --></div></section>
 
         <!-- ==================== KONTAK / LEAD FORM SECTION ==================== -->
+        </details>
+        <details class="studio-disclosure"><summary>Ceritakan kebutuhan usahamu</summary>
         <section id="kontak" class="lead-section py-20 md:py-28">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="lead-shell grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
@@ -620,83 +339,17 @@
                 </div>
             </div>
         </section>
+        </details>
+        </div>
     </main>
 
-    <div class="mobile-lead-bar" role="region" aria-label="Akses cepat demo dan konsultasi">
-        <a href="#demo" class="btn-outline-theme">Demo Interaktif</a>
-        <a href="https://wa.me/6285777345985?text=Halo%20KAR%20Labs%2C%20saya%20ingin%20konsultasi%20gratis%20untuk%20usaha%20saya.%20Kebutuhan%20saya%3A%20" class="btn-primary-theme" target="_blank" rel="noopener noreferrer" aria-label="Konsultasi Gratis via WhatsApp"><span>Konsultasi Gratis<br>via WhatsApp</span></a>
-    </div>
-
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="py-12 md:py-16 bg-dark border-t border-dark-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-8">
-                <!-- Column 1: Logo & Tagline -->
-                <div>
-                    <a href="#hero" class="brand-link flex items-center gap-3 text-2xl font-heading font-bold mb-5 uppercase tracking-wide">
-                        <img class="brand-logo" src="public/brand/karlabs-logo-96.webp" srcset="public/brand/karlabs-logo-96.webp 1x, public/brand/karlabs-logo-192.webp 2x" width="56" height="56" alt="KAR Labs" decoding="async"><span class="brand-name" aria-hidden="true">KAR Labs<span>.dev</span></span>
-                    </a>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Website katalog produk dan automasi bisnis untuk UMKM. Solusi sesuai kebutuhan dan cara kerja usaha Anda.
-                    </p>
-                </div>
-
-                <!-- Column 2: Services Links -->
-                <div>
-                    <h2 class="font-semibold text-white mb-4">Layanan</h2>
-                    <div class="space-y-2">
-                        <a href="catalog.html#landing" class="block text-gray-400 hover:text-accent text-sm transition-colors">Landing Page</a>
-                        <a href="catalog.html#product-catalog" class="block text-gray-400 hover:text-accent text-sm transition-colors">Website Katalog Produk</a>
-                        <a href="catalog.html#chatbot" class="block text-gray-400 hover:text-accent text-sm transition-colors">Chatbot</a>
-                        <a href="catalog.html#calculator" class="block text-gray-400 hover:text-accent text-sm transition-colors">Tool/Calculator</a>
-                        <a href="catalog.html#dashboard" class="block text-gray-400 hover:text-accent text-sm transition-colors">Dashboard</a>
-                        <a href="catalog.html#pos" class="block text-gray-400 hover:text-accent text-sm transition-colors">Point Of Sales</a>
-                        <a href="catalog.html#workflow" class="block text-gray-400 hover:text-accent text-sm transition-colors">Automasi</a>
-                        <a href="catalog.html#scraping" class="block text-gray-400 hover:text-accent text-sm transition-colors">Scraping</a>
-                    </div>
-                </div>
-
-                <!-- Column 3: Contact -->
-                <div>
-                    <h2 class="font-semibold text-white mb-4">Kontak</h2>
-                    <div class="space-y-2">
-                        <!-- Nomor WhatsApp KAR Labs.dev -->
-                        <a href="https://wa.me/6285777345985" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-400 hover:text-accent text-sm transition-colors">
-                            <i data-lucide="smartphone" class="w-4 h-4"></i>
-                            WhatsApp
-                        </a>
-                        <a href="mailto:karlabs.dev@gmail.com" class="flex items-center gap-2 text-gray-400 hover:text-accent text-sm transition-colors">
-                            <i data-lucide="mail" class="w-4 h-4"></i>
-                            karlabs.dev@gmail.com
-                        </a>
-                        <a href="https://www.instagram.com/karlabs.dev/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-400 hover:text-accent text-sm transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                            @karlabs.dev
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="border-dark-border mb-8">
-
-            <!-- Bottom Bar -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
-                <p class="text-gray-500 text-sm">
-                    &copy; 2026 KAR Labs.dev. Solusi digital untuk UMKM.
-                </p>
-            </div>
-        </div>
-    </footer>
+    <footer class="studio-footer"><a href="#hero">KAR Labs.dev</a><a href="/portfolio/">Indeks demo</a><a href="mailto:karlabs.dev@gmail.com">karlabs.dev@gmail.com</a></footer>
 
     <!-- ==================== JAVASCRIPT ==================== -->
-    <script src="./public/lead-events.js?v=20261118-light-1" defer></script>
-    <script src="./public/index.js?v=20261119-ux-1" defer></script>
+    <script src="./public/lead-events.js?v=20261121-gallery" defer></script>
+    <script src="./public/index.js?v=20261122-paket" defer></script>
     <script src="public/packages.js?v=20261118-copy-1" defer></script>
-    <script src="./public/consultation.js?v=20261118-compact-1" defer></script>
+    <script src="./public/consultation.js?v=20261121-gallery" defer></script>
     <script src="public/site.js?v=20261119-ux-1" defer></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
     "preview": "node scripts/dev-server.cjs dist 4173",
     "check": "npm run build:content && node scripts/check.cjs && node scripts/check-leads.cjs && node scripts/check-quality.cjs && node scripts/check-packages.cjs && npm run build && node scripts/check-dist.cjs && node scripts/check-quality.cjs dist && node scripts/check-packages.cjs dist",
     "build:css": "node scripts/build-tailwind.cjs",
-    "build:content": "node scripts/build-content.cjs"
+    "build:content": "node scripts/build-content.cjs && node scripts/build-portfolio.cjs"
   },
   "keywords": [
     "static-site",

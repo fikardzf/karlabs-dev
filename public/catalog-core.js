@@ -122,3 +122,22 @@
       window.lucide.createIcons();
     }
   }
+
+  const posDemoProducts=[
+    {id:'coffee',name:'Americano',category:'Beverage',price:28000,stock:14,icon:'coffee'},
+    {id:'latte',name:'Cafe Latte',category:'Beverage',price:35000,stock:9,icon:'cup-soda'},
+    {id:'croissant',name:'Butter Croissant',category:'Bakery',price:32000,stock:5,icon:'sandwich'},
+    {id:'rice',name:'Rice Bowl Chicken',category:'Food',price:48000,stock:7,icon:'utensils'},
+    {id:'bottle',name:'Mineral Water',category:'Beverage',price:12000,stock:18,icon:'droplet'},
+    {id:'cake',name:'Cheesecake Slice',category:'Dessert',price:42000,stock:2,icon:'cake-slice'}
+  ];
+
+  function chartColors(){return ['#006847','#06B6D4','#F97316','#A855F7','#EF4444','#EAB308'];}
+
+  function csvCell(value){
+    let text=String(value ?? '');
+    // Spreadsheet apps may execute formula-like text even inside quoted CSV cells.
+    if(typeof value==='string' && /^\s*[=+@-]|^[\t\r\n]/.test(text))text="'"+text;
+    return '"'+text.replace(/"/g,'""')+'"';
+  }
+  function downloadCSV(data,filename){ if(!data.length){toast('Tidak ada data untuk di-export'); return;} const headers=Object.keys(data[0]); const rows=data.map(row=>headers.map(h=>csvCell(row[h])).join(',')); const csv=[headers.map(csvCell).join(','),...rows].join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url); toast('CSV berhasil di-download!'); }

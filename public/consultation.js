@@ -158,6 +158,8 @@
             }
             track('consultation_cta_clicked', link.dataset.inquiryPackage ? 'pricing' : 'service');
             if (attempted) validate();
+            const disclosure = form.closest('.studio-disclosure');
+            if (disclosure) disclosure.open = true;
             form.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
             form.focus({ preventScroll: true });
         });
