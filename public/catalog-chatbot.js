@@ -2,7 +2,10 @@
 'use strict';
   function initChat(){
     const area=$('#chatArea'), input=$('#chatInput'), quick=$('#quickReplies');
+    const pendingReplies = new Set();
     let currentScenario='ecommerce';
+    let withAdmin = false;
+    let lastTopic = '';
     let customRules=[];
     const scenarioMap={
       ecommerce:{
@@ -152,7 +155,7 @@
       }
 
     };
-    function activeRules(){ return [...scenarioMap[currentScenario].rules,...customRules]; }
+    function activeRules(){ return [...customRules,...scenarioMap[currentScenario].rules]; }
     function escapeHtml(value){ return String(value).replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch])); }
     function now(){ return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
     function bubble(text,type='bot',meta=''){
@@ -161,19 +164,66 @@
       div.innerHTML=`${meta?`<div class="text-[10px] uppercase tracking-wide opacity-60 font-bold mb-1">${escapeHtml(meta)}</div>`:''}${escapeHtml(text).replace(/\n/g,'<br>')}<div class="text-[10px] opacity-55 mt-2 text-right">${now()}</div>`;
       wrap.appendChild(div); area.appendChild(wrap); area.scrollTop=area.scrollHeight;
     }
-    function typing(){ const el=document.createElement('div'); el.id='typingBubble'; el.className='flex justify-start'; el.innerHTML='<div class="chat-bubble bot"><span class="inline-flex gap-1"><span class="animate-pulse">●</span><span class="animate-pulse" style="animation-delay:.12s">●</span><span class="animate-pulse" style="animation-delay:.24s">●</span></span></div>'; area.appendChild(el); area.scrollTop=area.scrollHeight; }
-    function showQuick(){ const q=scenarioMap[currentScenario].quick; quick.innerHTML=q.map(r=>`<button class="quick-reply" data-msg="${r}">${r}</button>`).join(''); $$('.quick-reply',quick).forEach(b=>b.onclick=()=>sendMsg(b.dataset.msg)); }
+    function typing() {
+      const el = document.createElement('div');
+      el.className = 'chat-typing';
+      el.innerHTML = '<span>Mengetik</span><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>';
+      area.appendChild(el);
+      area.scrollTop = area.scrollHeight;
+      return el;
+    }
+    function showQuick(){
+      const questions = [...scenarioMap[currentScenario].quick];
+      if (!questions.some(q => /admin/i.test(q))) questions.push('Bicara dengan admin');
+      const replies = withAdmin ? ['Lihat ringkasan', 'Kembali ke bot'] : questions;
+      quick.replaceChildren(...replies.map(text => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quick-reply';
+        btn.textContent = text;
+        btn.onclick = () => sendMsg(text);
+        return btn;
+      }));
+    }
     function findAnswer(msg){ const m=String(msg).toLowerCase(); const matched=activeRules().find(rule=>rule.keys.some(k=>m.includes(k.toLowerCase())) || m.includes(rule.title.toLowerCase())); return matched || null; }
-    function botReply(msg){ typing(); setTimeout(()=>{ const t=$('#typingBubble'); if(t)t.remove(); const matched=findAnswer(msg); if(matched){ bubble(matched.reply,'bot','Keyword: '+matched.keys[0]); } else { bubble('Saya belum menemukan keyword yang cocok. Coba klik keyword aktif di panel kanan, atau tambahkan custom keyword sendiri untuk melihat bagaimana bot bisa dikustom sesuai bisnis.','bot','Fallback response'); } showQuick(); },650); }
+    function botReply(msg) {
+      const matched = findAnswer(msg);
+      const indicator = typing();
+      const timer = setTimeout(() => {
+        pendingReplies.delete(timer);
+        indicator.remove();
+        if (withAdmin && msg === 'Kembali ke bot') {
+          withAdmin = false;
+          bubble('Kamu bisa memilih pertanyaan lain.', 'bot', 'Balasan otomatis aktif');
+        } else if (withAdmin) {
+          bubble(`Usaha: ${scenarioMap[currentScenario].label}. Topik: ${lastTopic || 'Pertanyaan umum'}. Tindak lanjut: admin meninjau percakapan.`, 'bot', 'Ringkasan untuk admin contoh');
+        } else if (/\badmin\b/i.test(msg) || matched?.keys.includes('admin')) {
+          withAdmin = true;
+          bubble('Percakapan masuk antrean simulasi. Lihat ringkasan yang akan diterima admin.', 'bot', 'Pengalihan contoh');
+        } else if (matched) {
+          lastTopic = matched.title;
+          bubble(matched.reply, 'bot', 'Kata kunci · ' + matched.keys[0]);
+        }
+        else bubble('Belum ada jawaban untuk pertanyaan ini. Pilih salah satu saran pesan atau tambahkan kata kunci sendiri.', 'bot', 'Balasan contoh');
+        if (!pendingReplies.size) showQuick();
+      }, 520);
+      pendingReplies.add(timer);
+    }
     function sendMsg(msg){ if(!String(msg).trim())return; bubble(msg,'user'); input.value=''; quick.innerHTML=''; botReply(msg); }
     function renderRules(){
       const list=$('#keywordRuleList');
       list.innerHTML=activeRules().map((rule,i)=>`<button class="text-left border border-dark-border bg-black/30 rounded-2xl p-3 hover:border-accent hover:bg-accent/5 transition" data-rule-index="${i}"><div class="flex items-start justify-between gap-2"><b class="text-sm text-white">${escapeHtml(rule.title)}</b><span class="text-[10px] px-2 py-1 rounded-full bg-accent/10 text-accent">test</span></div><p class="text-xs text-gray-500 mt-2">${rule.keys.map(k=>'#'+escapeHtml(k)).join(' ')}</p></button>`).join('');
       $$('[data-rule-index]',list).forEach(btn=>btn.onclick=()=>{ const rule=activeRules()[Number(btn.dataset.ruleIndex)]; sendMsg(rule.keys[0]); });
     }
-    function loadScenario(name){ currentScenario=name; customRules=[]; area.innerHTML=''; $('#chatScenarioBadge').textContent=scenarioMap[name].label; const select=$('#chatScenarioSelect'); if(select) select.value=name; bubble(scenarioMap[name].menu,'bot','Menu utama'); showQuick(); renderRules(); }
+    function loadScenario(name){
+      pendingReplies.forEach(timer => clearTimeout(timer));
+      pendingReplies.clear();
+      withAdmin = false;
+      lastTopic = '';
+      area.dataset.scenario = name;
+      currentScenario=name; customRules=[]; area.innerHTML=''; const select=$('#chatScenarioSelect'); if(select) select.value=name; bubble(scenarioMap[name].menu,'bot','Menu utama'); showQuick(); renderRules(); }
     const scenarioSelect=$('#chatScenarioSelect'); if(scenarioSelect) scenarioSelect.addEventListener('change',e=>loadScenario(e.target.value));
-    $('#addKeywordRule').onclick=()=>{ const key=$('#customKeyword').value.trim(); const res=$('#customResponse').value.trim(); if(!key||!res){toast('Isi keyword dan balasannya dulu.'); return;} customRules.push({keys:[key],title:'Custom: '+key,reply:res}); $('#customKeyword').value=''; $('#customResponse').value=''; renderRules(); toast('Custom keyword berhasil ditambahkan!'); sendMsg(key); };
+    $('#addKeywordRule').onclick=()=>{ const key=$('#customKeyword').value.trim(); const res=$('#customResponse').value.trim(); if(!key||!res){toast('Isi keyword dan balasannya dulu.'); return;} customRules = customRules.filter(rule => rule.keys[0].toLowerCase() !== key.toLowerCase()); customRules.unshift({keys:[key],title:'Custom: '+key,reply:res}); $('#customKeyword').value=''; $('#customResponse').value=''; renderRules(); toast('Custom keyword berhasil ditambahkan!'); sendMsg(key); };
     $('#resetChatDemo').onclick=()=>loadScenario(currentScenario);
     $('#chatSend').onclick=()=>sendMsg(input.value); input.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg(input.value)});
     loadScenario('ecommerce');

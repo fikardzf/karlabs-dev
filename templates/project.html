@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <style>@media (prefers-reduced-motion:no-preference) { @view-transition { navigation:auto; } }</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{{title}} — Demo Interaktif | KAR Labs.dev</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{canonical}}">
+  <meta property="og:url" content="{{canonical}}">
+  <meta property="og:title" content="{{title}} | KAR Labs.dev">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:image" content="https://karlabs-dev.netlify.app{{art}}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="id_ID">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/public/favicon.svg">
+  <link rel="apple-touch-icon" href="/public/brand/apple-touch-icon.png">
+  <link rel="stylesheet" href="/public/tailwind.css?v=20261121-gallery">
+  <link rel="stylesheet" href="/public/catalog.css?v=20261121-gallery">
+  <link rel="stylesheet" href="/public/site.css?v=20261119-ux-1">
+  <link rel="stylesheet" href="/public/portfolio.css?v=2">
+  <link rel="stylesheet" href="/public/demo-studio.css?v=2">
+  {{icons}}
+</head>
+<body class="canvas-page" data-project="{{slug}}">
+  <a class="skip-link" href="#canvas-demo">Lewati ke demo</a>
+  {{header}}
+  <main class="canvas-main">
+    <div class="canvas-crumb"><a data-gallery-back href="/?project={{slug}}">Galeri demo</a> <span aria-hidden="true">/</span> {{category}}</div>
+    <div class="canvas-heading">
+      <div><p class="folio-meta">Demo interaktif <span>/</span> {{number}}</p><h1>{{title}}</h1><p>{{description}}</p>
+        <div class="canvas-actions"><a href="#canvas-demo" class="ink-button">Coba demo</a></div>
+      </div>
+      <img class="canvas-art" src="{{art}}" {{artSources}} alt="{{artworkAlt}}" width="960" height="720">
+    </div>
+    <ul class="canvas-capabilities" aria-label="Yang bisa dicoba">{{capabilities}}</ul>
+    <div id="canvas-demo" tabindex="-1" data-init="{{init}}" data-module="{{moduleUrl}}" data-charts="{{charts}}">
+      <h2 class="demo-heading">Coba demo <span>Data simulasi</span></h2>
+      <noscript><p>Aktifkan JavaScript untuk mencoba demo ini.</p></noscript>
+      <div id="demo-status" role="status" hidden><p></p><button type="button" class="quiet-button">Coba lagi</button></div>
+      {{panel}}
+    </div>
+    <aside class="project-inquiry" aria-label="Konsultasi proyek"><p>Ingin mencoba alur ini di usaha Anda?</p><a class="ink-button" href="{{inquiry}}" target="_blank" rel="noopener noreferrer" data-lead-service="{{slug}}" data-lead-placement="catalog">{{inquiryLabel}} <span aria-hidden="true">↗</span></a></aside>
+    <nav class="canvas-pagination" aria-label="Navigasi proyek">
+      <a data-prev href="{{prevUrl}}"><small>Sebelumnya</small><b>{{prevTitle}}</b></a>
+      <a data-gallery-back href="/?project={{slug}}">Kembali ke galeri</a>
+      <a data-next href="{{nextUrl}}"><small>Selanjutnya</small><b>{{nextTitle}}</b></a>
+    </nav>
+  </main>
+  {{modal}}
+  <div id="toast" role="status" aria-live="polite" class="toast glass rounded-2xl px-5 py-3"></div>
+  <script type="application/json" id="project-routes">{{routes}}</script>
+  {{scripts}}
+</body>
+</html>
+

@@ -7,6 +7,7 @@ const root = process.argv[2] || '.';
 const origin = 'https://karlabs-dev.netlify.app';
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const attribute = (tag, name) => tag.match(new RegExp(`\\b${name}=["']([^"']*)["']`, 'i'))?.[1];
+const { projects } = require('../config/portfolio.cjs');
 const pages = ['index.html', 'catalog.html'];
 for (const file of pages) {
   const html = read(file);
@@ -60,13 +61,25 @@ for (const file of pages) {
     const url = new URL(ref, origin + '/' + file);
     const destination = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
     assert(fs.existsSync(path.join(root, destination)), `${file}: missing ${destination}`);
-    if (url.hash) assert(read(destination).includes(`id="${url.hash.slice(1)}"`), `${file}: missing anchor ${ref}`);
+    if (url.hash) assert(read(destination.endsWith("/") ? destination + "index.html" : destination).includes(`id="${url.hash.slice(1)}"`), `${file}: missing anchor ${ref}`);
   }
 }
 assert(read('robots.txt').includes(origin + '/sitemap.xml'));
 const locations = [...read('sitemap.xml').matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
-assert.deepEqual(locations, [origin + '/', origin + '/catalog.html']);
+assert.deepEqual(locations, [origin + '/', origin + '/catalog.html', origin + '/portfolio/', ...projects.map(p => origin + '/portfolio/' + p.slug + '/')]);
 
+for (const project of projects) {
+  const route = '/portfolio/' + project.slug + '/';
+  const html = read(route.slice(1) + 'index.html');
+  assert(html.includes('href="' + origin + route + '"'), 'Missing canonical: ' + route);
+  assert.equal((html.match(/class="service-panel active"/g) || []).length, 1, 'Expected one playable demo per route');
+  assert(html.includes('id="' + project.slug + '" class="service-panel active"'));
+  const modulePath = 'public/catalog-' + project.module + '.js';
+  assert(html.includes('data-module="/' + modulePath + '?v=') && fs.existsSync(path.join(root, modulePath)), 'Missing playable module: ' + route);
+  for (const asset of html.matchAll(/(?:src|href)="(\/public\/[^"?#]+)/g)) {
+    assert(fs.existsSync(path.join(root, asset[1].slice(1))), 'Missing canvas asset: ' + asset[1]);
+  }
+}
 const context = vm.createContext({});
 vm.runInContext(read('public/catalog-core.js'), context);
 assert.equal(vm.runInContext('escapeCatalogHtml(\'<img src=x onerror="bad()">&\')', context), '&lt;img src=x onerror=&quot;bad()&quot;&gt;&amp;');

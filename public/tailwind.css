@@ -41,10 +41,7 @@
   --text-4xl--line-height: calc(2.5 / 2.25);
   --text-5xl: 3rem;
   --text-5xl--line-height: 1;
-  --text-6xl: 3.75rem;
-  --text-6xl--line-height: 1;
   --font-weight-medium: 500;
-  --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --tracking-tight: -0.025em;
   --tracking-wide: 0.025em;
@@ -54,7 +51,6 @@
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
   --radius-3xl: 1.5rem;
-  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --blur-sm: 8px;
   --blur-xl: 24px;
   --default-transition-duration: 150ms;
@@ -212,8 +208,19 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 [hidden]:where(:not([hidden='until-found'])) {
   display: none !important;
 }
-.absolute {
+.visible {
+  visibility: visible;
+}
+.sr-only {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 .fixed {
   position: fixed;
@@ -229,27 +236,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 }
 .top-0 {
   top: calc(var(--spacing) * 0);
-}
-.top-4 {
-  top: calc(var(--spacing) * 4);
-}
-.right-0 {
-  right: calc(var(--spacing) * 0);
-}
-.right-4 {
-  right: calc(var(--spacing) * 4);
-}
-.bottom-0 {
-  bottom: calc(var(--spacing) * 0);
-}
-.left-0 {
-  left: calc(var(--spacing) * 0);
-}
-.z-10 {
-  z-index: 10;
-}
-.z-40 {
-  z-index: 40;
 }
 .z-50 {
   z-index: 50;
@@ -293,12 +279,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .mt-10 {
   margin-top: calc(var(--spacing) * 10);
 }
-.mt-12 {
-  margin-top: calc(var(--spacing) * 12);
-}
-.mt-auto {
-  margin-top: auto;
-}
 .mr-1 {
   margin-right: calc(var(--spacing) * 1);
 }
@@ -332,12 +312,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .mb-10 {
   margin-bottom: calc(var(--spacing) * 10);
 }
-.mb-12 {
-  margin-bottom: calc(var(--spacing) * 12);
-}
-.mb-14 {
-  margin-bottom: calc(var(--spacing) * 14);
-}
 .block {
   display: block;
 }
@@ -356,14 +330,8 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .inline-block {
   display: inline-block;
 }
-.inline-flex {
-  display: inline-flex;
-}
 .table {
   display: table;
-}
-.h-0\.5 {
-  height: calc(var(--spacing) * 0.5);
 }
 .h-3\.5 {
   height: calc(var(--spacing) * 3.5);
@@ -434,9 +402,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .w-12 {
   width: calc(var(--spacing) * 12);
 }
-.w-72 {
-  width: calc(var(--spacing) * 72);
-}
 .w-auto {
   width: auto;
 }
@@ -464,17 +429,11 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .shrink-0 {
   flex-shrink: 0;
 }
-.animate-pulse {
-  animation: var(--animate-pulse);
-}
 .cursor-pointer {
   cursor: pointer;
 }
 .resize {
   resize: both;
-}
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -514,12 +473,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 }
 .justify-start {
   justify-content: flex-start;
-}
-.gap-1 {
-  gap: calc(var(--spacing) * 1);
-}
-.gap-1\.5 {
-  gap: calc(var(--spacing) * 1.5);
 }
 .gap-2 {
   gap: calc(var(--spacing) * 2);
@@ -680,12 +633,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     background-color: color-mix(in oklab, var(--color-black) 35%, transparent);
   }
 }
-.bg-black\/50 {
-  background-color: color-mix(in srgb, #000 50%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-black) 50%, transparent);
-  }
-}
 .bg-black\/70 {
   background-color: color-mix(in srgb, #000 70%, transparent);
   @supports (color: color-mix(in lab, red, red)) {
@@ -719,20 +666,11 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     background-color: color-mix(in oklab, var(--color-dark) 90%, transparent);
   }
 }
-.bg-transparent {
-  background-color: transparent;
-}
-.bg-white {
-  background-color: var(--color-white);
-}
 .bg-\[radial-gradient\(circle_at_top_right\,rgba\(0\,104\,71\,\.08\)\,transparent_35\%\)\,linear-gradient\(135deg\,rgba\(255\,255\,255\,\.02\)\,transparent\)\] {
   background-image: radial-gradient(circle at top right,rgba(0,104,71,.08),transparent 35%),linear-gradient(135deg,rgba(255,255,255,.02),transparent);
 }
 .p-0 {
   padding: calc(var(--spacing) * 0);
-}
-.p-2 {
-  padding: calc(var(--spacing) * 2);
 }
 .p-3 {
   padding: calc(var(--spacing) * 3);
@@ -866,10 +804,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
 }
-.font-semibold {
-  --tw-font-weight: var(--font-weight-semibold);
-  font-weight: var(--font-weight-semibold);
-}
 .tracking-tight {
   --tw-tracking: var(--tracking-tight);
   letter-spacing: var(--tracking-tight);
@@ -924,18 +858,11 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .uppercase {
   text-transform: uppercase;
 }
-.opacity-0 {
-  opacity: 0%;
-}
 .opacity-55 {
   opacity: 55%;
 }
 .opacity-60 {
   opacity: 60%;
-}
-.shadow-2xl {
-  --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
-  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
 .blur {
   --tw-blur: blur(8px);
@@ -969,31 +896,9 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
   transition-duration: var(--tw-duration, var(--default-transition-duration));
 }
-.transition-opacity {
-  transition-property: opacity;
-  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
-}
 .duration-300 {
   --tw-duration: 300ms;
   transition-duration: 300ms;
-}
-.group-hover\:bg-accent\/20 {
-  &:is(:where(.group):hover *) {
-    @media (hover: hover) {
-      background-color: color-mix(in srgb, #006847 20%, transparent);
-      @supports (color: color-mix(in lab, red, red)) {
-        background-color: color-mix(in oklab, var(--color-accent) 20%, transparent);
-      }
-    }
-  }
-}
-.group-hover\:opacity-100 {
-  &:is(:where(.group):hover *) {
-    @media (hover: hover) {
-      opacity: 100%;
-    }
-  }
 }
 .hover\:-translate-y-1 {
   &:hover {
@@ -1003,28 +908,10 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     }
   }
 }
-.hover\:-translate-y-2 {
-  &:hover {
-    @media (hover: hover) {
-      --tw-translate-y: calc(var(--spacing) * -2);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
-}
 .hover\:border-accent {
   &:hover {
     @media (hover: hover) {
       border-color: var(--color-accent);
-    }
-  }
-}
-.hover\:border-accent\/30 {
-  &:hover {
-    @media (hover: hover) {
-      border-color: color-mix(in srgb, #006847 30%, transparent);
-      @supports (color: color-mix(in lab, red, red)) {
-        border-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
-      }
     }
   }
 }
@@ -1079,26 +966,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     }
   }
 }
-.focus\:ring-2 {
-  &:focus {
-    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-}
-.focus\:ring-accent\/60 {
-  &:focus {
-    --tw-ring-color: color-mix(in srgb, #006847 60%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --tw-ring-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
-    }
-  }
-}
-.focus\:outline-none {
-  &:focus {
-    --tw-outline-style: none;
-    outline-style: none;
-  }
-}
 .sm\:col-span-2 {
   @media (width >= 40rem) {
     grid-column: span 2 / span 2;
@@ -1112,11 +979,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .sm\:w-64 {
   @media (width >= 40rem) {
     width: calc(var(--spacing) * 64);
-  }
-}
-.sm\:w-auto {
-  @media (width >= 40rem) {
-    width: auto;
   }
 }
 .sm\:grid-cols-2 {
@@ -1149,21 +1011,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     padding-inline: calc(var(--spacing) * 6);
   }
 }
-.md\:mb-16 {
-  @media (width >= 48rem) {
-    margin-bottom: calc(var(--spacing) * 16);
-  }
-}
-.md\:mb-20 {
-  @media (width >= 48rem) {
-    margin-bottom: calc(var(--spacing) * 20);
-  }
-}
-.md\:h-20 {
-  @media (width >= 48rem) {
-    height: calc(var(--spacing) * 20);
-  }
-}
 .md\:grid-cols-2 {
   @media (width >= 48rem) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1177,11 +1024,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .md\:grid-cols-4 {
   @media (width >= 48rem) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.md\:grid-cols-\[1fr_auto\] {
-  @media (width >= 48rem) {
-    grid-template-columns: 1fr auto;
   }
 }
 .md\:grid-cols-\[180px_1fr_auto\] {
@@ -1209,11 +1051,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     gap: calc(var(--spacing) * 4);
   }
 }
-.md\:gap-12 {
-  @media (width >= 48rem) {
-    gap: calc(var(--spacing) * 12);
-  }
-}
 .md\:p-4 {
   @media (width >= 48rem) {
     padding: calc(var(--spacing) * 4);
@@ -1237,11 +1074,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .md\:p-8 {
   @media (width >= 48rem) {
     padding: calc(var(--spacing) * 8);
-  }
-}
-.md\:py-16 {
-  @media (width >= 48rem) {
-    padding-block: calc(var(--spacing) * 16);
   }
 }
 .md\:py-20 {
@@ -1272,18 +1104,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
 }
-.md\:text-5xl {
-  @media (width >= 48rem) {
-    font-size: var(--text-5xl);
-    line-height: var(--tw-leading, var(--text-5xl--line-height));
-  }
-}
-.md\:text-lg {
-  @media (width >= 48rem) {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
-  }
-}
 .md\:text-sm {
   @media (width >= 48rem) {
     font-size: var(--text-sm);
@@ -1298,11 +1118,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .lg\:top-24 {
   @media (width >= 64rem) {
     top: calc(var(--spacing) * 24);
-  }
-}
-.lg\:block {
-  @media (width >= 64rem) {
-    display: block;
   }
 }
 .lg\:flex {
@@ -1400,18 +1215,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     padding-inline: calc(var(--spacing) * 8);
   }
 }
-.lg\:text-5xl {
-  @media (width >= 64rem) {
-    font-size: var(--text-5xl);
-    line-height: var(--tw-leading, var(--text-5xl--line-height));
-  }
-}
-.lg\:text-6xl {
-  @media (width >= 64rem) {
-    font-size: var(--text-6xl);
-    line-height: var(--tw-leading, var(--text-6xl--line-height));
-  }
-}
 @property --tw-space-y-reverse {
   syntax: "*";
   inherits: false;
@@ -1433,71 +1236,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 @property --tw-tracking {
   syntax: "*";
   inherits: false;
-}
-@property --tw-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-shadow-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-shadow-alpha {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
-@property --tw-inset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-inset-shadow-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-inset-shadow-alpha {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
-@property --tw-ring-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-ring-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-inset-ring-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-inset-ring-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-ring-inset {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-ring-offset-width {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-@property --tw-ring-offset-color {
-  syntax: "*";
-  inherits: false;
-  initial-value: #fff;
-}
-@property --tw-ring-offset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
 }
 @property --tw-blur {
   syntax: "*";
@@ -1607,11 +1345,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   inherits: false;
   initial-value: 0;
 }
-@keyframes pulse {
-  50% {
-    opacity: 0.5;
-  }
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -1620,20 +1353,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
       --tw-leading: initial;
       --tw-font-weight: initial;
       --tw-tracking: initial;
-      --tw-shadow: 0 0 #0000;
-      --tw-shadow-color: initial;
-      --tw-shadow-alpha: 100%;
-      --tw-inset-shadow: 0 0 #0000;
-      --tw-inset-shadow-color: initial;
-      --tw-inset-shadow-alpha: 100%;
-      --tw-ring-color: initial;
-      --tw-ring-shadow: 0 0 #0000;
-      --tw-inset-ring-color: initial;
-      --tw-inset-ring-shadow: 0 0 #0000;
-      --tw-ring-inset: initial;
-      --tw-ring-offset-width: 0px;
-      --tw-ring-offset-color: #fff;
-      --tw-ring-offset-shadow: 0 0 #0000;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;

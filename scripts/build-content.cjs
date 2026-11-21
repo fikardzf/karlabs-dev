@@ -9,12 +9,13 @@ assert.equal(data.premiumAutomationLimit, 1);
 for (const p of data.packages) assert(Number.isSafeInteger(p.price) && p.price > 0);
 
 function cards() {
-  return '<div class="package-grid">' + data.packages.map(p => `<article class="package-card${p.id === 'premium' ? ' package-premium' : ''}" data-package="${p.id}" aria-labelledby="package-${p.id}-title">
+  const choices = data.packages.map(p => `<button type="button" aria-controls="offer-${p.id}" aria-pressed="false">${escape(p.name)}</button>`).join('');
+  return `<div class="package-picker filter-bar" role="group" aria-label="Pilih paket" hidden>${choices}</div><div class="package-grid">` + data.packages.map(p => `<article class="package-card${p.id === 'premium' ? ' package-premium' : ''}" id="offer-${p.id}" data-package="${p.id}" aria-labelledby="package-${p.id}-title">
     <div class="package-overview"><header><p class="package-tier">${escape(p.name)}</p><h3 id="package-${p.id}-title">${escape(p.positioning)}</h3><p class="package-price"><span class="package-start-label" lang="en">${escape(data.priceLabel)}</span><span>${money(p.price)}</span></p><p>${escape(p.target)}</p></header>
     <h4>Cakupan paket</h4>${list(p.included)}
     <p class="${p.id === 'premium' ? 'premium-limit' : 'package-limit'}">${escape(p.automation)}.</p>
     </div><details class="package-details" name="package-options"><summary>Fitur opsional dan batas paket</summary><div class="package-details-body"><h4>Opsional · penawaran terpisah</h4>${list(p.optional)}<h4>Tidak otomatis termasuk</h4>${list(p.excluded)}</div></details>
-    <a class="pricing-package-cta btn-primary-theme" href="index.html?package=${p.id}#contact-form" data-inquiry-package="${p.name}">Bahas Paket ${p.name}</a>
+    <a class="pricing-package-cta ink-button" href="index.html?package=${p.id}#contact-form" data-inquiry-package="${p.name}">Bahas Paket ${p.name}</a>
   </article>`).join('') + '</div>';
 }
 function comparison() {

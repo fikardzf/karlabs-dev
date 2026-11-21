@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <style>@media (prefers-reduced-motion:no-preference) { @view-transition { navigation:auto; } }</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Demo Katalog Produk &amp; Automasi UMKM | KAR Labs.dev</title>
@@ -41,15 +42,17 @@
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="public/brand/apple-touch-icon.png" sizes="180x180">
 
-  <link rel="stylesheet" href="public/tailwind.css?v=20261119-ux-1">
-  <link rel="stylesheet" href="public/catalog.css?v=20261118-light-1">
+  <link rel="stylesheet" href="public/tailwind.css?v=20261121-gallery">
+  <link rel="stylesheet" href="public/catalog.css?v=20261121-gallery">
   <link rel="stylesheet" href="public/site.css?v=20261119-ux-1">
+  <link rel="stylesheet" href="/public/demo-studio.css?v=2">
 </head>
 <body class="font-body">
   <a href="#serviceDiscovery" class="catalog-skip">Lewati ke pilihan demo</a>
+  <!-- canvas-dialog:pos -->
   <div id="posReceiptModal" class="pos-receipt fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="posReceiptTitle">
     <div class="pos-receipt-card">
-      <div class="text-center mb-4"><b id="posReceiptTitle" class="text-lg">KAR Labs POS</b><p class="text-xs text-zinc-500">Receipt Simulation</p></div>
+      <div class="text-center mb-4"><b id="posReceiptTitle" class="text-lg">KAR Labs POS</b><p class="text-xs text-zinc-500">Struk transaksi contoh</p></div>
       <div class="pos-receipt-rule"></div>
       <div class="pos-receipt-line"><span>Order</span><b id="posReceiptOrder">#DEMO-0001</b></div>
       <div class="pos-receipt-line"><span>Customer</span><span id="posReceiptCustomer">Walk-in Customer</span></div>
@@ -67,6 +70,7 @@
       <div class="grid grid-cols-2 gap-2"><button id="posReceiptClose" class="border border-zinc-300 rounded-lg py-2 text-sm font-bold">Tutup</button><button id="posReceiptNew" class="bg-[#006847] text-white rounded-lg py-2 text-sm font-bold">Transaksi Baru</button></div>
     </div>
   </div>
+  <!-- /canvas-dialog:pos -->
 
   <div class="catalog-backdrop" aria-hidden="true"></div>
   <nav class="catalog-navigation sticky top-0 z-50 bg-dark/90 backdrop-blur-xl border-b border-dark-border" aria-label="Navigasi utama">
@@ -151,9 +155,15 @@
                 <div class="w-11 h-11 rounded-full bg-accent/10 flex items-center justify-center"><i data-lucide="bot" class="w-6 h-6 text-accent"></i></div>
                 <div><b>KAR Labs Assistant</b><p class="text-xs text-gray-500">Simulasi balasan berbasis kata kunci</p></div>
               </div>
-              <span id="chatScenarioBadge" class="text-[11px] px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/25 font-bold">Toko Online</span>
             </div>
-            <div id="chatArea" class="h-[500px] overflow-y-auto p-4 space-y-3 bg-[radial-gradient(circle_at_top_right,rgba(0,104,71,.08),transparent_35%),linear-gradient(135deg,rgba(255,255,255,.02),transparent)]"></div>
+            <label class="chat-scenario" for="chatScenarioSelect"><span>Coba sebagai pelanggan</span><select id="chatScenarioSelect" class="input-dark w-full">
+                    <option value="ecommerce">🛒 Toko Online</option>
+                    <option value="restaurant">🍽️ Restoran / Café</option>
+                    <option value="clinic">🏥 Klinik</option>
+                    <option value="course">🎓 Course / Kelas Online</option>
+                    <option value="motorDealer">🏍️ Dealer Motor</option>
+                  </select></label>
+            <div id="chatArea" role="log" aria-label="Percakapan simulasi" aria-relevant="additions" class="h-[500px] overflow-y-auto p-4 space-y-3 bg-[radial-gradient(circle_at_top_right,rgba(0,104,71,.08),transparent_35%),linear-gradient(135deg,rgba(255,255,255,.02),transparent)]"></div>
             <div id="quickReplies" class="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto bg-dark-card border-t border-dark-border"></div>
             <div class="p-4 bg-dark-card flex gap-2"><input id="chatInput" aria-label="Pesan untuk chatbot demo" class="input-dark flex-1" placeholder="Coba ketik: menu, reservasi, harga, order, promo, stok, kredit..." /><button id="chatSend" aria-label="Kirim pesan demo" class="btn-primary px-4"><i data-lucide="send" class="w-4 h-4"></i></button></div>
           </div>
@@ -163,23 +173,9 @@
               <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
                 <div>
                   <h4 class="font-heading text-2xl font-bold">Atur balasan demo</h4>
-                  <p class="text-gray-400 text-sm mt-1">Pilih skenario dan coba kata kunci pada percakapan.</p>
+                  <p class="text-gray-400 text-sm mt-1">Coba kata kunci yang tersedia atau buat balasan sendiri.</p>
                 </div>
                 <button id="resetChatDemo" class="btn-outline text-sm px-4 py-2"><i data-lucide="refresh-cw" class="w-4 h-4"></i> Reset Chat</button>
-              </div>
-
-              <div class="bg-dark border border-dark-border rounded-2xl p-4 mb-5">
-                <label for="chatScenarioSelect" class="block text-sm font-bold text-white mb-2">Pilih skenario bisnis</label>
-                <div class="grid md:grid-cols-[1fr_auto] gap-3 items-center">
-                  <select id="chatScenarioSelect" class="input-dark w-full">
-                    <option value="ecommerce">🛒 Toko Online</option>
-                    <option value="restaurant">🍽️ Restoran / Café</option>
-                    <option value="clinic">🏥 Klinik</option>
-                    <option value="course">🎓 Course / Kelas Online</option>
-                    <option value="motorDealer">🏍️ Dealer Motor</option>
-                  </select>
-                  <span class="text-xs text-gray-500">Balasan mengikuti skenario yang dipilih.</span>
-                </div>
               </div>
 
               <div class="bg-dark border border-dark-border rounded-2xl p-4 mb-5">
@@ -355,7 +351,7 @@
                   <button class="pos-payment-btn" data-pos-payment="Card"><i data-lucide="credit-card" class="w-4 h-4 inline mr-1"></i>Card</button>
                   <button class="pos-payment-btn" data-pos-payment="Bank"><i data-lucide="landmark" class="w-4 h-4 inline mr-1"></i>Bank</button>
                 </div>
-                <div class="pos-actions"><button id="posHold" class="pos-hold"><i data-lucide="pause" class="w-4 h-4 inline mr-1"></i> Hold</button><button id="posCheckout" class="pos-checkout"><i data-lucide="check-circle-2" class="w-4 h-4 inline mr-1"></i> Bayar Sekarang</button></div>
+                <div class="pos-actions"><button id="posHold" class="pos-hold"><i data-lucide="pause" class="w-4 h-4 inline mr-1"></i> Tahan pesanan</button><button type="button" id="posResume" class="pos-hold" hidden>Lanjutkan pesanan tertahan</button><button id="posCheckout" class="pos-checkout"><i data-lucide="check-circle-2" class="w-4 h-4 inline mr-1"></i> Lihat struk demo</button></div>
               </div>
             </div>
           </div>
@@ -378,15 +374,15 @@
         </div>
 
         <div class="flex gap-3 overflow-x-auto pb-3 mb-6 justify-start lg:justify-center">
-          <button data-calc="kpr" class="sub-tab-btn active px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">🏠 KPR</button>
+          <button data-calc="bep" class="sub-tab-btn active px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">💰 BEP & Margin</button>
+          <button data-calc="kpr" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">🏠 KPR</button>
           <button data-calc="health" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">🔥 BMI + Kalori</button>
           <button data-calc="ongkir" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">📦 Ongkir</button>
-          <button data-calc="bep" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">💰 BEP & Margin</button>
           <button data-calc="ads" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">📣 ROAS Ads</button>
           <button data-calc="inventory" class="sub-tab-btn px-5 py-2.5 rounded-xl border border-dark-border bg-dark font-bold whitespace-nowrap">📦 Inventory</button>
         </div>
 
-        <div id="calc-kpr" class="calc-panel glass rounded-3xl p-6 md:p-8">
+        <div id="calc-kpr" class="calc-panel hidden glass rounded-3xl p-6 md:p-8">
           <div class="flex flex-col lg:flex-row lg:items-start gap-8">
             <div class="lg:w-[42%]"><div class="flex items-center gap-3 mb-5"><span class="text-3xl">🏠</span><div><h4 class="font-heading text-2xl font-bold">Kalkulator KPR / Cicilan</h4><p class="text-gray-500 text-sm">Simulasi cicilan flat amortized loan dengan breakdown pokok vs bunga.</p></div></div><div class="space-y-5"><label class="block"><span class="text-sm text-gray-400">Harga Rumah / Nilai Pembiayaan (Rp)</span><input id="kprHarga" class="input-dark w-full mt-2" value="500.000.000"></label><label class="block"><div class="flex justify-between text-sm"><span class="text-gray-400">Uang Muka (%)</span><b id="dpLabel">20%</b></div><input id="kprDp" type="range" min="5" max="70" value="20" class="range-accent w-full mt-3"></label><label class="block"><div class="flex justify-between text-sm"><span class="text-gray-400">Tenor (Tahun)</span><b id="tenorLabel">20 tahun</b></div><input id="kprTenor" type="range" min="1" max="30" value="20" class="range-accent w-full mt-3"></label><label class="block"><div class="flex justify-between text-sm"><span class="text-gray-400">Bunga per Tahun (%)</span><b id="bungaLabel">7%</b></div><input id="kprBunga" type="range" min="1" max="18" step="0.1" value="7" class="range-accent w-full mt-3"></label><button id="kprHitung" class="btn-primary w-full">Hitung KPR</button></div></div>
             <div class="lg:flex-1 grid md:grid-cols-2 gap-5"><div class="bg-dark border border-dark-border rounded-2xl p-5"><h5 class="font-bold text-accent mb-4">HASIL UTAMA</h5><div class="space-y-3 text-sm"><div class="flex justify-between gap-4"><span>Uang Muka</span><b id="kprDpResult" class="counting text-right">Rp 0</b></div><div class="flex justify-between gap-4"><span>Pinjaman</span><b id="kprLoanResult" class="text-right">Rp 0</b></div><div class="flex justify-between gap-4"><span>Cicilan/Bln</span><b id="kprMonthlyResult" class="text-accent text-lg text-right">Rp 0</b></div><div class="flex justify-between gap-4"><span>Total Bunga</span><b id="kprInterestResult" class="text-right">Rp 0</b></div><div class="flex justify-between gap-4"><span>Total Bayar</span><b id="kprTotalResult" class="text-right">Rp 0</b></div></div><div class="mt-5 p-4 rounded-xl bg-accent/10 border border-accent/20 text-sm text-gray-300">Cocok untuk properti, leasing, pembiayaan kendaraan, atau simulasi cicilan produk bernilai besar.</div></div><div class="bg-dark border border-dark-border rounded-2xl p-4"><canvas role="img" aria-label="Grafik simulasi pinjaman; angka hasil tersedia di bagian hasil utama." id="kprChart" height="235"></canvas></div></div>
@@ -401,8 +397,8 @@
           <div class="grid lg:grid-cols-2 gap-8 items-start"><div><div class="flex items-center gap-3 mb-5"><span class="text-3xl">📦</span><div><h4 class="font-heading text-2xl font-bold">Kalkulator Ongkir + Dimensional Weight</h4><p class="text-gray-500 text-sm">Simulasi ongkir berbasis jarak kota, berat aktual, dan berat volumetrik.</p></div></div><div class="space-y-5"><div class="grid sm:grid-cols-2 gap-4"><label><span class="text-sm text-gray-400">Kota Asal</span><select id="originCity" class="input-dark w-full mt-2"><option>Jakarta</option><option>Bandung</option><option>Surabaya</option><option>Semarang</option><option>Yogyakarta</option></select></label><label><span class="text-sm text-gray-400">Kota Tujuan</span><select id="destCity" class="input-dark w-full mt-2"><option>Bandung</option><option>Jakarta</option><option>Surabaya</option><option>Semarang</option><option>Yogyakarta</option></select></label></div><label class="block"><span class="text-sm text-gray-400">Berat Aktual (gram)</span><input id="shipWeight" type="number" class="input-dark w-full mt-2" value="1000"></label><div class="grid grid-cols-3 gap-3"><label><span class="text-xs text-gray-400">Panjang cm</span><input id="shipLength" type="number" class="input-dark w-full mt-2" value="30"></label><label><span class="text-xs text-gray-400">Lebar cm</span><input id="shipWidth" type="number" class="input-dark w-full mt-2" value="20"></label><label><span class="text-xs text-gray-400">Tinggi cm</span><input id="shipHeight" type="number" class="input-dark w-full mt-2" value="10"></label></div><div><span class="text-sm text-gray-400">Kurir</span><div id="courierChoices" class="grid sm:grid-cols-2 gap-3 mt-3"></div></div><button id="ongkirHitung" class="btn-primary w-full">Cek Ongkir</button></div></div><div><div class="bg-dark border border-dark-border rounded-2xl p-6"><h5 class="font-bold text-accent mb-4">HASIL:</h5><div class="space-y-2"><div class="text-2xl font-heading font-bold" id="shipCourier">JNE Regular</div><div class="text-gray-400" id="shipRoute">Jakarta → Bandung</div><div class="text-gray-400">Jarak simulasi: <b id="shipDistance" class="text-white">0 km</b></div><div class="text-gray-400">Berat charge: <b id="shipKg" class="text-white">1 kg</b></div><div class="text-gray-400">Volumetrik: <b id="shipVolumetric" class="text-white">1 kg</b></div><div class="text-gray-400">Estimasi: <b id="shipEstimate" class="text-white">2-3 hari</b></div><hr class="border-dark-border my-4"><div class="text-3xl font-heading font-bold text-accent" id="shipCost">Rp 18.000</div><p class="text-xs text-gray-500 mt-3">Harga simulasi: jarak kota memakai pendekatan Haversine + pembulatan berat kg. Bukan tarif resmi ekspedisi.</p></div></div></div></div>
         </div>
 
-        <div id="calc-bep" class="calc-panel hidden glass rounded-3xl p-6 md:p-8">
-          <div class="grid lg:grid-cols-2 gap-8 items-start"><div><div class="flex items-center gap-3 mb-5"><span class="text-3xl">💰</span><div><h4 class="font-heading text-2xl font-bold">Break-even & Profit Margin</h4><p class="text-gray-500 text-sm">Untuk estimasi minimal unit terjual agar bisnis/campaign tidak rugi.</p></div></div><div class="grid sm:grid-cols-2 gap-4"><label><span class="text-sm text-gray-400">Harga Jual / Unit</span><input id="bepPrice" class="input-dark w-full mt-2" value="150.000"></label><label><span class="text-sm text-gray-400">Modal Variabel / Unit</span><input id="bepVariable" class="input-dark w-full mt-2" value="85.000"></label><label><span class="text-sm text-gray-400">Fixed Cost / Bulan</span><input id="bepFixed" class="input-dark w-full mt-2" value="7.500.000"></label><label><span class="text-sm text-gray-400">Target Profit</span><input id="bepTarget" class="input-dark w-full mt-2" value="5.000.000"></label></div><button id="bepHitung" class="btn-primary w-full mt-5">Hitung BEP</button></div><div class="grid sm:grid-cols-2 gap-4"><div class="bg-dark border border-dark-border rounded-2xl p-5"><p class="text-gray-500 text-sm">Contribution Margin</p><div class="text-3xl font-heading font-bold text-accent" id="bepContribution">Rp 65.000</div><p class="text-sm text-gray-400 mt-2">Rasio margin: <b id="bepMarginRatio" class="text-white">43%</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-5"><p class="text-gray-500 text-sm">Break-even Point</p><div class="text-3xl font-heading font-bold" id="bepUnits">116 unit</div><p class="text-sm text-gray-400 mt-2">Omzet BEP: <b id="bepRevenue" class="text-white">Rp 17.400.000</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-5 sm:col-span-2"><p class="text-gray-500 text-sm">Target Profit</p><div class="text-3xl font-heading font-bold" id="bepTargetUnits">193 unit</div><p class="text-sm text-gray-400 mt-2">Estimasi omzet target: <b id="bepTargetRevenue" class="text-accent">Rp 28.950.000</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-4 sm:col-span-2"><canvas role="img" aria-label="Grafik simulasi BEP; angka hasil tersedia di panel perhitungan." id="bepChart" height="180"></canvas></div></div></div>
+        <div id="calc-bep" class="calc-panel glass rounded-3xl p-6 md:p-8">
+          <div class="grid lg:grid-cols-2 gap-8 items-start"><div><div class="flex items-center gap-3 mb-5"><span class="text-3xl">💰</span><div><h4 class="font-heading text-2xl font-bold">Break-even & Profit Margin</h4><p class="text-gray-500 text-sm">Untuk estimasi minimal unit terjual agar bisnis/campaign tidak rugi.</p></div></div><div class="grid sm:grid-cols-2 gap-4"><label><span class="text-sm text-gray-400">Harga Jual / Unit</span><input id="bepPrice" class="input-dark w-full mt-2" value="150.000"></label><label><span class="text-sm text-gray-400">Modal Variabel / Unit</span><input id="bepVariable" class="input-dark w-full mt-2" value="85.000"></label><label><span class="text-sm text-gray-400">Fixed Cost / Bulan</span><input id="bepFixed" class="input-dark w-full mt-2" value="7.500.000"></label><label><span class="text-sm text-gray-400">Target Profit</span><input id="bepTarget" class="input-dark w-full mt-2" value="5.000.000"></label></div><label class="price-dial" for="bepDial"><span>Geser harga jual per unit</span><input id="bepDial" type="range" min="1000" max="300000" step="1000" value="150000"></label><p id="bepAdvice" class="bep-advice"></p><button type="button" class="btn-outline" id="resetBep">Kembalikan angka contoh</button><button id="bepHitung" class="btn-primary w-full mt-5">Hitung BEP</button></div><div class="grid sm:grid-cols-2 gap-4"><div class="bg-dark border border-dark-border rounded-2xl p-5"><p class="text-gray-500 text-sm">Contribution Margin</p><div class="text-3xl font-heading font-bold text-accent" id="bepContribution">Rp 65.000</div><p class="text-sm text-gray-400 mt-2">Rasio margin: <b id="bepMarginRatio" class="text-white">43%</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-5"><p class="text-gray-500 text-sm">Break-even Point</p><div class="text-3xl font-heading font-bold" id="bepUnits">116 unit</div><p class="text-sm text-gray-400 mt-2">Omzet BEP: <b id="bepRevenue" class="text-white">Rp 17.400.000</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-5 sm:col-span-2"><p class="text-gray-500 text-sm">Target Profit</p><div class="text-3xl font-heading font-bold" id="bepTargetUnits">193 unit</div><p class="text-sm text-gray-400 mt-2">Estimasi omzet target: <b id="bepTargetRevenue" class="text-accent">Rp 28.950.000</b></p></div><div class="bg-dark border border-dark-border rounded-2xl p-4 sm:col-span-2"><canvas role="img" aria-label="Grafik simulasi BEP; angka hasil tersedia di panel perhitungan." id="bepChart" height="180"></canvas></div></div></div>
         </div>
 
         <div id="calc-ads" class="calc-panel hidden glass rounded-3xl p-6 md:p-8">
@@ -449,13 +445,13 @@
                 <p id="dashboardSubtitle" class="text-gray-500 text-sm mt-1">Preview dashboard Excel/Google Sheets dengan rumus profitability yang lebih lengkap.</p>
               </div>
               <div class="flex flex-col sm:flex-row gap-3">
-                <select id="dashboardPeriod" aria-label="Periode dashboard demo" class="input-dark w-full sm:w-auto"><option>Jan 2024</option><option>Feb 2024</option><option>Mar 2024</option><option>Q1 2024</option></select>
+                <span class="showroom-note">Periode contoh tetap</span>
                 <button id="exportFinanceCsv" class="btn-outline py-2 px-3 text-sm">Export CSV</button>
               </div>
             </div>
 
-            <div id="dashFormulaChips" class="flex gap-2 overflow-x-auto pb-3 mb-5"></div>
-            <div id="dashCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6"></div>
+            <div id="dashFormulaChips" role="region" aria-label="Rumus indikator dashboard" tabindex="0" class="flex gap-2 overflow-x-auto pb-3 mb-5"></div>
+            <label id="financePeriodLabel" class="report-period">Periode transaksi <select id="financePeriod"><option value="">Semua bulan</option></select></label><div id="dashCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6"></div>
 
             <div class="grid lg:grid-cols-2 gap-5 mb-6">
               <div class="border border-dark-border rounded-2xl p-4 bg-dark-alt"><h5 id="chartOneTitle" class="font-bold mb-4">Trend Pemasukan vs Pengeluaran</h5><canvas role="img" aria-label="Grafik tren data contoh; detail tersedia di KPI dan tabel dashboard." id="financeBar" height="230"></canvas></div>
@@ -469,7 +465,7 @@
                 <div><h5 id="dashboardTableTitle" class="font-bold">Tabel Transaksi & Formula</h5><p id="dashboardTableNote" class="text-xs text-gray-500 mt-1">Saldo, margin, dan insight dihitung otomatis.</p></div>
                 <div class="flex gap-2"><button id="addTransaction" class="btn-primary py-2 px-3 text-sm">Tambah Data</button></div>
               </div>
-              <div class="table-scroll"><table class="dashboard-table w-full text-sm"><thead id="financeHead" class="text-gray-400 bg-dark"></thead><tbody id="financeTable"></tbody></table></div>
+              <div class="table-scroll" role="region" aria-labelledby="dashboardTableTitle" tabindex="0"><table class="dashboard-table w-full text-sm"><thead id="financeHead" class="text-gray-400 bg-dark"></thead><tbody id="financeTable"></tbody></table></div>
             </div>
           </div>
           <div class="trust-note mt-5">
@@ -490,7 +486,8 @@
         <details class="reference-details"><summary>Lihat semua referensi workflow</summary><div id="workflowCatalog" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div></details>
 
         <div id="workflowSummary" class="workflow-summary"></div>
-        <div class="workflow-controls"><button id="startWorkflowGuide" type="button" class="btn-primary">Mulai panduan</button><button id="nextWorkflowStep" type="button" class="btn-outline" disabled>Langkah berikutnya</button><button id="resetWorkflowGuide" type="button" class="btn-outline">Reset simulasi</button><label>Data contoh<select id="workflowDataState"><option value="valid">Lengkap</option><option value="missing">Kontak belum lengkap</option></select></label></div>
+        <label class="workflow-sample" id="workflowSampleLabel">Catatan untuk dicoba <select id="workflowSample"><option value="cafe">Kedai kopi</option><option value="bakery">Toko roti</option></select></label><div class="workflow-controls"><button id="startWorkflowGuide" type="button" class="btn-primary">Mulai panduan</button><button id="nextWorkflowStep" type="button" class="btn-outline" disabled>Langkah berikutnya</button><button id="resetWorkflowGuide" type="button" class="btn-outline">Reset simulasi</button><label>Data contoh<select id="workflowDataState"><option value="valid">Lengkap</option><option value="missing">Kontak belum lengkap</option></select></label></div>
+        <ol id="workflowProgress" class="workflow-progress" aria-label="Progres panduan"></ol>
         <p id="workflowGuideStatus" class="showroom-status" role="status">Pilih skenario, lalu mulai panduan.</p>
         <div id="workflowGuideError" class="showroom-status" role="alert" hidden><p>Kontak pada data contoh belum lengkap. Perbaiki data sebelum melanjutkan.</p><button id="repairWorkflowData" type="button" class="btn-outline">Lengkapi data contoh</button></div>
         <div id="workflowRecord" class="workflow-record" aria-live="polite"></div>
@@ -520,9 +517,9 @@
         <button id="resetScrapingDemo" type="button" class="btn-outline">Reset simulasi data</button>
         <div class="text-center mb-8"><h3 class="font-heading text-3xl md:text-4xl font-bold mb-3">Demo Web Scraping</h3><p class="text-gray-400">Simulasi proses mengambil data dari website dan mengubahnya menjadi tabel.</p></div>
         <div class="grid lg:grid-cols-[390px_1fr] gap-6">
-          <div class="glass rounded-3xl p-6"><h4 class="font-heading text-2xl font-bold mb-5">Scraping Configuration</h4><div class="space-y-5"><label class="block"><span class="text-sm text-gray-400">Target URL</span><input id="scrapeUrl" class="input-dark w-full mt-2" value="https://toko-contoh.com/products"></label><div><span class="text-sm text-gray-400">Data yang diambil</span><div class="space-y-2 mt-3 text-sm"><label class="flex gap-2"><input type="checkbox" checked> Nama Produk</label><label class="flex gap-2"><input type="checkbox" checked> Harga</label><label class="flex gap-2"><input type="checkbox" checked> Rating</label><label class="flex gap-2"><input type="checkbox" checked> Stok</label><label class="flex gap-2"><input type="checkbox"> Deskripsi</label></div></div><label class="block"><span class="text-sm text-gray-400">Jumlah halaman</span><select id="scrapePages" class="input-dark w-full mt-2"><option>3</option><option selected>5</option><option>10</option></select></label><button id="startScraping" class="btn-primary w-full">🚀 Mulai Scraping</button></div></div>
-          <div class="space-y-6"><div id="scrapeProgressBox" class="glass rounded-3xl p-6 hidden"><div class="flex justify-between gap-4 mb-3"><b>⏳ Scraping in progress...</b><span id="scrapeProgressText" class="text-accent font-bold">0%</span></div><div class="progress-bar mb-3"><div id="scrapeProgressFill" class="progress-fill" style="width:0%"></div></div><p class="text-sm text-gray-400 mb-3">Halaman <span id="scrapePageNow">1</span> dari <span id="scrapeTotalPages">5</span> • <span id="scrapeCount">0</span> data terkumpul</p><div id="scrapeLogs" class="h-36 overflow-y-auto bg-dark border border-dark-border rounded-2xl p-3 text-xs text-gray-400 font-mono space-y-1"></div></div>
-          <div id="scrapeResultBox" class="glass rounded-3xl p-6 hidden"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4"><div><h4 class="font-heading text-2xl font-bold">✅ Scraping selesai!</h4><p class="text-gray-400"><span id="scrapeTotalResult">0</span> data berhasil diambil</p></div><div class="flex gap-2"><button id="downloadScrapeCsv" class="btn-primary py-2 px-3 text-sm">📥 Download CSV</button><button id="copyScrape" class="btn-outline py-2 px-3 text-sm">📋 Copy</button></div></div><div class="flex flex-col md:flex-row gap-3 mb-4"><input id="scrapeSearch" aria-label="Cari hasil scraping contoh" class="input-dark flex-1" placeholder="Search/filter produk..."><select id="scrapePageSize" aria-label="Jumlah hasil per halaman" class="input-dark"><option>10</option><option>20</option><option>50</option></select></div><div class="table-scroll border border-dark-border rounded-2xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark text-gray-400"><tr><th class="sortable p-3 text-left" data-sort="no">No</th><th class="sortable p-3 text-left" data-sort="nama">Nama</th><th class="sortable p-3 text-right" data-sort="harga">Harga</th><th class="sortable p-3 text-right" data-sort="rating">Rating</th><th class="sortable p-3 text-right" data-sort="stok">Stok</th></tr></thead><tbody id="scrapeTable"></tbody></table></div><div class="flex items-center justify-between mt-4 text-sm"><button id="scrapePrev" class="btn-outline py-2 px-3">Prev</button><span id="scrapePageInfo" class="text-gray-400">Page 1</span><button id="scrapeNext" class="btn-outline py-2 px-3">Next</button></div></div></div>
+          <div class="glass rounded-3xl p-6"><h4 class="font-heading text-2xl font-bold mb-5">Sumber data contoh</h4><div class="space-y-5"><label class="block"><span class="text-sm text-gray-400">Pilih katalog simulasi</span><select id="scrapeSource" class="input-dark w-full mt-2"><option value="fashion">Toko pakaian</option><option value="cafe">Kedai kopi</option></select></label><p id="scrapePageHint" class="showroom-note">Tiap halaman berisi hingga sembilan produk toko.</p><label class="block"><span class="text-sm text-gray-400">Jumlah halaman</span><select id="scrapePages" class="input-dark w-full mt-2"><option>3</option><option selected>5</option><option>10</option></select></label><button id="startScraping" class="btn-primary w-full">Baca halaman contoh</button></div></div>
+          <div class="space-y-6"><div class="sample-tray"><h4 id="sampleTitle">Cuplikan katalog sumber</h4><ol id="scrapeSamples" class="scrape-samples"></ol></div><div id="scrapeProgressBox" class="glass rounded-3xl p-6 hidden"><div class="flex justify-between gap-4 mb-3"><b id="scrapeState">Membaca halaman contoh</b><span id="scrapeProgressText" class="text-accent font-bold">0%</span></div><div class="progress-bar mb-3"><div id="scrapeProgressFill" class="progress-fill" style="width:0%"></div></div><p class="text-sm text-gray-400 mb-3">Halaman <span id="scrapePageNow">1</span> dari <span id="scrapeTotalPages">5</span> • <span id="scrapeCount">0</span> data terkumpul</p><div id="scrapeLogs" class="h-36 overflow-y-auto bg-dark border border-dark-border rounded-2xl p-3 text-xs text-gray-400 font-mono space-y-1"></div></div>
+          <div id="scrapeResultBox" class="glass rounded-3xl p-6 hidden"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4"><div><h4 class="font-heading text-2xl font-bold">✅ Scraping selesai!</h4><p class="text-gray-400"><span id="scrapeTotalResult">0</span> data berhasil diambil</p></div><div class="flex gap-2"><button id="downloadScrapeCsv" class="btn-primary py-2 px-3 text-sm">📥 Download CSV</button><button id="copyScrape" class="btn-outline py-2 px-3 text-sm">📋 Copy</button></div></div><details class="csv-preview"><summary>Pratinjau CSV · seluruh hasil</summary><small>Tiga baris pertama dari berkas unduhan.</small><pre id="scrapeCsvPreview" tabindex="0" aria-label="Cuplikan CSV"></pre></details><div class="flex flex-col md:flex-row gap-3 mb-4"><input id="scrapeSearch" aria-label="Cari hasil scraping contoh" class="input-dark flex-1" placeholder="Search/filter produk..."><select id="scrapePageSize" aria-label="Jumlah hasil per halaman" class="input-dark"><option>10</option><option>20</option><option>50</option></select></div><div class="table-scroll border border-dark-border rounded-2xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark text-gray-400"><tr><th class="sortable p-3 text-left" data-sort="no">No</th><th class="sortable p-3 text-left" data-sort="nama">Nama</th><th class="sortable p-3 text-right" data-sort="harga">Harga</th><th class="sortable p-3 text-right" data-sort="rating">Rating</th><th class="sortable p-3 text-right" data-sort="stok">Stok</th></tr></thead><tbody id="scrapeTable"></tbody></table></div><div class="flex items-center justify-between mt-4 text-sm"><button id="scrapePrev" class="btn-outline py-2 px-3">Prev</button><span id="scrapePageInfo" class="text-gray-400">Page 1</span><button id="scrapeNext" class="btn-outline py-2 px-3">Next</button></div></div></div>
         </div>
         <p class="text-center text-gray-500 text-sm mt-6">Data simulasi. Pengambilan data nyata memerlukan izin dan harus mengikuti aturan situs sumber.</p>
         <div class="mt-10" data-service-cta="Web Scraping Demo"></div>
@@ -530,6 +527,7 @@
     </div>
   </main>
 
+  <!-- canvas-dialog:landing -->
   <div id="landingPreviewModal" role="dialog" aria-modal="true" aria-labelledby="landingPreviewTitle" class="modal fixed inset-0 bg-black/85 backdrop-blur-sm z-[100] items-center justify-center p-3 md:p-5">
     <div class="w-full max-w-7xl">
       <div class="glass rounded-3xl overflow-hidden border border-dark-border">
@@ -544,13 +542,20 @@
           </div>
         </div>
         <div class="p-3 md:p-4 bg-dark">
-          <iframe id="landingPreviewFrame" class="landing-preview-frame" title="Landing page preview"></iframe>
+          <label class="landing-switch">Tampilan <select id="landingSwitch"></select></label>
+          <div class="landing-sizes" role="group" aria-label="Ukuran pratinjau"><button type="button" data-preview-width="wide" aria-pressed="true">Desktop</button><button type="button" data-preview-width="phone" aria-pressed="false">Ponsel</button></div>
+          <iframe sandbox="" id="landingPreviewFrame" class="landing-preview-frame" title="Landing page preview"></iframe>
         </div>
       </div>
     </div>
   </div>
+  <!-- /canvas-dialog:landing -->
+  <!-- canvas-dialog:dashboard -->
   <div id="transactionModal" role="dialog" aria-modal="true" aria-labelledby="transactionModalTitle" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] items-center justify-center p-4"><div class="glass rounded-3xl p-6 w-full max-w-lg"><div class="flex items-center justify-between mb-5"><h3 id="transactionModalTitle" class="font-heading text-2xl font-bold">Tambah Transaksi</h3><button class="close-modal text-gray-400 hover:text-white" aria-label="Tutup form transaksi"><i data-lucide="x" class="w-6 h-6"></i></button></div><form id="transactionForm" class="space-y-4"><input name="tanggal" type="date" class="input-dark w-full" required><select name="tipe" class="input-dark w-full"><option value="masuk">Masuk</option><option value="keluar">Keluar</option></select><input name="kategori" class="input-dark w-full" placeholder="Kategori" required><input name="deskripsi" class="input-dark w-full" placeholder="Deskripsi" required><input name="jumlah" type="number" class="input-dark w-full" placeholder="Jumlah" required><button class="btn-primary w-full" type="submit">Simpan Data</button></form></div></div>
-  <dialog id="productDetailDialog" aria-labelledby="productDetailTitle"><div class="showroom-heading"><h2 id="productDetailTitle"></h2><button id="closeProductDetail" type="button" class="btn-outline">Tutup detail</button></div><div id="productDetailBody"></div><a id="productDetailWhatsApp" data-lead-service="product-catalog" data-lead-placement="catalog" class="btn-primary" target="_blank" rel="noopener noreferrer">Konsultasi alur katalog ini</a><p class="showroom-note">Tautan ini menghubungi KAR Labs untuk konsultasi pembuatan katalog, bukan membeli produk contoh.</p></dialog>
+  <!-- /canvas-dialog:dashboard -->
+  <!-- canvas-dialog:product -->
+  <dialog id="productDetailDialog" aria-labelledby="productDetailTitle"><div class="showroom-heading"><h2 id="productDetailTitle"></h2><button id="closeProductDetail" type="button" class="btn-outline">Tutup detail</button></div><div id="productDetailBody"></div><div class="product-inquiry-preview"><label id="servingLabel">Penyajian contoh <select id="productServing"><option>Panas</option><option>Dingin</option></select></label><h3>Contoh pesan ke penjual</h3><p id="productMessage" aria-live="polite"></p><small>Simulasi WhatsApp. Pesan ini hanya ditampilkan di sini.</small></div><a id="productDetailWhatsApp" data-lead-service="product-catalog" data-lead-placement="catalog" class="btn-primary" target="_blank" rel="noopener noreferrer">Diskusikan katalog usaha saya</a><p class="showroom-note">Tautan ini menghubungi KAR Labs untuk konsultasi pembuatan katalog, bukan membeli produk contoh.</p></dialog>
+  <!-- /canvas-dialog:product -->
   <div id="toast" role="status" aria-live="polite" class="toast glass rounded-2xl px-5 py-3 text-sm font-bold border-accent/40"></div>
   <button id="backTop" aria-label="Kembali ke atas" class="back-top btn-primary rounded-full w-12 h-12 p-0"><i data-lucide="arrow-up" class="w-5 h-5" aria-hidden="true"></i></button>
 
@@ -559,18 +564,19 @@
 <!-- package-summary:end -->
   <footer class="py-12 border-t border-dark-border bg-dark"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center"><a class="brand-link footer-brand" href="index.html"><img class="brand-logo" src="public/brand/karlabs-logo-96.webp" srcset="public/brand/karlabs-logo-96.webp 1x, public/brand/karlabs-logo-192.webp 2x" width="56" height="56" alt="KAR Labs" decoding="async"><span class="brand-name" aria-hidden="true">KAR Labs<span>.dev</span></span></a><p class="text-gray-500 text-sm">&copy; 2026 KAR Labs.dev. Katalog interaktif per kategori layanan.</p><a href="index.html#layanan" class="text-accent hover:underline text-sm font-bold">← Kembali ke Layanan</a></div></footer>
 
-  <script src="public/lead-events.js?v=20261118-light-1" defer></script>
+  <script src="public/lead-events.js?v=20261121-gallery" defer></script>
   <script src="public/packages.js?v=20261118-copy-1" defer></script>
-  <script src="public/catalog-core.js?v=20261118-copy-1" defer></script>
-  <script src="public/catalog-landing.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-chatbot.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-calculators.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-dashboard.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-workflow.js?v=20261119-ux-1" defer></script>
-  <script src="public/catalog-pos.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-scraping.js?v=20261118-light-1" defer></script>
-  <script src="public/catalog-product.js?v=20261118-copy-1" defer></script>
-  <script src="public/catalog-showroom.js?v=20261118-copy-1" defer></script>
+  <script src="public/catalog-core.js?v=20261121-showroom" defer></script>
+  <script src="public/catalog-landing.js?v=20261122-final" defer></script>
+  <script src="public/catalog-chatbot.js?v=20261122-final" defer></script>
+  <script src="public/catalog-calculators.js?v=20261122-final" defer></script>
+  <script src="public/catalog-dashboard.js?v=20261122-final" defer></script>
+  <script src="public/catalog-workflow.js?v=20261122-final" defer></script>
+  <script src="public/catalog-pos.js?v=20261122-final" defer></script>
+  <script src="public/catalog-scraping.js?v=20261122-final" defer></script>
+  <script src="public/catalog-product.js?v=20261122-final" defer></script>
+  <script src="public/catalog-dialogs.js?v=20261121-gallery" defer></script>
+  <script src="public/catalog-showroom.js?v=20261121-gallery" defer></script>
   <script src="public/catalog-init.js?v=20261118-light-1" defer></script>
   <script src="public/site.js?v=20261119-ux-1" defer></script>
 </body>

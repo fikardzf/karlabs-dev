@@ -125,10 +125,18 @@
     const order=currentPreset.startsWith('order');
     const status=workflowGuideStep<0?'Belum dimulai':workflowGuideStep===0?'Data contoh diterima':workflowGuideStep===1?'Catatan contoh diperiksa':'Draft tindak lanjut tersedia';
     const workflow=workflowCatalog[currentPreset];
+    $('#workflowProgress').innerHTML = workflow.nodes.map((step, i) =>
+      `<li class="${i <= workflowGuideStep ? 'filled' : ''}"${i === workflowGuideStep ? ' aria-current="step"' : ''}><span aria-hidden="true">${i < workflowGuideStep ? '✓' : i + 1}</span>${step.title}</li>`).join('');
     const basic=currentPreset==='lead'||currentPreset==='order-basic';
+    $('#workflowSampleLabel').hidden = !basic;
+    $('#workflowSample').disabled = started;
+    const bakery = $('#workflowSample').value === 'bakery';
+    const shop = bakery ? 'Toko roti contoh' : 'Kedai kopi contoh';
+    const request = order ? (bakery ? '3 croissant' : '2 kopi susu') : (bakery ? 'Daftar roti dan pilihan isian' : 'Daftar minuman dan pilihan susu');
+    const draft = order ? `Pesanan ${request} tercatat untuk ${shop}. Mohon periksa sebelum disiapkan.` : `Terima kasih sudah bertanya tentang ${request.toLowerCase()}. Pilihan mana yang ingin Anda lihat?`;
     const node=workflow.nodes[workflowGuideStep];
-    const fields=basic?`<div><dt>Usaha</dt><dd>Usaha Contoh (simulasi)</dd></div><div><dt>Kebutuhan</dt><dd>${order?'Pesanan minuman contoh':'Katalog produk untuk pelanggan'}</dd></div><div><dt>Status</dt><dd>${status}</dd></div>`:started?`<div><dt>Alur</dt><dd>${workflow.label}</dd></div><div><dt>Langkah saat ini</dt><dd>${node.title}</dd></div><div><dt>Hasil contoh</dt><dd>${escapeCatalogHtml(node.output)}</dd></div>`:'';
-    $('#workflowRecord').innerHTML=started?`<h4>${basic?'Catatan '+(order?'order':'calon pelanggan')+' contoh':'Catatan simulasi'}</h4><dl>${fields}</dl><p class="showroom-note">${workflowGuideStep===workflow.nodes.length-1?'Selesai di browser. Draft belum dikirim ke siapa pun.':'Lanjutkan untuk melihat perubahan catatan.'}</p>`:'<p>Belum ada catatan contoh. Tekan Mulai panduan untuk melihat alurnya.</p>';
+    const fields=basic?`<div><dt>Usaha</dt><dd>${shop}</dd></div><div><dt>Kebutuhan</dt><dd>${request}</dd></div><div><dt>Status</dt><dd>${status}</dd></div>`:started?`<div><dt>Alur</dt><dd>${workflow.label}</dd></div><div><dt>Langkah saat ini</dt><dd>${node.title}</dd></div><div><dt>Hasil contoh</dt><dd>${escapeCatalogHtml(node.output)}</dd></div>`:'';
+    $('#workflowRecord').innerHTML=started?`<h4>${basic?'Catatan '+(order?'order':'calon pelanggan')+' contoh':'Catatan simulasi'}</h4><dl>${fields}</dl>${basic && workflowGuideStep===workflow.nodes.length-1 ? `<blockquote class="workflow-draft">${draft}</blockquote>` : ''}<p class="showroom-note">${workflowGuideStep===workflow.nodes.length-1?'Selesai di browser. Draft belum dikirim ke siapa pun.':'Lanjutkan untuk melihat perubahan catatan.'}</p>`:'<p>Belum ada catatan contoh. Tekan Mulai panduan untuk melihat alurnya.</p>';
     $('#nextWorkflowStep').disabled=!started||workflowGuideStep>=workflowCatalog[currentPreset].nodes.length-1;
     $('#startWorkflowGuide').disabled=started;
   }
