@@ -35,13 +35,15 @@ function initProductCatalog() {
       const serving = $('#productServing');
       $('#servingLabel').hidden = !hasServing;
       serving.selectedIndex = 0;
+      const quantity = $('#productQuantity');
+      quantity.selectedIndex = 0;
       function previewMessage() {
         const item = product.name + (hasServing ? ' (' + serving.value.toLowerCase() + ')' : '');
-        $('#productMessage').textContent = `Halo, apakah ${item} seharga ${fmtRp(product.price)} masih tersedia? Saya ingin pesan satu.`;
+        $('#productMessage').textContent = `Halo, saya ingin pesan ${quantity.value} ${item}. Apakah masih tersedia? Totalnya ${fmtRp(product.price * Number(quantity.value))}, ya?`;
       }
-      serving.onchange = previewMessage;
+      serving.onchange = quantity.onchange = previewMessage;
       previewMessage();
-      $('#productDetailWhatsApp').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo KAR Labs, saya ingin konsultasi Website Katalog Produk dengan alur seperti produk contoh '+product.name+'. Saya ingin membahas katalog untuk usaha saya, bukan membeli produk demo. Jenis usaha saya: ')}`;
+      $('#productDetailWhatsApp').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo KAR Labs, saya mencoba katalog dan melihat detail '+product.name+'. Saya ingin membuat katalog untuk usaha saya. Jenis usaha saya: ')}`;
       dialog.showModal();
     }
     function reset() {

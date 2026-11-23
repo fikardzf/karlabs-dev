@@ -130,6 +130,7 @@
     const basic=currentPreset==='lead'||currentPreset==='order-basic';
     $('#workflowSampleLabel').hidden = !basic;
     $('#workflowSample').disabled = started;
+    $('#workflowDataState').disabled = workflowGuideStep > 0;
     const bakery = $('#workflowSample').value === 'bakery';
     const shop = bakery ? 'Toko roti contoh' : 'Kedai kopi contoh';
     const request = order ? (bakery ? '3 croissant' : '2 kopi susu') : (bakery ? 'Daftar roti dan pilihan isian' : 'Daftar minuman dan pilihan susu');
@@ -163,6 +164,12 @@
       $('#workflowGuideError').hidden=true;
       showNode(workflowGuideStep);renderWorkflowRecord();
       $('#workflowGuideStatus').textContent=`Langkah ${workflowGuideStep+1} dari ${workflowCatalog[currentPreset].nodes.length}: ${workflowCatalog[currentPreset].nodes[workflowGuideStep].title}.`;
+    };
+    $('#workflowDataState').onchange = () => {
+      if ($('#workflowDataState').value === 'valid' && !$('#workflowGuideError').hidden) {
+        $('#workflowGuideError').hidden = true;
+        $('#workflowGuideStatus').textContent = 'Kontak sudah lengkap. Lanjutkan ke pencatatan.';
+      }
     };
     $('#repairWorkflowData').onclick=()=>{$('#workflowDataState').value='valid';$('#workflowGuideError').hidden=true;$('#workflowGuideStatus').textContent='Kontak contoh sudah dilengkapi. Tekan Langkah berikutnya untuk mencoba lagi.';$('#nextWorkflowStep').focus();};
     $('#resetWorkflowGuide').onclick=resetWorkflowGuide;

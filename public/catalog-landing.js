@@ -583,8 +583,12 @@
 
   let activeLandingTemplate = landingTemplates[0];
   let activeLandingFilter = 'Semua';
-  const landingFilters = ['Semua','F&B','Healthcare','Fashion','Property','Education','Tech','Event','Portfolio'];
-  const landingFilterMap = { 'F&B':['Restoran & Café'], Healthcare:['Klinik & Healthcare'], Fashion:['Fashion & Online Shop'], Property:['Properti & Real Estate'], Education:['Course & Education'], Tech:['SaaS & Tech Startup'], Event:['Event & Community'], Portfolio:['Personal Brand & Portfolio'] };
+  const landingFilterMap = {
+    Kuliner:'Restoran & Café', Klinik:'Klinik & Healthcare', Mode:'Fashion & Online Shop',
+    Properti:'Properti & Real Estate', Pendidikan:'Course & Education', Teknologi:'SaaS & Tech Startup',
+    Acara:'Event & Community', Portofolio:'Personal Brand & Portfolio'
+  };
+  const landingFilters = ['Semua', ...Object.keys(landingFilterMap)];
 
   function miniItems(items){ return (items||[]).map(x=>`<span>${x}</span>`).join(''); }
   function landingHtml(t){
@@ -632,15 +636,19 @@
   }
   function filteredLandingTemplates(){
     if(activeLandingFilter==='Semua') return landingTemplates;
-    const cats=landingFilterMap[activeLandingFilter] || [];
-    return landingTemplates.filter(t=>cats.includes(t.category));
+    return landingTemplates.filter(t => t.category === landingFilterMap[activeLandingFilter]);
   }
   let miniatureObserver;
   function renderLandingTemplates(){
     const grid=$('#landingTemplateGrid'); if(!grid)return;
     renderLandingFilters();
     const data=filteredLandingTemplates();
-    grid.innerHTML=data.map(t=>`<article class="landing-template-card glass rounded-3xl p-4 glow-hover transition-all duration-300 hover:-translate-y-1"><div class="landing-mini-browser mb-4"></div><div class="flex items-start justify-between gap-3 mb-2"><div><p class="text-accent text-xs font-bold uppercase tracking-wider">${t.category}</p><h5 class="font-heading text-xl font-bold mt-1">${t.icon} ${t.title}</h5></div><span class="text-[11px] text-gray-500 border border-dark-border rounded-full px-2 py-1 whitespace-nowrap">${t.tone}</span></div><p class="text-gray-400 text-sm leading-relaxed mb-4">${t.desc}</p><div class="flex flex-wrap gap-2 mb-4">${t.features.map(f=>`<span class="text-[11px] bg-dark border border-dark-border rounded-full px-2.5 py-1 text-gray-400">${f}</span>`).join('')}</div><div class="landing-card-actions"><button type="button" class="btn-primary landing-preview-btn preview-landing-btn" data-template="${t.id}" aria-label="Lihat preview besar ${t.title}">Buka tampilan</button></div></article>`).join('');
+    $('#landingCount').textContent = data.length + ' contoh desain';
+    grid.innerHTML = data.map(t => `<article class="landing-template-card">
+      <div class="landing-mini-browser"></div>
+      <div class="landing-design-caption"><p>${t.category}</p><h4>${t.title}</h4>
+      <p>${t.desc}</p><button type="button" class="preview-landing-btn" data-template="${t.id}" aria-label="Buka desain ${t.title}">Buka desain <span aria-hidden="true">↗</span></button></div>
+    </article>`).join('');
     miniatureObserver?.disconnect();
     const pictures = $$('.landing-mini-browser', grid);
     const samples = new Map(pictures.map((picture, i) => [picture, data[i]]));
@@ -661,16 +669,15 @@
           miniatureObserver.unobserve(entry.target);
           mount(entry.target);
         }
-      }, {rootMargin:'240px'});
+      }, {rootMargin:'80px'});
       pictures.forEach(picture => miniatureObserver.observe(picture));
     } else pictures.forEach(mount);
-    // Event delegation lebih stabil untuk card yang di-render ulang saat filter industri berubah.
     grid.onclick=(event)=>{
       const btn=event.target.closest('.preview-landing-btn');
       if(!btn || !grid.contains(btn)) return;
       event.preventDefault();
       event.stopPropagation();
-      openLandingPreview(btn.dataset.template);
+      openLandingPreview(btn.dataset.template, btn);
     };
     refreshIcons();
   }
@@ -680,23 +687,20 @@
   function mobilePreviewShell(t){
     const doc = landingHtml(t);
     const title = `${t.icon || ''} ${t.title || 'Landing Page Preview'}`.trim();
-    return `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} - Mobile Preview</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f8fafc;color:#0f172a;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}.preview-shell{width:100vw;height:100dvh;display:flex;flex-direction:column;background:#f8fafc}.preview-bar{height:52px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;border-bottom:1px solid rgba(15,23,42,.12);background:#ffffff;backdrop-filter:blur(12px)}.preview-title{min-width:0;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preview-meta{font-size:11px;color:#006847;font-weight:800}.preview-open{border:1px solid rgba(0,104,71,.45);background:rgba(0,104,71,.12);color:#006847;border-radius:999px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:900;white-space:nowrap}.preview-frame-wrap{flex:1;min-height:0;width:100%;max-width:430px;margin:0 auto;background:#fff;box-shadow:0 0 0 1px rgba(15,23,42,.12)}iframe{display:block;width:100%;height:100%;border:0;background:#fff}@media(min-width:768px){.preview-frame-wrap{height:100%;border-left:1px solid rgba(15,23,42,.12);border-right:1px solid rgba(15,23,42,.12)}}<\/style></head><body><main class="preview-shell"><div class="preview-bar"><div style="min-width:0"><div class="preview-meta">Mobile Preview</div><div class="preview-title">${title}</div></div><a class="preview-open" href="javascript:window.print()">Simpan</a></div><div class="preview-frame-wrap"><iframe sandbox="" id="mobileLandingPreview" title="${title}"></iframe></div></main><script>document.getElementById('mobileLandingPreview').srcdoc = ${JSON.stringify(doc)};<\/script></body></html>`;
+    return `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} - Mobile Preview</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f8fafc;color:#0f172a;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}.preview-shell{width:100vw;height:100dvh;display:flex;flex-direction:column;background:#f8fafc}.preview-bar{height:52px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;border-bottom:1px solid rgba(15,23,42,.12);background:#ffffff;backdrop-filter:blur(12px)}.preview-title{min-width:0;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preview-meta{font-size:11px;color:#006847;font-weight:800}.preview-open{border:1px solid rgba(0,104,71,.45);background:rgba(0,104,71,.12);color:#006847;border-radius:999px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:900;white-space:nowrap}.preview-frame-wrap{flex:1;min-height:0;width:100%;max-width:430px;margin:0 auto;background:#fff;box-shadow:0 0 0 1px rgba(15,23,42,.12)}iframe{display:block;width:100%;height:100%;border:0;background:#fff}@media(min-width:768px){.preview-frame-wrap{height:100%;border-left:1px solid rgba(15,23,42,.12);border-right:1px solid rgba(15,23,42,.12)}}<\/style></head><body><main class="preview-shell"><div class="preview-bar"><div style="min-width:0"><div class="preview-meta">Contoh desain</div><div class="preview-title">${title}</div></div><button class="preview-open" type="button" onclick="window.close()">Kembali ke demo</button></div><div class="preview-frame-wrap"><iframe sandbox="" id="mobileLandingPreview" title="${title}"></iframe></div></main><script>document.getElementById('mobileLandingPreview').srcdoc = ${JSON.stringify(doc)};<\/script></body></html>`;
   }
   function openLandingPreviewInNewTab(template){
     const win=window.open('', '_blank');
     if(win)win.opener=null;
-    if(!win){toast('Popup diblokir browser');return false;}
+    if (!win) return false;
     win.document.open();
     win.document.write(mobilePreviewShell(template));
     win.document.close();
     return true;
   }
-  function openLandingPreview(id){
+  function openLandingPreview(id, opener){
     activeLandingTemplate = landingTemplates.find(t=>t.id===id) || landingTemplates[0];
-    if(isMobileViewport()){
-      openLandingPreviewInNewTab(activeLandingTemplate);
-      return;
-    }
+    if (isMobileViewport() && !$('#landingPreviewModal').classList.contains('open') && openLandingPreviewInNewTab(activeLandingTemplate)) return;
     const modal=$('#landingPreviewModal');
     const title=$('#landingPreviewTitle');
     const meta=$('#landingPreviewMeta');
@@ -709,8 +713,7 @@
     title.textContent = `${activeLandingTemplate.icon} ${activeLandingTemplate.title}`;
     meta.textContent = `${activeLandingTemplate.category} • ${activeLandingTemplate.tone}`;
     frame.srcdoc = landingHtml(activeLandingTemplate);
-    modal.classList.add('open');
-    document.body.style.overflow='hidden';
+    openCatalogDialog(modal, opener);
   }
   window.openLandingPreview = openLandingPreview;
   function closeLandingPreview(){

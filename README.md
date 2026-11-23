@@ -23,6 +23,10 @@ Rute, hasil pengujian dan tangkapan layar tersedia dalam [laporan serah terima s
 
 Hasil per persona, scorecard sebelum dan sesudah, serta cara menjalankan uji Chromium dan WebKit tersedia dalam [audit pengalaman final](docs/AUDIT_PENGALAMAN_FINAL.md).
 
+Perubahan pada delapan demo, perbandingan visual ponsel, dan matriks tujuh skill tersedia dalam [audit penyempurnaan showroom](docs/REFINEMENT_SHOWROOM.md).
+
+Panduan durasi, pembagian tugas animasi, hasil pengukuran drag, dan cara menguji fallback tersedia di [sistem motion showroom](docs/SISTEM_MOTION.md). Pada checkout baru, jalankan `npm ci` sebelum build agar distribusi GSAP lokal tersedia.
+
 Beranda menampilkan galeri. Jalur `/portfolio/` membuka indeks dan `/portfolio/<slug>/` membuka satu demo. URL menyimpan kategori aktif melalui `?filter=` dan pilihan galeri melalui `?project=`.
 
 Urutan, kategori, teks, nama modul dan fungsi inisialisasi berasal dari `config/portfolio.cjs`. Untuk menambahkan demo, daftarkan panel dari `catalog.html` dan modulnya, lalu simpan sampul 4:3 di `public/portfolio-art/<slug>.webp`. Jika ada dialog terpisah, tandai bloknya dengan komentar `canvas-dialog:<nama>` seperti contoh POS. Jalankan `npm run build:content`. Generator mengisi blok galeri pada beranda dan menghasilkan direktori `portfolio/` dari `templates/project.html`. Edit sumber panel atau templat untuk mengubah hasilnya.

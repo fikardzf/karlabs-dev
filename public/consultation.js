@@ -109,13 +109,13 @@
             'Kontak: ' + byId('kontak-calon-client').value.trim(),
             'Jenis usaha: ' + byId('usaha').value.trim(),
             'Layanan: ' + service.value,
-            info ? 'Paket yang ingin dibahas: ' + info.name + ' — ' + info.formattedStartingPrice : '',
+            info ? 'Paket yang ingin dibahas: ' + info.name : '',
             info ? 'Harga awal: ' + info.formattedStartingPrice + '. ' + info.priceNotice : '',
             info?.automationLimit === 1 ? 'Batas Premium: maksimal 1 workflow automasi sederhana yang dinilai layak dan disepakati bersama. ERP, CRM lengkap, integrasi AI kompleks dan fitur di luar scope ditawarkan terpisah.' : '',
             'Kebutuhan: ' + description.value.trim(),
             byId('anggaran').value ? 'Kisaran anggaran: ' + byId('anggaran').value : '',
             byId('target-waktu').value ? 'Target waktu yang diinginkan: ' + byId('target-waktu').value : '',
-            'Mohon bantu bahas scope, estimasi biaya, dan tahapan pengerjaannya.'
+            'Bisa kita bahas apa saja yang perlu dikerjakan, perkiraan biaya, dan waktunya?'
         ].filter(Boolean).join('\n');
     }
     function changed() {

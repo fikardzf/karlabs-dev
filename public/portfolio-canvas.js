@@ -54,8 +54,7 @@
       if (demo.dataset.charts === 'true') {
         status.hidden = false;
         status.querySelector('p').textContent = 'Memuat grafik demo…';
-        const charts = await ensureChartJs();
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) charts.defaults.animation = false;
+        await ensureChartJs();
       }
       window[demo.dataset.init]();
       refreshIcons();

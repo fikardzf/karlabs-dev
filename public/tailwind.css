@@ -19,7 +19,6 @@
   --color-black: #000;
   --color-white: #fff;
   --spacing: 0.25rem;
-  --container-lg: 32rem;
   --container-2xl: 42rem;
   --container-3xl: 48rem;
   --container-7xl: 80rem;
@@ -309,9 +308,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .mb-9 {
   margin-bottom: calc(var(--spacing) * 9);
 }
-.mb-10 {
-  margin-bottom: calc(var(--spacing) * 10);
-}
 .block {
   display: block;
 }
@@ -417,9 +413,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .max-w-7xl {
   max-width: var(--container-7xl);
 }
-.max-w-lg {
-  max-width: var(--container-lg);
-}
 .min-w-0 {
   min-width: calc(var(--spacing) * 0);
 }
@@ -452,9 +445,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 }
 .items-center {
   align-items: center;
-}
-.items-end {
-  align-items: flex-end;
 }
 .items-start {
   align-items: flex-start;
@@ -609,12 +599,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .bg-\[\#006847\] {
   background-color: #006847;
 }
-.bg-accent\/5 {
-  background-color: color-mix(in srgb, #006847 5%, transparent);
-  @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--color-accent) 5%, transparent);
-  }
-}
 .bg-accent\/10 {
   background-color: color-mix(in srgb, #006847 10%, transparent);
   @supports (color: color-mix(in lab, red, red)) {
@@ -686,9 +670,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 }
 .px-2 {
   padding-inline: calc(var(--spacing) * 2);
-}
-.px-2\.5 {
-  padding-inline: calc(var(--spacing) * 2.5);
 }
 .px-3 {
   padding-inline: calc(var(--spacing) * 3);
@@ -896,18 +877,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
   transition-duration: var(--tw-duration, var(--default-transition-duration));
 }
-.duration-300 {
-  --tw-duration: 300ms;
-  transition-duration: 300ms;
-}
-.hover\:-translate-y-1 {
-  &:hover {
-    @media (hover: hover) {
-      --tw-translate-y: calc(var(--spacing) * -1);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
-}
 .hover\:border-accent {
   &:hover {
     @media (hover: hover) {
@@ -969,11 +938,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .sm\:col-span-2 {
   @media (width >= 40rem) {
     grid-column: span 2 / span 2;
-  }
-}
-.sm\:inline-flex {
-  @media (width >= 40rem) {
-    display: inline-flex;
   }
 }
 .sm\:w-64 {
@@ -1110,16 +1074,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 }
-.lg\:sticky {
-  @media (width >= 64rem) {
-    position: sticky;
-  }
-}
-.lg\:top-24 {
-  @media (width >= 64rem) {
-    top: calc(var(--spacing) * 24);
-  }
-}
 .lg\:flex {
   @media (width >= 64rem) {
     display: flex;
@@ -1153,11 +1107,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 .lg\:grid-cols-4 {
   @media (width >= 64rem) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.lg\:grid-cols-\[0\.8fr_1\.2fr\] {
-  @media (width >= 64rem) {
-    grid-template-columns: 0.8fr 1.2fr;
   }
 }
 .lg\:grid-cols-\[0\.9fr_1\.1fr\] {
@@ -1326,25 +1275,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   syntax: "*";
   inherits: false;
 }
-@property --tw-duration {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-translate-x {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-y {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-z {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -1375,10 +1305,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
       --tw-backdrop-opacity: initial;
       --tw-backdrop-saturate: initial;
       --tw-backdrop-sepia: initial;
-      --tw-duration: initial;
-      --tw-translate-x: 0;
-      --tw-translate-y: 0;
-      --tw-translate-z: 0;
     }
   }
 }

@@ -24,3 +24,4 @@ dist-ssr
 
 # Static routes rendered by build:content
 /portfolio/
+/public/motion-vendor/
