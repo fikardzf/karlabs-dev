@@ -1,176 +1,394 @@
-/* KAR Labs v2.6.0 - Workflow automation demo */
 'use strict';
-  const workflowCatalog = {
-    email:{
-      icon:'📧', label:'Balasan email', title:'Email masuk hingga draft balasan', short:'Tinjau contoh pengelompokan email, draft jawaban, dan persetujuan admin.', complexity:'Medium', tools:['Gmail','AI','Sheets','CRM'],
-      outcomes:['Email urgent diprioritaskan','Pertanyaan umum dibalas otomatis','Tim tetap punya kontrol approval'],
-      nodes:[
-        {icon:'📧',title:'Email Masuk',sub:'Trigger',type:'Trigger',platform:'Gmail / Lark Mail',config:'Subject/body contains keyword seperti "harga", "kerja sama", "support", atau "complaint".',condition:'Setiap email baru masuk ke inbox atau label tertentu.',output:'Email masuk ditangkap sebagai data mentah.'},
-        {icon:'🧠',title:'AI Klasifikasi',sub:'Analyze',type:'Action',platform:'OpenAI / AI Model',config:'AI membaca intent, urgency, nama client, nomor kontak, dan kebutuhan utama.',condition:'Email bukan spam dan memiliki isi yang valid.',output:'Kategori lead, urgency score, dan ringkasan email.'},
-        {icon:'📝',title:'Draft Response',sub:'Generate',type:'Action',platform:'Gmail Draft',config:'Generate draft balasan sesuai kategori: sales, support, partnership, complaint.',condition:'Confidence AI di atas threshold yang ditentukan.',output:'Draft email siap review admin.'},
-        {icon:'✅',title:'Approval Rule',sub:'Validation',type:'Decision',platform:'Rule Engine',config:'Jika kategori complaint/high value, minta approval manual. Jika FAQ umum, auto-send.',condition:'Berdasarkan kategori dan urgency score.',output:'Menentukan auto-send atau review manual.'},
-        {icon:'📤',title:'Reply / Assign',sub:'Output',type:'Output',platform:'Gmail + CRM',config:'Kirim balasan atau assign ke PIC sales/support.',condition:'Draft disetujui rule atau admin.',output:'Client mendapat respon cepat dan PIC mendapat task.'},
-        {icon:'📊',title:'Log & Report',sub:'Archive',type:'Output',platform:'Google Sheets / Airtable',config:'Simpan email, kategori, SLA, status, dan PIC follow-up.',condition:'Setelah workflow selesai.',output:'Dashboard performa CS/sales otomatis terisi.'}
-      ]
-    },
-    order:{
-      icon:'📦', label:'Pemrosesan pesanan', title:'Pesanan hingga pembaruan status', short:'Tinjau contoh pemeriksaan pembayaran, stok, dan pemberitahuan pesanan.', complexity:'Advanced', tools:['Shopify','WhatsApp','Sheets','Warehouse'],
-      outcomes:['Customer otomatis dapat update','Tim gudang melihat prioritas order','Admin punya log status order'],
-      nodes:[
-        {icon:'🛒',title:'Order Masuk',sub:'Trigger',type:'Trigger',platform:'Shopify / Website Form',config:'Trigger saat order paid, partially paid, COD confirmed, atau draft order completed.',condition:'Order memiliki nomor HP dan status valid.',output:'Data order masuk ke workflow.'},
-        {icon:'💳',title:'Validasi Payment',sub:'Decision',type:'Decision',platform:'Payment Gateway / Rule',config:'Cek paid, unpaid, partially paid, manual transfer, atau marketplace order.',condition:'Status pembayaran berubah.',output:'Menentukan order siap proses atau perlu follow-up.'},
-        {icon:'📦',title:'Cek Stok',sub:'Validation',type:'Action',platform:'Inventory Sheet / OMS',config:'Cek SKU, varian, lokasi stok, dan estimasi kesiapan fulfillment.',condition:'SKU tersedia di data inventory.',output:'Status ready, partial, atau PO/backorder.'},
-        {icon:'📱',title:'WA Customer',sub:'Action',type:'Action',platform:'WhatsApp API',config:'Kirim template order diterima, estimasi proses, atau request data tambahan.',condition:'Nomor WA valid dan customer opt-in.',output:'Customer mendapat update otomatis.'},
-        {icon:'🏷️',title:'Assign Gudang',sub:'Action',type:'Action',platform:'Sheets / Task Board',config:'Buat task picking/packing dengan prioritas dan lokasi barang.',condition:'Order siap diproses.',output:'Tim gudang tahu order yang harus dikerjakan.'},
-        {icon:'📊',title:'Update Tracker',sub:'Output',type:'Output',platform:'Google Sheets / Dashboard',config:'Update status: paid, picking, packed, shipped, delivered, issue.',condition:'Setiap status berubah.',output:'Dashboard fulfillment otomatis terupdate.'}
-      ]
-    },
-    lead:{
-      icon:'🎯', label:'Prioritas calon pelanggan', title:'Pencatatan hingga pembagian tindak lanjut', short:'Contoh pencatatan kebutuhan, pemeriksaan data, dan penentuan tindak lanjut.', complexity:'Advanced', tools:['Form','WhatsApp','CRM','Sheets'],
-      outcomes:['Lead panas tidak tertinggal','Sales follow-up sesuai prioritas','Data prospect lebih bersih'],
-      nodes:[
-        {icon:'📝',title:'Form / WA Masuk',sub:'Trigger',type:'Trigger',platform:'Landing Page Form / WhatsApp',config:'Ambil nama, nomor HP, kebutuhan, budget, kota, dan sumber campaign.',condition:'User submit form atau chat keyword tertentu.',output:'Lead baru tercatat.'},
-        {icon:'🧹',title:'Clean Data',sub:'Validation',type:'Action',platform:'Formatter',config:'Normalize nomor HP, kota, nama, dan cek format data wajib.',condition:'Ada data yang perlu dibersihkan.',output:'Data lead siap diproses.'},
-        {icon:'🔎',title:'Duplicate Check',sub:'Decision',type:'Decision',platform:'CRM / Sheets Lookup',config:'Cek nomor HP/email sudah pernah masuk atau belum.',condition:'Nomor HP/email tersedia.',output:'Lead baru atau existing lead.'},
-        {icon:'🔥',title:'Lead Scoring',sub:'Analyze',type:'Action',platform:'Rule + AI',config:'Score berdasarkan budget, urgency, kota, source, dan intent chat.',condition:'Data kebutuhan tersedia.',output:'Hot, warm, cold lead.'},
-        {icon:'👤',title:'Assign Sales',sub:'Action',type:'Action',platform:'CRM / Lark / Sheets',config:'Assign lead ke sales sesuai region, produk, atau kapasitas follow-up.',condition:'Lead punya score dan kategori.',output:'Sales menerima task follow-up.'},
-        {icon:'📱',title:'Follow-up WA',sub:'Output',type:'Output',platform:'WhatsApp API',config:'Kirim pesan pembuka otomatis sesuai kebutuhan lead.',condition:'Lead valid dan belum dihubungi.',output:'Prospect mendapat respon cepat.'}
-      ]
-    },
-    approval:{
-      icon:'✅', label:'Persetujuan pengajuan', title:'Pengajuan hingga persetujuan', short:'Tinjau contoh validasi, persetujuan berjenjang, dan pengingat pengajuan.', complexity:'Advanced', tools:['Form','Lark','Email','Sheets'],
-      outcomes:['Request tidak hilang di chat','Approval punya jejak audit','Manager mendapat reminder otomatis'],
-      nodes:[
-        {icon:'📥',title:'Request Dibuat',sub:'Trigger',type:'Trigger',platform:'Lark Form / Google Form',config:'User submit request: overtime, purchase, reimbursement, cuti, atau approval campaign.',condition:'Form lengkap dan submit valid.',output:'Nomor request otomatis dibuat.'},
-        {icon:'🧾',title:'Validasi Form',sub:'Validation',type:'Action',platform:'Rule Engine',config:'Cek field wajib, nominal, lampiran, department, dan approver.',condition:'Request baru diterima.',output:'Request valid atau butuh revisi.'},
-        {icon:'👔',title:'Approval Level 1',sub:'Decision',type:'Decision',platform:'Manager Approval',config:'Manager approve/reject/revise melalui link atau status form.',condition:'Request valid.',output:'Status level 1 tercatat.'},
-        {icon:'⏰',title:'SLA Reminder',sub:'Delay',type:'Delay',platform:'Scheduler',config:'Jika belum approve dalam 12/24 jam, kirim reminder otomatis.',condition:'Status masih pending.',output:'Approver mendapat reminder.'},
-        {icon:'🏢',title:'Approval Level 2',sub:'Decision',type:'Decision',platform:'HR / Finance / Director',config:'Approval lanjutan sesuai nominal, jenis request, atau divisi.',condition:'Level 1 approved dan butuh approval lanjutan.',output:'Final approve/reject.'},
-        {icon:'📊',title:'Audit Log',sub:'Output',type:'Output',platform:'Sheets / Dashboard',config:'Simpan request, approver, waktu approve, SLA, status, dan catatan.',condition:'Setiap status berubah.',output:'Dashboard approval dan audit trail siap dipakai.'}
-      ]
-    },
-    inventory:{
-      icon:'📦', label:'Pengingat stok', title:'Data stok hingga daftar pemesanan', short:'Tinjau contoh perhitungan kebutuhan stok dan draft daftar pembelian.', complexity:'Advanced', tools:['Sheets','ERP/OMS','Email','WhatsApp'],
-      outcomes:['Tim tahu barang yang harus dipesan','PO dan stok lebih sinkron','Forecast lebih mudah dibaca'],
-      nodes:[
-        {icon:'📊',title:'Sync Stock Data',sub:'Trigger',type:'Trigger',platform:'ERP / Shopify / Sheets',config:'Ambil stok on hand, incoming PO, reserved stock, dan sales 7/14/30 hari.',condition:'Jadwal harian atau data berubah.',output:'Snapshot stok terbaru.'},
-        {icon:'🧮',title:'Hitung ROP',sub:'Action',type:'Action',platform:'Formula Engine',config:'Reorder Point = demand harian × lead time + safety stock.',condition:'Data lead time dan sales tersedia.',output:'ROP per SKU.'},
-        {icon:'⚠️',title:'Risk Detection',sub:'Decision',type:'Decision',platform:'Rule Engine',config:'Tandai SKU risk jika stock cover < threshold atau incoming PO belum cukup.',condition:'Stok lebih rendah dari ROP.',output:'SKU masuk daftar alert.'},
-        {icon:'📩',title:'Alert PIC',sub:'Action',type:'Action',platform:'Email / WhatsApp / Lark',config:'Kirim alert ke purchasing/product PIC dengan SKU, qty rekomendasi, dan PO gap.',condition:'Ada SKU risk.',output:'PIC mendapat notifikasi tindakan.'},
-        {icon:'🧾',title:'Draft PO List',sub:'Output',type:'Output',platform:'Google Sheets',config:'Buat daftar rekomendasi pembelian: SKU, varian, qty, supplier, prioritas.',condition:'Alert valid.',output:'Draft PO siap review.'},
-        {icon:'📈',title:'Dashboard Update',sub:'Output',type:'Output',platform:'Dashboard Excel/Sheets',config:'Update days cover, inventory turnover, PO gap, dan risk score.',condition:'Setiap sync selesai.',output:'Dashboard stock monitoring terbarui.'}
-      ]
-    },
-    ads:{
-      icon:'📣', label:'Laporan iklan', title:'Data iklan hingga ringkasan laporan', short:'Tinjau contoh pengolahan biaya, hasil iklan, dan pengingat anggaran.', complexity:'Medium-Advanced', tools:['Meta Ads','Sheets','Email','Dashboard'],
-      outcomes:['Tim marketing cepat melihat campaign bermasalah','Budget tidak kebablasan','Report meeting lebih siap'],
-      nodes:[
-        {icon:'📥',title:'Fetch Ads Data',sub:'Trigger',type:'Trigger',platform:'Meta/TikTok/Shopee Ads Export',config:'Ambil spend, clicks, revenue, orders, campaign, adset, dan product/category.',condition:'Jadwal harian atau export file masuk.',output:'Data iklan mentah masuk.'},
-        {icon:'🧹',title:'Normalize Data',sub:'Validation',type:'Action',platform:'Data Formatter',config:'Samakan nama campaign, tanggal, channel, product code, dan format currency.',condition:'Ada data baru.',output:'Data siap dihitung.'},
-        {icon:'🧮',title:'Hitung KPI',sub:'Action',type:'Action',platform:'Formula Engine',config:'Hitung ROAS, CAC, CPC, CVR, profit ads, dan budget pacing.',condition:'Spend dan revenue tersedia.',output:'KPI per campaign.'},
-        {icon:'🚦',title:'Campaign Health',sub:'Decision',type:'Decision',platform:'Rule Engine',config:'Tandai campaign: scale, maintain, watch, atau stop berdasarkan KPI threshold.',condition:'KPI sudah dihitung.',output:'Rekomendasi aksi campaign.'},
-        {icon:'📩',title:'Kirim Summary',sub:'Output',type:'Output',platform:'Email / Lark / WhatsApp',config:'Kirim daily digest: top campaign, low performer, overspend, dan next action.',condition:'Jadwal laporan aktif.',output:'Tim mendapat ringkasan otomatis.'},
-        {icon:'📊',title:'Update Dashboard',sub:'Output',type:'Output',platform:'Google Sheets / Looker Studio',config:'Update trend spend, ROAS, CAC, profit, dan product performance.',condition:'Setelah report selesai.',output:'Dashboard marketing terupdate.'}
-      ]
+
+const workflowCatalog = {
+  lead: {
+    icon:'message-circle', label:'Pertanyaan pelanggan', title:'Dari chat ke daftar tindak lanjut',
+    short:'Siapa yang perlu dihubungi kembali?', basic:true, editableDraft:true, output:'Catatan calon pelanggan',
+    intro:'Coba dua jenis pertanyaan. Admin mendapat ringkasan kebutuhan dan draf pertanyaan berikutnya.',
+    input:'Pesan pelanggan', tools:'Chat atau formulir → catatan pelanggan → draf balasan',
+    required:'Kontak balasan', issue:'Admin perlu tahu lewat mana pelanggan bisa dihubungi kembali.',
+    nodes:[
+      {title:'Baca pesan', output:'Ambil kebutuhan dan saluran balasan dari pertanyaan pelanggan.'},
+      {title:'Catat kebutuhan', output:'Pisahkan pertanyaan menu dari permintaan pesanan acara agar tindak lanjutnya sesuai.'},
+      {title:'Susun tindak lanjut', output:'Siapkan pertanyaan berikutnya untuk diperiksa admin.'}
+    ],
+    samples:[
+      {id:'cafe', label:'Kedai kopi · Pilihan susu', code:'CHAT-014', from:'Chat kedai', message:'Kopi susu bisa dibuat pakai oat? Ada pilihan yang tidak terlalu manis?', need:'Pilihan susu dan gula', contact:'Chat kedai', assignment:'Admin kedai', reply:'Terima kasih sudah bertanya. Mau lihat pilihan susu oat dan tingkat gula untuk minuman dingin atau panas?'},
+      {id:'bakery', label:'Toko roti · Konsumsi rapat', code:'CHAT-022', from:'Form toko roti', message:'Kami perlu roti untuk rapat 25 orang. Bisa pilih dua isian?', need:'Paket rapat untuk 25 orang', contact:'Email pada formulir', assignment:'Admin pesanan acara', reply:'Untuk rapat 25 orang, kapan roti dibutuhkan dan isian apa yang ingin dipilih? Kami bisa siapkan rincian paketnya.'}
+    ],
+    build(s) {
+      return {fields:[['Kebutuhan',s.need],['Kontak balasan',s.contact]], finding:`Pertanyaan tentang ${s.need.toLowerCase()} masuk ke daftar ${s.assignment.toLowerCase()}.`,
+        title:'Draf balasan pelanggan', draft:s.reply, reviewers:[s.assignment]};
     }
-  }; let currentPreset='lead';
-  Object.assign(workflowCatalog, {
-    lead:{label:'Pertanyaan pelanggan',icon:'💬',title:'Pertanyaan pelanggan menjadi catatan follow-up',short:'Ikuti perubahan pertanyaan contoh menjadi catatan calon pelanggan dan draft tindak lanjut.',complexity:'Alur dasar',tools:['Form','Catatan lead','Draft follow-up'],outcomes:['Kebutuhan pelanggan dicatat secara terstruktur.','Admin dapat memeriksa kontak sebelum tindak lanjut.','Pesan follow-up disiapkan untuk ditinjau.'],nodes:[
-      {title:'Pertanyaan masuk',sub:'Terima kebutuhan',type:'Trigger',platform:'Form atau chat sesuai scope',config:'Terima kebutuhan dari data contoh.',condition:'Ada pertanyaan baru.',output:'Kebutuhan katalog dicatat sebagai input.'},
-      {title:'Catat calon pelanggan',sub:'Periksa kontak',type:'Action',platform:'Catatan atau spreadsheet sesuai scope',config:'Periksa kelengkapan kontak dan kebutuhan.',condition:'Kontak contoh sudah lengkap.',output:'Catatan lead siap ditinjau admin.'},
-      {title:'Siapkan follow-up',sub:'Tinjau draft',type:'Output',platform:'Draft untuk admin',config:'Susun tindak lanjut dari kebutuhan yang dicatat.',condition:'Admin memeriksa isi sebelum mengirim.',output:'Draft pertanyaan lanjutan tersedia. Tidak ada pesan dikirim.'}
-    ]},
-    'order-basic':{label:'Pencatatan order',icon:'📦',title:'Order masuk, data dicatat, admin diberi tahu',short:'Lihat contoh pemeriksaan data order hingga draft pemberitahuan untuk admin.',complexity:'Alur dasar',tools:['Form order','Catatan order','Draft notifikasi'],outcomes:['Detail order memiliki satu catatan acuan.','Data yang belum lengkap diperiksa sebelum proses lanjut.','Admin mempunyai draft pembaruan untuk ditinjau.'],nodes:[
-      {title:'Order diterima',sub:'Terima data',type:'Trigger',platform:'Form atau platform usaha sesuai scope',config:'Baca pesanan contoh dari browser.',condition:'Ada data order contoh.',output:'Input order tersedia.'},
-      {title:'Periksa dan catat',sub:'Validasi data',type:'Action',platform:'Catatan order sesuai scope',config:'Periksa kontak sebelum mencatat status order.',condition:'Data order contoh lengkap.',output:'Order contoh tercatat dalam simulasi.'},
-      {title:'Siapkan notifikasi',sub:'Tinjau hasil',type:'Output',platform:'Draft notifikasi',config:'Siapkan pemberitahuan untuk admin.',condition:'Catatan contoh sudah diperiksa.',output:'Draft pemberitahuan tersedia. Tidak ada pesan dikirim.'}
-    ]}
-  });
-  let workflowGuideStep=-1;
-  function renderWorkflowCatalog(){
-    const entries=Object.entries(workflowCatalog).sort(([a],[b])=>Number(!['lead','order-basic'].includes(a))-Number(!['lead','order-basic'].includes(b)));
-    $('#workflowCatalog').innerHTML=entries.map(([key,w])=>`<button type="button" data-preset="${key}" aria-pressed="${key===currentPreset}" class="workflow-catalog-card text-left glass rounded-3xl p-5 border border-dark-border hover:border-accent/70 transition-all">
-      <div class="flex items-start justify-between gap-3 mb-4"><span class="workflow-reference-icon" aria-hidden="true">${w.icon || '⚙️'}</span><span class="text-[11px] border border-dark-border rounded-full px-2 py-1 text-gray-400">${w.complexity==='Alur dasar'?'Alur dasar':'Referensi lanjutan'}</span></div>
-      <h4 class="font-heading text-lg font-bold mb-2">${w.label}</h4><p class="text-sm text-gray-400 leading-relaxed mb-4">${w.short}</p>
-      <div class="flex flex-wrap gap-2">${w.tools.slice(0,3).map(t=>`<span class="text-[11px] rounded-full bg-black/35 border border-dark-border px-2 py-1 text-gray-400">${t}</span>`).join('')}</div>
+  },
+  'order-basic': {
+    icon:'receipt', label:'Pencatatan pesanan', title:'Dari pesan singkat ke nota pesanan',
+    short:'Apa yang harus disiapkan hari ini?', basic:true, output:'Nota untuk admin toko',
+    intro:'Ubah jumlah pesanan. Lihat barang, total, dan jadwal ambil yang akan diterima admin dalam satu catatan.',
+    input:'Form pesanan', tools:'Form pesanan → buku pesanan → nota admin',
+    required:'Jadwal ambil', issue:'Barang sudah diketahui, tetapi tim belum tahu kapan pesanan harus siap.',
+    amount:{label:'Jumlah pesanan', key:'quantity', min:1, max:999},
+    nodes:[
+      {title:'Terima pesanan', output:'Baca produk, jumlah, harga satuan, dan jadwal ambil.'},
+      {title:'Periksa nota', output:'Periksa jadwal ambil dan kalikan jumlah barang dengan harga satuan.'},
+      {title:'Siapkan nota', output:'Tampilkan catatan yang bisa ditinjau admin sebelum diteruskan ke tim toko.'}
+    ],
+    samples:[
+      {id:'cafe', label:'Kedai kopi · Kopi susu', code:'PS-018', from:'Form kedai', item:'kopi susu', quantity:2, price:22000, pickup:'Hari ini, 15.30', message:'Saya mau ambil kopi susu di kedai sore ini.'},
+      {id:'bakery', label:'Toko roti · Croissant', code:'PS-026', from:'Form toko roti', item:'croissant', quantity:3, price:24000, pickup:'Besok, 08.00', message:'Tolong siapkan croissant untuk saya ambil besok pagi.'}
+    ],
+    build(s, quantity) {
+      const total = quantity*s.price;
+      return {fields:[['Pesanan',`${quantity} ${s.item}`],['Harga satuan',fmtRp(s.price)],['Jadwal ambil',s.pickup]],
+        finding:`${quantity} × ${fmtRp(s.price)} = ${fmtRp(total)}. Jadwal pengambilan sudah tersedia.`,
+        title:'Nota pengambilan', draft:`${s.code} · ${quantity} ${s.item} · Total ${fmtRp(total)}. Pengambilan: ${s.pickup}. Periksa nota sebelum menyiapkan pesanan.`, reviewers:['Admin toko']};
+    }
+  },
+  email: {
+    icon:'mail', label:'Balasan email', title:'Dari kotak masuk ke meja yang tepat',
+    short:'Email mana yang perlu ditangani dulu?', editableDraft:true, output:'Draf balasan dan petugas',
+    intro:'Bandingkan pertanyaan reseller dengan keluhan barang. Isi email menentukan petugas dan draf balasannya.',
+    input:'Email masuk', tools:'Kotak masuk → kategori email → draf untuk petugas',
+    required:'Judul email', issue:'Lengkapi judul agar petugas bisa mengenali percakapan yang harus ditinjau.',
+    nodes:[
+      {title:'Baca email', output:'Ambil judul dan isi dari kotak masuk contoh.'},
+      {title:'Tentukan petugas', output:'Pertanyaan harga grosir diteruskan ke penjualan. Keluhan barang ditandai untuk layanan pelanggan.'},
+      {title:'Siapkan balasan', output:'Tampilkan draf jawaban sesuai topik dan serahkan ke petugas untuk ditinjau.'}
+    ],
+    samples:[
+      {id:'reseller', label:'Penawaran reseller', code:'EM-012', from:'Email toko', subject:'Daftar harga reseller', message:'Kami ingin menjual kembali produk Anda. Berapa minimal pembelian grosir?', kind:'grosir'},
+      {id:'return', label:'Keluhan barang rusak', code:'EM-019', from:'Email layanan', subject:'Kemasan pesanan rusak', message:'Kemasan pesanan saya rusak saat diterima. Bagaimana cara meminta pemeriksaan?', kind:'keluhan'}
+    ],
+    build(s) {
+      const complaint = s.kind === 'keluhan';
+      const owner = complaint ? 'Layanan pelanggan' : 'Tim penjualan';
+      return {fields:[['Judul email',s.subject],['Kotak masuk',s.from]], finding:complaint ? 'Keluhan ditandai untuk pemeriksaan petugas sebelum ada keputusan penggantian barang.' : 'Permintaan harga grosir masuk antrean tim penjualan.',
+        title:`Draf email · ${owner}`, draft:complaint ? 'Terima kasih sudah memberi tahu kami. Boleh kirim nomor pesanan dan foto kemasannya agar tim dapat memeriksa kondisi barang?' : 'Terima kasih atas minat menjadi reseller. Produk dan kisaran jumlah berapa yang ingin dipesan? Tim kami akan menyiapkan penawaran grosir yang sesuai.',
+        reviewers:[owner]};
+    }
+  },
+  order: {
+    icon:'package-check', label:'Kesiapan pengiriman', title:'Dari pesanan masuk ke daftar kemas',
+    short:'Pesanan mana yang siap dikemas?', output:'Daftar kemas atau catatan penundaan',
+    intro:'Coba pesanan lunas, stok kurang, atau pembayaran tertunda. Gudang hanya mendapat daftar kemas saat barang dan pembayaran siap.',
+    input:'Pesanan toko pakaian', tools:'Buku pesanan → pemeriksaan pembayaran dan stok → tugas admin atau gudang',
+    required:'Varian barang', issue:'Ukuran harus tercatat supaya stok yang diperiksa sesuai dengan pesanan.',
+    amount:{label:'Stok tersedia (potong)', key:'stock', min:0, max:9999},
+    nodes:[
+      {title:'Buka pesanan', output:'Cocokkan nomor pesanan dengan varian yang diminta.'},
+      {title:'Cek kesiapan', output:'Periksa pembayaran terlebih dahulu, lalu bandingkan jumlah pesanan dengan stok varian.'},
+      {title:'Susun tugas', output:'Pesanan siap masuk daftar kemas. Sisanya menjadi tugas pemeriksaan atau pengadaan.'}
+    ],
+    samples:[
+      {id:'ready', label:'Kemeja linen · Lunas', code:'KR-041', from:'Pesanan toko', item:'Kemeja linen', size:'M', qty:3, stock:8, paid:true, message:'Pesanan kemeja linen untuk dikirim dalam satu paket.'},
+      {id:'short', label:'Celana chino · Lunas', code:'KR-047', from:'Pesanan toko', item:'Celana chino', size:'L', qty:5, stock:2, paid:true, message:'Pelanggan meminta lima celana chino dengan ukuran yang sama.'},
+      {id:'pending', label:'Kaos polos · Transfer perlu diperiksa', code:'KR-052', from:'Pesanan toko', item:'Kaos polos', size:'XL', qty:2, stock:12, paid:false, message:'Pembeli sudah membuat pesanan. Pembayaran masih menunggu pemeriksaan.'}
+    ],
+    build(s, stock) {
+      const fields = [['Varian barang',`${s.item} · ${s.size}`],['Dipesan',`${s.qty} potong`],['Stok',`${stock} potong`],['Pembayaran',s.paid?'Lunas':'Menunggu pemeriksaan']];
+      if (!s.paid) return {fields, finding:'Pembayaran belum terverifikasi. Pengemasan ditahan.', title:'Tugas pemeriksaan pembayaran', draft:`Admin keuangan perlu mencocokkan pembayaran ${s.code} sebelum gudang menyiapkan ${s.qty} ${s.item.toLowerCase()}.`, reviewers:['Admin keuangan']};
+      if (stock<s.qty) return {fields, finding:`Stok kurang ${s.qty-stock} potong untuk memenuhi seluruh pesanan.`, title:'Catatan kekurangan stok', draft:`Tahan ${s.code}. Konfirmasi ketersediaan ${s.qty-stock} ${s.item.toLowerCase()} ukuran ${s.size} lagi sebelum menentukan jadwal kirim.`, reviewers:['Admin stok']};
+      return {fields, finding:`Pembayaran lunas dan ${stock} potong tersedia untuk pesanan ${s.qty} potong.`, title:'Daftar kemas', draft:`Siapkan ${s.qty} ${s.item.toLowerCase()} ukuran ${s.size} untuk ${s.code}. Cocokkan varian sebelum menutup paket.`, reviewers:['Petugas gudang']};
+    }
+  },
+  approval: {
+    icon:'clipboard-check', label:'Persetujuan belanja', title:'Dari permintaan belanja ke keputusan',
+    short:'Siapa yang perlu menyetujui biaya?', output:'Lembar keputusan belanja',
+    intro:'Ubah nominal belanja dan coba jadi pemeriksanya. Pada aturan contoh ini, pengajuan di atas Rp1 juta juga memerlukan persetujuan pemilik.',
+    input:'Form pengajuan', tools:'Form belanja → aturan nominal → catatan persetujuan',
+    required:'Bukti penawaran', issue:'Pemeriksa memerlukan penawaran pemasok sebagai dasar pengajuan.',
+    amount:{label:'Nominal pengajuan (Rp)', key:'cost', min:1, max:100000000},
+    nodes:[
+      {title:'Buka pengajuan', output:'Baca kebutuhan, nominal belanja, dan lampiran penawaran.'},
+      {title:'Tentukan pemeriksa', output:'Semua pengajuan melalui supervisor. Di atas Rp1.000.000, pemilik ikut meninjau.'},
+      {title:'Minta keputusan', output:'Catat keputusan setiap pemeriksa atau kembalikan pengajuan untuk revisi.'}
+    ],
+    samples:[
+      {id:'boxes', label:'Kemasan untuk toko roti', code:'BL-008', from:'Bagian produksi', item:'Kotak roti', cost:450000, proof:'Penawaran kotak roti', message:'Stok kemasan menipis. Tim produksi mengajukan pembelian kotak roti.'},
+      {id:'printer', label:'Printer label untuk gudang', code:'BL-011', from:'Bagian gudang', item:'Printer label', cost:2400000, proof:'Penawaran printer label', message:'Gudang mengajukan printer label untuk meja pengemasan.'}
+    ],
+    build(s, amount) {
+      const reviewers = amount>1000000 ? ['Supervisor','Pemilik usaha'] : ['Supervisor'];
+      return {fields:[['Kebutuhan',s.item],['Nominal',fmtRp(amount)],['Bukti penawaran',s.proof]],
+        finding:`${fmtRp(amount)} ${amount>1000000?'melewati':'masih dalam'} batas persetujuan supervisor. ${reviewers.length} pemeriksa diperlukan.`,
+        title:'Lembar persetujuan belanja', draft:`${s.code} · ${s.item} · ${fmtRp(amount)}. Urutan pemeriksaan: ${reviewers.join(' → ')}.`, reviewers};
+    }
+  },
+  inventory: {
+    icon:'boxes', label:'Pengingat stok', title:'Dari hitungan rak ke daftar beli',
+    short:'Barang apa yang perlu dipesan ulang?', output:'Usulan pembelian atau catatan stok',
+    intro:'Masukkan jumlah yang tersisa di rak. Alur menghitung apakah stok cukup sampai kiriman berikutnya tiba.',
+    input:'Catatan stok', tools:'Catatan rak → titik pesan → usulan pembelian',
+    required:'Waktu kirim', issue:'Titik pesan belum bisa dihitung sebelum waktu kirim pemasok diketahui.',
+    amount:{label:'Stok di rak (unit)', key:'stock', min:0, max:9999},
+    nodes:[
+      {title:'Baca kartu stok', output:'Ambil stok tersedia, pemakaian harian, waktu kirim, dan cadangan.'},
+      {title:'Hitung titik pesan', output:'Titik pesan = pemakaian harian × waktu kirim + cadangan. Contoh ini mengasumsikan tidak ada kiriman dalam perjalanan.'},
+      {title:'Susun daftar beli', output:'Pada atau di bawah titik pesan, isi kembali hingga titik pesan ditambah kebutuhan tiga hari.'}
+    ],
+    samples:[
+      {id:'cups', label:'Kedai · Gelas kertas', code:'ST-032', from:'Rak kemasan', item:'Gelas kertas', daily:12, days:4, reserve:12, stock:36, message:'Gelas kertas dipakai setiap hari untuk pesanan bawa pulang.'},
+      {id:'labels', label:'Toko roti · Label produk', code:'ST-037', from:'Rak kemasan', item:'Label roti', daily:8, days:3, reserve:10, stock:80, message:'Tim pengemasan selesai menghitung label yang tersisa di rak.'}
+    ],
+    build(s, stock) {
+      const threshold = s.daily*s.days+s.reserve;
+      const toBuy = stock<=threshold ? threshold+s.daily*3-stock : 0;
+      return {fields:[['Barang',s.item],['Di rak',`${stock} unit`],['Pemakaian',`${s.daily} unit/hari`],['Waktu kirim',`${s.days} hari`],['Cadangan',`${s.reserve} unit`]],
+        finding:`Titik pesan ${threshold} unit (${s.daily} × ${s.days} + ${s.reserve}). Stok di rak ${stock} unit.`,
+        title:toBuy?'Usulan pembelian':'Catatan stok cukup', draft:toBuy ? `Usulkan ${toBuy} unit ${s.item.toLowerCase()}. Jumlah di rak ditambah usulan ini menjadi ${threshold+s.daily*3} unit sebelum pemakaian berikutnya. Periksa usulan sebelum memesan ke pemasok.` : `${s.item} masih di atas titik pesan. Catat hasil pengecekan hari ini.`,
+        reviewers:['Admin pembelian']};
+    }
+  },
+  ads: {
+    icon:'megaphone', label:'Rekap iklan', title:'Dari biaya iklan ke catatan harian',
+    short:'Kampanye mana yang perlu diperiksa?', output:'Ringkasan untuk pemilik usaha',
+    intro:'Bandingkan belanja iklan dengan batas harian. Hasilnya menunjukkan sisa anggaran dan biaya per pesanan dari data contoh.',
+    input:'Rekap kampanye', tools:'Ekspor iklan → cek anggaran → ringkasan harian',
+    required:'Batas harian', issue:'Isi batas harian agar belanja kampanye bisa dibandingkan dengan anggarannya.',
+    amount:{label:'Belanja iklan (Rp)', key:'spend', min:0, max:100000000},
+    nodes:[
+      {title:'Baca rekap', output:'Ambil nama kampanye, pengeluaran, jumlah pesanan, dan anggaran harian.'},
+      {title:'Cek anggaran', output:'Bandingkan belanja dengan batas harian. Hitung biaya per pesanan hanya jika ada pesanan.'},
+      {title:'Susun ringkasan', output:'Siapkan catatan untuk pemilik. Perubahan pada kampanye memerlukan keputusan pengelola iklan.'}
+    ],
+    samples:[
+      {id:'launch', label:'Peluncuran koleksi linen', code:'IK-015', from:'Ekspor iklan toko', name:'Koleksi linen', spend:180000, budget:250000, orders:6, message:'Tim toko merangkum pengeluaran iklan peluncuran koleksi linen.'},
+      {id:'promo', label:'Promo akhir pekan', code:'IK-018', from:'Ekspor iklan toko', name:'Promo akhir pekan', spend:320000, budget:300000, orders:0, message:'Pemilik ingin memeriksa belanja promo sebelum kampanye dilanjutkan.'}
+    ],
+    build(s, spend) {
+      const delta=s.budget-spend;
+      const position=delta<0 ? `Lewat batas harian ${fmtRp(-delta)}` : delta===0 ? 'Tepat di batas harian' : `Sisa anggaran ${fmtRp(delta)}`;
+      return {fields:[['Kampanye',s.name],['Belanja',fmtRp(spend)],['Batas harian',fmtRp(s.budget)],['Pesanan',String(s.orders)]],
+        finding:`${position}. ${s.orders ? 'Biaya per pesanan '+fmtRp(spend/s.orders)+'.' : 'Belum ada pesanan untuk menghitung biaya per pesanan.'}`,
+        title:delta<=0?'Catatan pemeriksaan anggaran':'Rekap belanja hari ini',
+        draft:`${s.name} · ${fmtRp(spend)} dari ${fmtRp(s.budget)} · ${s.orders} pesanan. ${delta<=0 ? 'Periksa hasil kampanye sebelum menambah anggaran.' : 'Catat pemakaian anggaran untuk rekap pemilik.'}`, reviewers:['Pengelola iklan']};
+    }
+  }
+};
+
+
+let currentPreset = 'lead';
+let workflowStep = -1;
+let workflowReviews = 0;
+let workflowBlocked = false;
+let workflowRevision = false;
+let workflowEditingDraft = false;
+let workflowEditedDraft = '';
+
+function updateWorkflowInquiry() {
+  const flow = workflowCatalog[currentPreset];
+  const href = 'https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(
+    `Halo KAR Labs, saya mencoba Business Automation bagian ${flow.label}. Saya ingin membahas alur dari ${flow.input.toLowerCase()} hingga ${flow.output.toLowerCase()} untuk usaha saya. Data dan alat apa yang perlu disiapkan?`);
+  for (const link of $$('.project-inquiry a[data-lead-service="workflow"], .studio-header .consult-link[data-lead-service="workflow"], #cta-workflow a.btn-primary, #serviceGuide a[data-lead-service="workflow"]')) {
+    link.href = href;
+    if (!link.closest('.studio-header, #serviceGuide')) link.textContent = 'Bahas alur '+flow.label.toLowerCase()+' ↗';
+  }
+}
+
+function workflowSample() {
+  return workflowCatalog[currentPreset].samples.find(item=>item.id === $('#workflowSample').value);
+}
+
+function renderWorkflowCase() {
+  const flow = workflowCatalog[currentPreset];
+  const sample = workflowSample();
+  const amountInput = $('#workflowAmount');
+  const validAmount = !flow.amount || amountInput.validity.valid;
+  const result = validAmount ? flow.build(sample,amountInput.valueAsNumber) : null;
+  const missing = $('#workflowDataState').value === 'missing';
+  const started = workflowStep >= 0;
+  const lastStep = flow.nodes.length-1;
+  const hasDraft = workflowStep === lastStep;
+  const approved = hasDraft && workflowReviews === result.reviewers.length;
+  const html = escapeCatalogHtml;
+
+  $('#workflowSample').disabled = started;
+  $('#workflowDataState').disabled = workflowStep > 0;
+  amountInput.readOnly = started;
+  $('#workflowMessage').textContent = sample.message;
+  $('#workflowSource').textContent = sample.from+' · '+sample.code;
+  $('#workflowFields').innerHTML = (result?.fields || []).map(([label,value])=>{
+    const absent = missing && label === flow.required;
+    return `<div><dt>${html(label)}</dt><dd${absent ? ' class="field-missing"' : ''}>${absent ? 'Belum diisi' : html(value)}</dd></div>`;
+  }).join('');
+
+  $('#workflowProgress').innerHTML = flow.nodes.map((node,i)=>{
+    const current = i === workflowStep;
+    const done = i < workflowStep || approved;
+    return `<li${current && !approved ? ' aria-current="step"' : ''} class="${done ? 'is-done' : ''}"><span aria-hidden="true">${done ? '✓' : i+1}</span>${html(node.title)}</li>`;
+  }).join('');
+  $('#workflowGuideError').hidden = !workflowBlocked;
+  $('#workflowErrorMessage').textContent = workflowBlocked ? `${flow.required} belum diisi. ${flow.issue}` : '';
+  $('#repairWorkflowData').textContent = 'Lengkapi '+flow.required.toLowerCase()+' dari contoh';
+
+  let status = 'Hasil yang akan disiapkan: '+flow.output.toLowerCase()+'.';
+  if (!validAmount) status = `Isi ${flow.amount.label.toLowerCase()} dengan bilangan bulat dari ${fmtNum(flow.amount.min)} sampai ${fmtNum(flow.amount.max)}.`;
+  else if (workflowRevision) status = 'Dikembalikan untuk revisi. Periksa masukan, lalu jalankan ulang.';
+  else if (workflowStep === 0) status = workflowBlocked ? 'Proses menunggu data yang diperlukan.' : `${sample.code} diterima. Lanjutkan ke pemeriksaan.`;
+  else if (workflowStep === 1) status = result.finding;
+  else if (hasDraft) status = approved ? 'Pemeriksaan simulasi selesai.' : 'Hasil siap ditinjau oleh '+result.reviewers[workflowReviews]+'.';
+  $('#workflowGuideStatus').textContent = status;
+
+  $('#startWorkflowGuide').hidden = started;
+  $('#startWorkflowGuide').textContent = workflowRevision ? 'Jalankan setelah revisi' : 'Mulai simulasi';
+  $('#nextWorkflowStep').hidden = !started || hasDraft;
+  $('#nextWorkflowStep').disabled = workflowBlocked;
+  if (started && !hasDraft) $('#nextWorkflowStep').textContent = flow.nodes[workflowStep+1].title;
+  $('#resetWorkflowGuide').hidden = !started && !workflowRevision;
+  $('#workflowRecord').hidden = !hasDraft;
+  if (hasDraft) {
+    $('#workflowResultCode').textContent = 'Hasil simulasi · '+sample.code;
+    $('#workflowResultTitle').textContent = result.title;
+    const draft = $('#workflowOutputText');
+    draft.textContent = workflowEditedDraft || result.draft;
+    draft.hidden = workflowEditingDraft;
+    $('#workflowDraftEditor').hidden = !workflowEditingDraft;
+    const reviewed = result.reviewers.slice(0,workflowReviews);
+    const approval = currentPreset === 'approval';
+    const receipt = reviewed.length ? (approval ? 'Disetujui oleh ' : 'Ditinjau oleh ')+reviewed.join(' dan ')+'. ' : '';
+    $('#workflowReviewStatus').textContent = receipt+(approved ? 'Tercatat dalam simulasi ini.' : 'Menunggu '+result.reviewers[workflowReviews]+'.');
+    $('#workflowApprove').hidden = approved || workflowEditingDraft;
+    $('#workflowRevise').hidden = approved || workflowEditingDraft;
+    $('#workflowRevise').textContent = flow.editableDraft ? 'Sunting draf' : 'Minta revisi';
+    if (!approved) $('#workflowApprove').textContent = (approval ? 'Setujui sebagai ' : 'Tinjau sebagai ')+result.reviewers[workflowReviews];
+  }
+}
+
+function resetWorkflowCase(restoreInputs) {
+  workflowStep = -1;
+  workflowReviews = 0;
+  workflowBlocked = false;
+  workflowRevision = !restoreInputs;
+  workflowEditingDraft = false;
+  workflowEditedDraft = '';
+  $('#workflowDraftText').value = '';
+  $('#workflowOutputText').textContent = '';
+  if (restoreInputs) {
+    $('#workflowDataState').value = 'valid';
+    const amount = workflowCatalog[currentPreset].amount;
+    if (amount) $('#workflowAmount').value = workflowSample()[amount.key];
+  }
+  renderWorkflowCase();
+}
+
+function selectWorkflow(preset) {
+  currentPreset = preset;
+  const flow = workflowCatalog[preset];
+  $('#workflowScenario').value = preset;
+  $$('#workflowCatalog button').forEach(button=>button.setAttribute('aria-pressed', String(button.dataset.preset === preset)));
+  $('#workflowTitle').textContent = flow.title;
+  $('#workflowComplexity').textContent = flow.basic ? 'Simulasi · Alur dasar' : 'Simulasi · Alur lanjutan';
+  $('#workflowSummary').textContent = flow.intro;
+  $('#workflowInputTitle').textContent = flow.input;
+  $('#workflowTools').textContent = flow.tools;
+  $('#workflowStepNotes').innerHTML = flow.nodes.map(node=>`<li><b>${escapeCatalogHtml(node.title)}</b><p>${escapeCatalogHtml(node.output)}</p></li>`).join('');
+  $('#workflowSample').replaceChildren(...flow.samples.map(s=>new Option(s.label,s.id)));
+  $('#workflowDataState').options[1].textContent = flow.required+' belum diisi';
+  $('#workflowAmountLabel').hidden = !flow.amount;
+  $('#workflowAmount').disabled = !flow.amount;
+  if (flow.amount) {
+    $('#workflowAmountPrompt').textContent = flow.amount.label;
+    $('#workflowAmount').min = flow.amount.min;
+    $('#workflowAmount').max = flow.amount.max;
+  }
+  resetWorkflowCase(true);
+  updateWorkflowInquiry();
+}
+
+function initWorkflow() {
+  const picker = $('#workflowScenario');
+  const directory = $('#workflowCatalog');
+  const entries = Object.entries(workflowCatalog);
+  picker.replaceChildren(...entries.map(([id,flow])=>new Option(flow.label,id)));
+  directory.innerHTML = entries.map(([id,flow])=>`
+    <button type="button" data-preset="${id}" aria-controls="workflowCase" aria-pressed="false">
+      <span class="automation-menu-icon" aria-hidden="true"><i data-lucide="${flow.icon}"></i></span>
+      <span><b>${escapeCatalogHtml(flow.label)}</b><small>${escapeCatalogHtml(flow.short)}</small></span>
     </button>`).join('');
-    $$('.workflow-catalog-card').forEach(card=>card.onclick=()=>{currentPreset=card.dataset.preset;renderWorkflowAll();$(`#workflowCatalog [data-preset="${currentPreset}"]`).focus({preventScroll:true});});
-    const picker=$('#workflowScenario');
-    picker.innerHTML=entries.map(([key,w])=>`<option value="${key}">${w.label}</option>`).join('');
-    picker.value=currentPreset;
-    picker.onchange=()=>{currentPreset=picker.value;renderWorkflowAll();};
-  }
-  function renderWorkflowSummary(){
-    const w=workflowCatalog[currentPreset];
-    $('#workflowSummary').innerHTML=`<p>${w.short}</p><p class="showroom-note">Contoh alat: ${w.tools.join(', ')}. Tanpa integrasi aktif; pilihan platform mengikuti penawaran.</p>`;
-  }
-  function renderWorkflowUseCases(){
-    const w=workflowCatalog[currentPreset];
-    $('#workflowUseCases').innerHTML=`<h4>Contoh tujuan alur</h4><ul>${w.outcomes.map(item=>`<li>${item}</li>`).join('')}</ul>`;
-  }
-  function renderWorkflow(){
-    const w=workflowCatalog[currentPreset]; const nodes=w.nodes;
-    $('#workflowTitle').textContent=w.title;
-    $('#workflowComplexity').innerHTML=`<span class="landing-pill">${w.complexity==='Alur dasar'?'Alur dasar':'Referensi lanjutan'}</span><span class="landing-pill">${nodes.length} langkah</span>`;
-    $('#workflowViz').innerHTML=nodes.map((n,i)=>`<button type="button" class="workflow-node" data-i="${i}" aria-pressed="false"><span class="workflow-step-number">Langkah ${i+1}</span><b>${n.title}</b><span>${n.sub}</span></button>`).join('');
-    $$('.workflow-node').forEach(n=>{n.setAttribute('aria-controls','nodeDetail');n.onclick=()=>showNode(Number(n.dataset.i));}); showNode(0);
-  }
-  function showNode(i){
-    $$('.workflow-node').forEach(n=>{n.classList.remove('active');n.setAttribute('aria-pressed','false');}); const node=$$('.workflow-node')[i]; if(node){node.classList.add('active');node.setAttribute('aria-pressed','true');} const n={icon:'',...workflowCatalog[currentPreset].nodes[i]};
-    $('#nodeDetail').innerHTML=`<div class="flex justify-between gap-4 mb-4"><div><p class="text-accent text-sm font-bold">Langkah ${i+1}</p><h4 class="font-heading text-2xl font-bold"><span aria-hidden="true">${n.icon}</span> ${n.title}</h4></div><button id="closeNode" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div><div class="space-y-4 text-sm"><div><p class="text-gray-500">Platform</p><b>${n.platform}</b></div><div><p class="text-gray-500">Cara kerja</p><p class="text-gray-300">${n.config}</p></div><div><p class="text-gray-500">Syarat</p><p class="text-gray-300">${n.condition}</p></div><div><p class="text-gray-500">Hasil contoh</p><p class="text-gray-300">${n.output||'-'}</p></div></div>`; refreshIcons(); $('#closeNode').onclick=()=>{$('#nodeDetail').innerHTML='<p class="text-gray-500">Detail ditutup. Pilih langkah untuk membukanya kembali.</p>';$('.workflow-node.active')?.focus({preventScroll:true});};
-    $('#closeNode').setAttribute('aria-label','Tutup detail langkah');
-  }
-  function renderWorkflowRecord(){
-    const started=workflowGuideStep>=0;
-    const order=currentPreset.startsWith('order');
-    const status=workflowGuideStep<0?'Belum dimulai':workflowGuideStep===0?'Data contoh diterima':workflowGuideStep===1?'Catatan contoh diperiksa':'Draft tindak lanjut tersedia';
-    const workflow=workflowCatalog[currentPreset];
-    $('#workflowProgress').innerHTML = workflow.nodes.map((step, i) =>
-      `<li class="${i <= workflowGuideStep ? 'filled' : ''}"${i === workflowGuideStep ? ' aria-current="step"' : ''}><span aria-hidden="true">${i < workflowGuideStep ? '✓' : i + 1}</span>${step.title}</li>`).join('');
-    const basic=currentPreset==='lead'||currentPreset==='order-basic';
-    $('#workflowSampleLabel').hidden = !basic;
-    $('#workflowSample').disabled = started;
-    $('#workflowDataState').disabled = workflowGuideStep > 0;
-    const bakery = $('#workflowSample').value === 'bakery';
-    const shop = bakery ? 'Toko roti contoh' : 'Kedai kopi contoh';
-    const request = order ? (bakery ? '3 croissant' : '2 kopi susu') : (bakery ? 'Daftar roti dan pilihan isian' : 'Daftar minuman dan pilihan susu');
-    const draft = order ? `Pesanan ${request} tercatat untuk ${shop}. Mohon periksa sebelum disiapkan.` : `Terima kasih sudah bertanya tentang ${request.toLowerCase()}. Pilihan mana yang ingin Anda lihat?`;
-    const node=workflow.nodes[workflowGuideStep];
-    const fields=basic?`<div><dt>Usaha</dt><dd>${shop}</dd></div><div><dt>Kebutuhan</dt><dd>${request}</dd></div><div><dt>Status</dt><dd>${status}</dd></div>`:started?`<div><dt>Alur</dt><dd>${workflow.label}</dd></div><div><dt>Langkah saat ini</dt><dd>${node.title}</dd></div><div><dt>Hasil contoh</dt><dd>${escapeCatalogHtml(node.output)}</dd></div>`:'';
-    $('#workflowRecord').innerHTML=started?`<h4>${basic?'Catatan '+(order?'order':'calon pelanggan')+' contoh':'Catatan simulasi'}</h4><dl>${fields}</dl>${basic && workflowGuideStep===workflow.nodes.length-1 ? `<blockquote class="workflow-draft">${draft}</blockquote>` : ''}<p class="showroom-note">${workflowGuideStep===workflow.nodes.length-1?'Selesai di browser. Draft belum dikirim ke siapa pun.':'Lanjutkan untuk melihat perubahan catatan.'}</p>`:'<p>Belum ada catatan contoh. Tekan Mulai panduan untuk melihat alurnya.</p>';
-    $('#nextWorkflowStep').disabled=!started||workflowGuideStep>=workflowCatalog[currentPreset].nodes.length-1;
-    $('#startWorkflowGuide').disabled=started;
-  }
-  function resetWorkflowGuide(){
-    workflowGuideStep=-1;
-    $('#workflowGuideError').hidden=true;
-    $('#workflowDataState').value='valid';
-    $('#workflowGuideStatus').textContent='Pilih skenario dan mulai panduan, atau buka langkah untuk melihat detail.';
-    renderWorkflowRecord();
-    showNode(0);
-  }
-  function renderWorkflowAll(){ renderWorkflowCatalog(); renderWorkflowSummary(); renderWorkflowUseCases(); renderWorkflow(); resetWorkflowGuide(); }
-  function initWorkflow(){
-    renderWorkflowAll();
-    $('#startWorkflowGuide').onclick=()=>{workflowGuideStep=0;showNode(0);renderWorkflowRecord();$('#workflowGuideStatus').textContent='Data contoh diterima. Lanjutkan untuk memeriksa catatan.';};
-    $('#nextWorkflowStep').onclick=()=>{
-      if(workflowGuideStep<0||workflowGuideStep>=workflowCatalog[currentPreset].nodes.length-1)return;
-      if(workflowGuideStep===0&&$('#workflowDataState').value==='missing'){
-        $('#workflowGuideError').hidden=false;
-        $('#workflowGuideStatus').textContent='Proses berhenti sebelum pencatatan karena kontak contoh belum lengkap.';
-        return;
-      }
-      workflowGuideStep++;
-      $('#workflowGuideError').hidden=true;
-      showNode(workflowGuideStep);renderWorkflowRecord();
-      $('#workflowGuideStatus').textContent=`Langkah ${workflowGuideStep+1} dari ${workflowCatalog[currentPreset].nodes.length}: ${workflowCatalog[currentPreset].nodes[workflowGuideStep].title}.`;
-    };
-    $('#workflowDataState').onchange = () => {
-      if ($('#workflowDataState').value === 'valid' && !$('#workflowGuideError').hidden) {
-        $('#workflowGuideError').hidden = true;
-        $('#workflowGuideStatus').textContent = 'Kontak sudah lengkap. Lanjutkan ke pencatatan.';
-      }
-    };
-    $('#repairWorkflowData').onclick=()=>{$('#workflowDataState').value='valid';$('#workflowGuideError').hidden=true;$('#workflowGuideStatus').textContent='Kontak contoh sudah dilengkapi. Tekan Langkah berikutnya untuk mencoba lagi.';$('#nextWorkflowStep').focus();};
-    $('#resetWorkflowGuide').onclick=resetWorkflowGuide;
-  }
+  refreshIcons();
+  directory.onclick = event=>{
+    const button = event.target.closest('button[data-preset]');
+    if (!button || button.dataset.preset === currentPreset) return;
+    picker.value = button.dataset.preset;
+    picker.dispatchEvent(new Event('change',{bubbles:true}));
+  };
+  picker.onchange = ()=>selectWorkflow(picker.value);
+  $('#workflowSample').onchange = ()=>resetWorkflowCase(true);
+  $('#workflowAmount').oninput = renderWorkflowCase;
+  $('#workflowDataState').onchange = ()=>{
+    workflowBlocked = false;
+    renderWorkflowCase();
+  };
+  $('#startWorkflowGuide').onclick = ()=>{
+    if (workflowStep !== -1) return;
+    if (workflowCatalog[currentPreset].amount && !$('#workflowAmount').reportValidity()) return;
+    workflowRevision = false;
+    workflowStep = 0;
+    renderWorkflowCase();
+    $('#nextWorkflowStep').focus({preventScroll:true});
+  };
+  $('#nextWorkflowStep').onclick = ()=>{
+    const flow = workflowCatalog[currentPreset];
+    if (workflowStep < 0 || workflowStep >= flow.nodes.length-1) return;
+    if (workflowStep === 0 && $('#workflowDataState').value === 'missing') {
+      workflowBlocked = true;
+      renderWorkflowCase();
+      $('#repairWorkflowData').focus();
+      return;
+    }
+    workflowStep++;
+    renderWorkflowCase();
+    if (workflowStep === flow.nodes.length-1) $('#workflowResultTitle').focus();
+  };
+  $('#repairWorkflowData').onclick = ()=>{
+    $('#workflowDataState').value = 'valid';
+    workflowBlocked = false;
+    renderWorkflowCase();
+    $('#workflowGuideStatus').textContent = workflowCatalog[currentPreset].required+' sudah dilengkapi. Pemeriksaan bisa dilanjutkan.';
+    $('#nextWorkflowStep').focus();
+  };
+  $('#workflowApprove').onclick = ()=>{
+    if ($('#workflowApprove').hidden || workflowStep !== workflowCatalog[currentPreset].nodes.length-1) return;
+    workflowReviews++;
+    renderWorkflowCase();
+    if ($('#workflowApprove').hidden) $('#workflowReviewStatus').focus({preventScroll:true});
+  };
+  $('#workflowRevise').onclick = ()=>{
+    if (workflowCatalog[currentPreset].editableDraft) {
+      const input = $('#workflowDraftText');
+      input.value = $('#workflowOutputText').textContent;
+      input.setCustomValidity('');
+      workflowEditingDraft = true;
+      renderWorkflowCase();
+      input.focus();
+      return;
+    }
+    resetWorkflowCase(false);
+    (workflowCatalog[currentPreset].amount ? $('#workflowAmount') : $('#workflowSample')).focus();
+  };
+  $('#workflowDraftText').oninput = event=>event.target.setCustomValidity('');
+  $('#workflowDraftEditor').onsubmit = event=>{
+    event.preventDefault();
+    const input = $('#workflowDraftText');
+    const text = input.value.trim();
+    if (!text) {
+      input.setCustomValidity('Tulis isi balasan sebelum menyimpan draf.');
+      input.reportValidity();
+      return;
+    }
+    workflowEditedDraft = text;
+    workflowEditingDraft = false;
+    renderWorkflowCase();
+    $('#workflowApprove').focus();
+  };
+  $('#cancelWorkflowEdit').onclick = ()=>{
+    workflowEditingDraft = false;
+    renderWorkflowCase();
+    $('#workflowRevise').focus();
+  };
+  $('#resetWorkflowGuide').onclick = ()=>{
+    resetWorkflowCase(true);
+    $('#startWorkflowGuide').focus();
+  };
+  selectWorkflow(currentPreset);
+}

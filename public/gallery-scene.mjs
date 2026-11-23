@@ -45,9 +45,9 @@ export function createScene(room) {
     arrive(frame, direction) {
       cancelArrival();
       arrival = gsap.timeline({defaults:{ease:'power2.out'}});
-      arrival.from(frame, {y:4, scale:.99, duration:.28}, 0)
-        .from(find('#selected-title'), {x:direction * 7, opacity:.78, duration:.24}, .035)
-        .from(find('#selected-desc'), {x:direction * 4, opacity:.78, duration:.22}, .07);
+      arrival.from(frame, {rotationY:direction * 7, y:9, scale:.965, duration:.46}, 0)
+        .from(find('#selected-title'), {y:9, opacity:.6, duration:.27}, .045)
+        .from(find('#selected-desc'), {y:5, opacity:.7, duration:.24}, .09);
     },
     destroy() {
       resize?.disconnect();

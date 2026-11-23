@@ -48,7 +48,22 @@
     else box.innerHTML=posCart.map(x=>`<div class="pos-cart-item"><div><b class="block text-sm">${x.name}</b><span class="text-xs text-gray-500">${fmtRp(x.price)} / item</span><div class="pos-qty"><button type="button" aria-label="Kurangi jumlah ${x.name}" data-pos-minus="${x.id}">−</button><span>${x.qty}</span><button type="button" aria-label="Tambah jumlah ${x.name}" data-pos-plus="${x.id}">+</button></div></div><b class="text-sm">${fmtRp(x.price*x.qty)}</b></div>`).join('');
     $$('[data-pos-minus]').forEach(b=>b.onclick=()=>updatePosQty(b.dataset.posMinus,-1)); $$('[data-pos-plus]').forEach(b=>b.onclick=()=>updatePosQty(b.dataset.posPlus,1)); refreshIcons();
   }
-  function renderPosTotals(){const t=posTotals(); if(!$('#posSubtotal'))return; $('#posSubtotal').textContent=fmtRp(t.subtotal);$('#posDiscountValue').textContent='- '+fmtRp(t.discount);$('#posTax').textContent=fmtRp(t.tax);$('#posTotal').textContent=fmtRp(t.total)}
+  function cashReceived(total) {
+    const value = $('#posCash').value.trim();
+    if (!value) return total;
+    return /^(?:\d+|\d{1,3}(?:\.\d{3})+)$/.test(value) ? Number(value.replace(/\./g,'')) : NaN;
+  }
+  function renderTender(total = posTotals().total) {
+    $('#posOrderDisplay').textContent = fmtRp(total);
+    const visible = posPayment === 'Cash' && posCart.length > 0;
+    $('#posTender').hidden = !visible;
+    if (!visible) return;
+    const change = cashReceived(total) - total;
+    $('#posCash').setAttribute('aria-invalid', String(!Number.isFinite(change) || change < 0));
+    $('#posChange').textContent = !Number.isFinite(change) ? 'Masukkan jumlah rupiah bulat.'
+      : change < 0 ? 'Masih kurang ' + fmtRp(-change) : 'Kembalian ' + fmtRp(change);
+  }
+  function renderPosTotals(){const t=posTotals(); if(!$('#posSubtotal'))return; $('#posSubtotal').textContent=fmtRp(t.subtotal);$('#posDiscountValue').textContent='- '+fmtRp(t.discount);$('#posTax').textContent=fmtRp(t.tax);$('#posTotal').textContent=fmtRp(t.total);renderTender(t.total)}
   function renderPos(changedProduct){
     renderPosProducts();renderPosCart();renderPosTotals();
     if (changedProduct) $(`[data-pos-add="${changedProduct}"]`)?.classList.add('pos-updated');
@@ -60,10 +75,12 @@
       button.classList.toggle('active', selected);
       button.setAttribute('aria-pressed', String(selected));
     }
+    renderTender();
   }
   function resetPos(showMessage=false) {
     posCart = [];
     receiptNumber = null;
+    $('#posCash').value = '';
     selectPayment('Cash');
     $('#posDiscount').value = '0';
     $('#posSearch').value = '';
@@ -75,6 +92,13 @@
   function openPosReceipt(){
     if(!posCart.length){toast('Pilih menu sebelum membuka struk.');return;}
     const t=posTotals(), modal=$('#posReceiptModal'); if(!modal)return;
+    const cash = cashReceived(t.total);
+    $('#posReceiptCashLines').hidden = posPayment !== 'Cash';
+    if (posPayment === 'Cash') {
+      if (!Number.isFinite(cash) || cash < t.total) { $('#posCash').focus(); return; }
+      $('#posReceiptCash').textContent = fmtRp(cash);
+      $('#posReceiptChange').textContent = fmtRp(cash-t.total);
+    }
     receiptNumber ??= ++posOrderSequence;
     $('#posReceiptOrder').textContent='#DEMO-'+String(receiptNumber).padStart(4,'0'); $('#posReceiptCustomer').textContent=$('#posCustomer')?.value||'Pelanggan umum'; $('#posReceiptPayment').textContent=$('.pos-payment-btn.active').textContent.trim(); $('#posReceiptTime').textContent=new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});
     $('#posReceiptItems').innerHTML=posCart.map(x=>`<div class="pos-receipt-line"><span>${x.qty}× ${x.name}</span><span>${fmtRp(x.price*x.qty)}</span></div>`).join(''); $('#posReceiptSubtotal').textContent=fmtRp(t.subtotal);$('#posReceiptDiscount').textContent='- '+fmtRp(t.discount);$('#posReceiptTax').textContent=fmtRp(t.tax);$('#posReceiptTotal').textContent=fmtRp(t.total); openCatalogDialog(modal, $('#posCheckout'));
@@ -87,7 +111,7 @@
   }
   function holdOrder() {
     if (!posCart.length) { toast('Tambahkan produk sebelum menahan pesanan.'); return; }
-    heldOrders.push({ receiptNumber, cart:posCart, payment:posPayment, discount:$('#posDiscount').value, customer:$('#posCustomer').value });
+    heldOrders.push({ receiptNumber, cart:posCart, payment:posPayment, cash:$('#posCash').value, discount:$('#posDiscount').value, customer:$('#posCustomer').value });
     resetPos(false);
     updateHeldOrders();
     toast('Pesanan ditahan selama halaman ini terbuka.');
@@ -98,6 +122,7 @@
     if (!order) return;
     posCart = order.cart;
     receiptNumber = order.receiptNumber;
+    $('#posCash').value = order.cash;
     selectPayment(order.payment);
     $('#posDiscount').value = order.discount;
     $('#posCustomer').value = order.customer;
@@ -112,6 +137,7 @@
     selectPayment(posPayment);
     $('#posSearch').oninput = renderPosProducts;
     $('#posDiscount').onchange = renderPosTotals;
+    $('#posCash').oninput = () => renderTender();
     $('#posCustomer').onchange = () => { $('#posCustomerLabel').textContent = $('#posCustomer').value; };
     $('#posReset').onclick = () => resetPos(true);
     $('#posViewOrder').onclick = () => {

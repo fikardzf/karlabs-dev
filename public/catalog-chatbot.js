@@ -221,6 +221,7 @@
       withAdmin = false;
       lastTopic = '';
       area.dataset.scenario = name;
+      input.placeholder = 'Tulis pesan untuk ' + scenarioMap[name].label;
       currentScenario=name; input.value=''; area.innerHTML=''; const select=$('#chatScenarioSelect'); if(select) select.value=name; bubble(scenarioMap[name].menu,'bot','Menu utama'); showQuick(); renderRules(); }
     const scenarioSelect=$('#chatScenarioSelect'); if(scenarioSelect) scenarioSelect.addEventListener('change',e=>loadScenario(e.target.value));
     $('#addKeywordRule').onclick = () => {

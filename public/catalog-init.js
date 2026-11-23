@@ -5,14 +5,13 @@
   let landingInitialized=false;
 
   async function ensureChartFeature(target){
-    if(target!=='calculator' && target!=='dashboard') return;
+    if(target!=='dashboard') return;
     const status=$('#chartFeatureStatus'), retry=$('#retryChartFeature');
     status.hidden=false;retry.hidden=true;
     $('#chartFeatureMessage').textContent='Memuat grafik demo. Fitur lain tetap dapat dipilih.';
     document.getElementById(target).setAttribute('aria-busy','true');
     try{
       await ensureChartJs();
-      if(target==='calculator' && !calculatorsInitialized){ initCalculators(); calculatorsInitialized=true; }
       if(target==='dashboard' && !dashboardInitialized){ initDashboard(); dashboardInitialized=true; }
       if(!document.getElementById(target).hidden)status.hidden=true;
     }catch(err){
@@ -46,11 +45,11 @@
       $('#chartFeatureStatus').hidden=true;
       if(target==='landing'&&!landingInitialized){initLanding();landingInitialized=true;}
 
-      if(target==='calculator' || target==='dashboard'){
+      if(target==='calculator' && !calculatorsInitialized){ initCalculators(); calculatorsInitialized=true; }
+      if(target==='dashboard'){
         try{ await ensureChartFeature(target); } catch(_){}
       }
       if(token!==navigation)return;
-      if(target==='calculator' && calculatorsInitialized) setTimeout(()=>{ [kprChart,bmiGauge,bepChart,adsChart,inventoryChart].filter(Boolean).forEach(c=>c.resize()); const active=document.querySelector('.sub-tab-btn.active'); if(active) refreshCalculator(active.dataset.calc); },120);
       if(target==='dashboard' && dashboardInitialized) setTimeout(()=>{ if(financeBar)financeBar.resize(); if(financePie)financePie.resize(); updateDashboard(); },120);
       if(shouldScroll){
         const el=document.getElementById('serviceGuide');
@@ -62,7 +61,7 @@
       if(location.hash==='#serviceDiscovery'){navigation++;return;}
       activateTarget(true);
     });
-    $('#retryChartFeature').onclick=()=>{const target=targetFromHash();if(target==='calculator'||target==='dashboard')activateTarget(false);};
+    $('#retryChartFeature').onclick=()=>{const target=targetFromHash();if(target==='dashboard')activateTarget(false);};
   }
 
   function initShared(){ createCtas();initShowroom();const top=$('#backTop');window.addEventListener('scroll',()=>top.classList.toggle('show',window.scrollY>300),{passive:true});top.onclick=()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}); }

@@ -2,6 +2,8 @@
 
 23 November 2026 · Build statis lokal dari branch `feat/interactive-portfolio-gallery`.
 
+Pengukuran dan durasi di bawah mencatat implementasi pada `a168e3b`. Komposisi, koreografi pemilihan karya, dan hasil pengujian iterasi berikutnya tercatat di [audit forensik showroom](AUDIT_FORENSIK_SHOWROOM.md).
+
 ## Hasil audit
 
 Beranda, indeks, delapan canvas, dan katalog lama menggunakan HTML statis dan JavaScript browser. Perpindahan halaman mengikuti navigasi dokumen. React/Vite ada di sumber lama. Branch kerja sudah berisi penyempurnaan demo beserta dependensi GSAP, Motion, dan Lenis. Riwayat pembandingan ZIP, GitHub, dan situs Netlify tercatat di [audit showroom](REFINEMENT_SHOWROOM.md).

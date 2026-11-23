@@ -1,753 +1,511 @@
-/* KAR Labs v2.6.0 - Landing page preview catalog and rendering */
 'use strict';
-  const landingTemplates = [
-    {
-        "id": "resto",
-        "layout": "fb-editorial",
-        "icon": "🍜",
-        "title": "Warteg Ami",
-        "category": "Restoran & Café",
-        "tone": "Editorial menu",
-        "badge": "Menu Harian Favorit",
-        "hero": "Masakan Rumahan Warteg Ami, Lebih Mudah Dipesan",
-        "desc": "Landing page warteg modern untuk menampilkan menu harian, paket makan siang, lokasi, jam buka, dan tombol pesan cepat ke WhatsApp.",
-        "cta": "Pesan Makan Sekarang",
-        "stats": [
-            "Menu Harian",
-            "Paket Hemat",
-            "Pesan via WA"
-        ],
-        "features": [
-            "Menu harian",
-            "Paket hemat",
-            "Pesan cepat"
-        ],
-        "palette": [
-            "#2b170c",
-            "#fff7ed",
-            "#f97316"
-        ],
-        "visual": "food editorial",
-        "sections": [
-            "Menu hari ini",
-            "Paket lauk",
-            "Pesan WhatsApp",
-            "Lokasi & jam buka"
-        ]
-    },
-    {
-        "id": "coffee",
-        "layout": "coffee-ambient",
-        "icon": "☕",
-        "title": "Atap Temu",
-        "category": "Restoran & Café",
-        "tone": "Lifestyle café",
-        "badge": "Rooftop Coffee Space",
-        "hero": "Tempat Ngopi, Ketemu, dan Nikmati Sore dari Atap Temu",
-        "desc": "Landing page café rooftop untuk menonjolkan ambience, menu kopi, event kecil, reservasi tempat, dan konten visual yang terasa hangat.",
-        "cta": "Reservasi Tempat",
-        "stats": [
-            "Rooftop Space",
-            "Event Sore",
-            "Manual Brew"
-        ],
-        "features": [
-            "Rooftop gallery",
-            "Event sore",
-            "Reservasi CTA"
-        ],
-        "palette": [
-            "#120b06",
-            "#fff7ed",
-            "#d97706"
-        ],
-        "visual": "warm cafe gallery",
-        "sections": [
-            "Gallery rooftop",
-            "Menu kopi",
-            "Jadwal event",
-            "Reservasi"
-        ]
-    },
-    {
-        "id": "bakery",
-        "layout": "bakery-shelf",
-        "icon": "🥐",
-        "title": "Golden Crust Bakery",
-        "category": "Restoran & Café",
-        "tone": "Artisan shelf",
-        "badge": "Fresh From Oven",
-        "hero": "Katalog Bakery yang Menjual Freshness, Hampers, dan Pre-Order dengan Visual Manis",
-        "desc": "Didesain untuk bakery/dessert/hampers agar produk terlihat premium, mudah dipilih, dan langsung mengarah ke WhatsApp order.",
-        "cta": "Pre-Order Hari Ini",
-        "stats": [
-            "Fresh Daily",
-            "Hampers Ready",
-            "Delivery Area"
-        ],
-        "features": [
-            "Product shelf",
-            "Hampers block",
-            "Pre-order CTA"
-        ],
-        "palette": [
-            "#fffbeb",
-            "#7c2d12",
-            "#f59e0b"
-        ],
-        "visual": "pastry shelf",
-        "sections": [
-            "Best seller shelf",
-            "Hampers package",
-            "Delivery notice",
-            "Pre-order flow"
-        ]
-    },
-    {
-        "id": "clinic",
-        "layout": "medical-trust",
-        "icon": "🩺",
-        "title": "Klinik Sehat",
-        "category": "Klinik & Healthcare",
-        "tone": "Medical booking",
-        "badge": "Booking Konsultasi",
-        "hero": "Perawatan Lebih Tenang, Jadwal Lebih Mudah, Trust Lebih Cepat Terbangun",
-        "desc": "Untuk klinik umum, dokter gigi, fisioterapi, atau layanan kesehatan yang butuh jadwal dokter, trust badge, dan appointment form.",
-        "cta": "Buat Janji",
-        "stats": [
-            "12 Dokter",
-            "08-21 WIB",
-            "Telekonsultasi"
-        ],
-        "features": [
-            "Doctor profile",
-            "Appointment card",
-            "Trust section"
-        ],
-        "palette": [
-            "#eff6ff",
-            "#0f766e",
-            "#14b8a6"
-        ],
-        "visual": "clinical trust",
-        "sections": [
-            "Doctor profile",
-            "Appointment booking",
-            "Service cards",
-            "Patient trust"
-        ]
-    },
-    {
-        "id": "kartika-beauty",
-        "layout": "beauty-studio",
-        "icon": "💆‍♀️",
-        "title": "Kartika Beauty Studio",
-        "category": "Klinik & Healthcare",
-        "tone": "Beauty studio",
-        "badge": "Beauty Treatment Booking",
-        "hero": "Tampilan Beauty Studio yang Elegan, Bersih, dan Siap Mengubah Followers Jadi Booking",
-        "desc": "Contoh landing page beauty studio dengan nuansa soft premium: treatment menu, before-after highlight, paket promo, testimoni, dan CTA booking WhatsApp.",
-        "cta": "Booking Treatment",
-        "stats": [
-            "Facial Treatment",
-            "Eyelash & Brow",
-            "Promo Member"
-        ],
-        "features": [
-            "Treatment menu",
-            "Before-after block",
-            "Booking WhatsApp"
-        ],
-        "palette": [
-            "#fff1f2",
-            "#7f1d1d",
-            "#fb7185"
-        ],
-        "visual": "soft blush beauty",
-        "sections": [
-            "Treatment menu",
-            "Before-after result",
-            "Promo package",
-            "Booking form"
-        ]
-    },
-    {
-        "id": "fashion",
-        "layout": "fashion-magazine",
-        "icon": "👕",
-        "title": "MODE.STORE",
-        "category": "Fashion & Online Shop",
-        "tone": "Magazine commerce",
-        "badge": "New Editorial Drop",
-        "hero": "Koleksi Baru yang Terasa Seperti Halaman Majalah Fashion",
-        "desc": "Untuk fashion, beauty, aksesoris, atau produk visual yang butuh lookbook editorial, katalog produk, promo, dan CTA checkout.",
-        "cta": "Shop The Look",
-        "stats": [
-            "50% Sale",
-            "COD Ready",
-            "Free Return"
-        ],
-        "features": [
-            "Magazine hero",
-            "Lookbook tiles",
-            "Product CTA"
-        ],
-        "palette": [
-            "#fafafa",
-            "#111827",
-            "#db2777"
-        ],
-        "visual": "fashion magazine",
-        "sections": [
-            "Lookbook hero",
-            "Product tiles",
-            "Promo banner",
-            "Checkout CTA"
-        ]
-    },
-    {
-        "id": "luxefashion",
-        "layout": "luxury-lookbook",
-        "icon": "👜",
-        "title": "LUXE Atelier",
-        "category": "Fashion & Online Shop",
-        "tone": "Luxury editorial",
-        "badge": "Private Collection",
-        "hero": "Luxury Pieces dengan Storytelling Visual yang Lebih Premium",
-        "desc": "Untuk butik premium, jewelry, perfume, bag, atau beauty brand yang ingin terasa eksklusif dengan campaign story dan private order.",
-        "cta": "Book Private Viewing",
-        "stats": [
-            "Limited Pieces",
-            "Premium Material",
-            "Private Order"
-        ],
-        "features": [
-            "Luxury split",
-            "Campaign story",
-            "Private CTA"
-        ],
-        "palette": [
-            "#09090b",
-            "#fafafa",
-            "#a855f7"
-        ],
-        "visual": "luxury editorial",
-        "sections": [
-            "Collection story",
-            "Private viewing",
-            "Material detail",
-            "Inquiry CTA"
-        ]
-    },
-    {
-        "id": "streetwear",
-        "layout": "street-drop",
-        "icon": "🧢",
-        "title": "DROP CTRL",
-        "category": "Fashion & Online Shop",
-        "tone": "Streetwear drop",
-        "badge": "Drop Countdown",
-        "hero": "Limited Drop yang Membuat Audience Siap Checkout Sebelum Kehabisan",
-        "desc": "Untuk streetwear, sneakers, merchandise, atau brand anak muda dengan sistem drop, waitlist, limited stock, dan hype campaign.",
-        "cta": "Join Waitlist",
-        "stats": [
-            "Limited Drop",
-            "Waitlist Open",
-            "Fast Checkout"
-        ],
-        "features": [
-            "Brutalist layout",
-            "Countdown drop",
-            "Waitlist CTA"
-        ],
-        "palette": [
-            "#050505",
-            "#ffffff",
-            "#f43f5e"
-        ],
-        "visual": "streetwear drop",
-        "sections": [
-            "Countdown drop",
-            "Stock alert",
-            "Waitlist form",
-            "Fast checkout"
-        ]
-    },
-    {
-        "id": "property",
-        "layout": "property-broker",
-        "icon": "🏡",
-        "title": "Vista Residence",
-        "category": "Properti & Real Estate",
-        "tone": "Property lead page",
-        "badge": "Unit Terbatas",
-        "hero": "Showcase Properti yang Membantu Customer Paham Unit, Lokasi, dan Jadwal Survey",
-        "desc": "Untuk developer, agen rumah, apartemen, villa, atau kost premium dengan fokus galeri unit, fasilitas, lokasi, dan lead form survey.",
-        "cta": "Jadwalkan Survey",
-        "stats": [
-            "5 Menit Tol",
-            "24/7 Security",
-            "DP Fleksibel"
-        ],
-        "features": [
-            "Unit gallery",
-            "Fasilitas",
-            "Lead form"
-        ],
-        "palette": [
-            "#f8fafc",
-            "#0f172a",
-            "#b45309"
-        ],
-        "visual": "real estate showcase",
-        "sections": [
-            "Unit gallery",
-            "Facilities grid",
-            "Location map",
-            "Survey lead form"
-        ]
-    },
-    {
-        "id": "course",
-        "layout": "course-roadmap",
-        "icon": "🎓",
-        "title": "SkillUp Academy",
-        "category": "Course & Education",
-        "tone": "Learning roadmap",
-        "badge": "Batch Baru Dibuka",
-        "hero": "Landing Page Kelas Online dengan Roadmap yang Membuat Peserta Paham Value-nya",
-        "desc": "Untuk course, bootcamp, webinar, mentoring, atau komunitas belajar dengan kurikulum, mentor, benefit, dan CTA daftar batch.",
-        "cta": "Daftar Kelas",
-        "stats": [
-            "8 Modul",
-            "Mentor Aktif",
-            "Sertifikat"
-        ],
-        "features": [
-            "Roadmap section",
-            "Mentor card",
-            "Batch CTA"
-        ],
-        "palette": [
-            "#eef2ff",
-            "#312e81",
-            "#6366f1"
-        ],
-        "visual": "education roadmap",
-        "sections": [
-            "Learning roadmap",
-            "Mentor profile",
-            "Batch schedule",
-            "Registration CTA"
-        ]
-    },
-    {
-        "id": "saas",
-        "layout": "saas-product",
-        "icon": "⚡",
-        "title": "FlowDesk AI",
-        "category": "SaaS & Tech Startup",
-        "tone": "Product dashboard",
-        "badge": "AI Productivity Tool",
-        "hero": "Demo Produk SaaS yang Menjelaskan Fitur Lewat Dashboard, Bukan Teks Panjang",
-        "desc": "Untuk SaaS, aplikasi internal, dashboard, AI product, atau startup yang ingin tampil kredibel, teknikal, dan siap demo.",
-        "cta": "Coba Demo",
-        "stats": [
-            "99.9% Uptime",
-            "Realtime Sync",
-            "AI Assist"
-        ],
-        "features": [
-            "App preview",
-            "Feature matrix",
-            "Pricing CTA"
-        ],
-        "palette": [
-            "#020617",
-            "#fafafa",
-            "#006847"
-        ],
-        "visual": "dashboard app",
-        "sections": [
-            "App preview",
-            "Feature matrix",
-            "Integration list",
-            "Pricing CTA"
-        ]
-    },
-    {
-        "id": "aiagency",
-        "layout": "ai-orbit",
-        "icon": "🤖",
-        "title": "NeuralWorks Studio",
-        "category": "SaaS & Tech Startup",
-        "tone": "AI agency landing",
-        "badge": "AI Implementation Partner",
-        "hero": "Bantu Bisnis Menggunakan AI Tanpa Ribet Teknis",
-        "desc": "Untuk AI consultant, software house, automation agency, atau tech service yang ingin menjelaskan solusi, proses kerja, dan lead form konsultasi.",
-        "cta": "Audit Workflow",
-        "stats": [
-            "AI Automation",
-            "System Audit",
-            "Custom Build"
-        ],
-        "features": [
-            "Solution orbit",
-            "Process cards",
-            "Audit CTA"
-        ],
-        "palette": [
-            "#ecfeff",
-            "#0f172a",
-            "#06b6d4"
-        ],
-        "visual": "AI solution orbit",
-        "sections": [
-            "Solution orbit",
-            "Process cards",
-            "Use cases",
-            "Audit CTA"
-        ]
-    },
-    {
-        "id": "cybertech",
-        "layout": "cyber-terminal",
-        "icon": "🛡️",
-        "title": "SecureOps Cloud",
-        "category": "SaaS & Tech Startup",
-        "tone": "Cybersecurity SaaS",
-        "badge": "Security Monitoring",
-        "hero": "Pantau Risiko Digital Sebelum Menjadi Masalah Besar",
-        "desc": "Untuk cybersecurity, cloud service, IT managed service, atau B2B tech product dengan dashboard risk, trust metric, dan demo request.",
-        "cta": "Request Security Demo",
-        "stats": [
-            "24/7 Monitor",
-            "Risk Alert",
-            "Audit Report"
-        ],
-        "features": [
-            "SOC terminal",
-            "Risk cards",
-            "Demo CTA"
-        ],
-        "palette": [
-            "#020617",
-            "#e2e8f0",
-            "#38bdf8"
-        ],
-        "visual": "security terminal",
-        "sections": [
-            "SOC terminal",
-            "Risk cards",
-            "Compliance badge",
-            "Demo CTA"
-        ]
-    },
-    {
-        "id": "event",
-        "layout": "event-stage",
-        "icon": "🎤",
-        "title": "StageUp Event",
-        "category": "Event & Community",
-        "tone": "Bold countdown",
-        "badge": "Early Bird Ticket",
-        "hero": "Event Page yang Membuat Audience Merasa Waktunya Terbatas dan Harus Daftar",
-        "desc": "Untuk konser, seminar, workshop, komunitas, wedding organizer, atau event organizer yang butuh countdown, lineup, rundown, dan tiket.",
-        "cta": "Ambil Tiket",
-        "stats": [
-            "12 Speaker",
-            "500 Seats",
-            "Live Streaming"
-        ],
-        "features": [
-            "Countdown hero",
-            "Lineup cards",
-            "Ticket CTA"
-        ],
-        "palette": [
-            "#111827",
-            "#ffffff",
-            "#f97316"
-        ],
-        "visual": "event stage",
-        "sections": [
-            "Countdown",
-            "Lineup",
-            "Rundown",
-            "Ticket CTA"
-        ]
-    },
-    {
-        "id": "portfolio",
-        "layout": "portfolio-case",
-        "icon": "🧑‍💻",
-        "title": "Aksa Portfolio",
-        "category": "Personal Brand & Portfolio",
-        "tone": "Case study portfolio",
-        "badge": "Available for Project",
-        "hero": "Portfolio Personal yang Menjelaskan Value, Bukan Hanya Menaruh Karya",
-        "desc": "Untuk freelancer, creator, consultant, designer, atau talent yang ingin menampilkan karya, pengalaman, proses, dan kontak dengan rapi.",
-        "cta": "Lihat Karya",
-        "stats": [
-            "24 Projects",
-            "8 Clients",
-            "3 Years"
-        ],
-        "features": [
-            "Case study cards",
-            "Service section",
-            "Contact CTA"
-        ],
-        "palette": [
-            "#f5f3ff",
-            "#111827",
-            "#7c3aed"
-        ],
-        "visual": "case study",
-        "sections": [
-            "Profile hero",
-            "Case study",
-            "Service list",
-            "Contact CTA"
-        ]
-    },
-    {
-        "id": "photographer",
-        "layout": "photo-masonry",
-        "icon": "📸",
-        "title": "Raka Visuals",
-        "category": "Personal Brand & Portfolio",
-        "tone": "Visual creator grid",
-        "badge": "Commercial Photographer",
-        "hero": "Galeri Visual yang Membuat Karya Terlihat Siap Dipilih Brand",
-        "desc": "Untuk fotografer, videografer, creative director, atau studio visual yang ingin menampilkan galeri, paket jasa, dan booking inquiry.",
-        "cta": "Book Session",
-        "stats": [
-            "Brand Shoot",
-            "Event Photo",
-            "Product Visual"
-        ],
-        "features": [
-            "Masonry gallery",
-            "Package cards",
-            "Booking CTA"
-        ],
-        "palette": [
-            "#0f172a",
-            "#f8fafc",
-            "#94a3b8"
-        ],
-        "visual": "photo masonry",
-        "sections": [
-            "Masonry gallery",
-            "Package cards",
-            "Client logos",
-            "Booking CTA"
-        ]
-    },
-    {
-        "id": "consultant",
-        "layout": "consultant-board",
-        "icon": "💼",
-        "title": "Nara Consulting",
-        "category": "Personal Brand & Portfolio",
-        "tone": "Consultant authority",
-        "badge": "Business Advisor",
-        "hero": "Bangun Kepercayaan dengan Insight, Bukti, dan Ajakan Konsultasi",
-        "desc": "Untuk consultant, coach, trainer, speaker, atau expert yang ingin menampilkan framework, kredibilitas, insight, dan CTA konsultasi.",
-        "cta": "Book Consultation",
-        "stats": [
-            "Strategy Audit",
-            "Client Results",
-            "Workshop"
-        ],
-        "features": [
-            "Authority layout",
-            "Framework cards",
-            "Consult CTA"
-        ],
-        "palette": [
-            "#f8fafc",
-            "#0f172a",
-            "#006847"
-        ],
-        "visual": "consulting framework",
-        "sections": [
-            "Framework",
-            "Proof points",
-            "Workshop offer",
-            "Consult CTA"
-        ]
-    }
+
+const landingTemplates = [
+  {
+    id: "resto",
+    title: "Warteg Ami",
+    category: "Kuliner",
+    goal: "Pesanan",
+    layout: "menu",
+    paper: "#fbf0d6",
+    ink: "#351e17",
+    accent: "#934124",
+    pitch: "Pelanggan bisa melihat harga per porsi atau memilih sepuluh kotak sekaligus untuk makan siang tim.",
+    headline: "Hari ini makan apa?",
+    lead: "Ayam kecap, telur balado, atau tumis tempe. Pilih lauk sebelum jam makan siang tiba.",
+    section: "Pilih bekal siangmu",
+    offers: [
+      {name: "Paket ayam kecap", meta: "Rp25.000 / porsi", detail: "Nasi hangat, ayam kecap, tumis buncis, dan sambal terpisah."},
+      {name: "Telur balado", meta: "Rp18.000 / porsi", detail: "Telur berbumbu cabai merah dengan sayur bening dan nasi."},
+      {name: "Paket sekantor", meta: "10 kotak", detail: "Satu pilihan lauk per kotak. Tentukan jumlah dan jam pengambilan."}
+    ],
+    inquiry: "Saya ingin memesan {offer}. Bisa saya ambil menjelang makan siang?"
+  },
+  {
+    id: "fashion",
+    title: "MODE.STORE",
+    category: "Mode",
+    goal: "Pesanan",
+    layout: "editorial",
+    paper: "#f7ede1",
+    ink: "#31241e",
+    accent: "#884531",
+    pitch: "Tunjukkan cara memadukan pakaian untuk kerja dan akhir pekan. Pembeli bisa memilih gaya sebelum menanyakan ukuran.",
+    headline: "Satu kemeja, tiga agenda.",
+    lead: "Mulai dari potongan yang mudah dipadukan. Pilih tampilan untuk bekerja, akhir pekan, atau bepergian.",
+    section: "Pilih tampilanmu",
+    offers: [
+      {name: "Ke kantor", meta: "Kemeja & chino", detail: "Kemeja berpotongan lurus dengan celana chino warna pasir."},
+      {name: "Akhir pekan", meta: "Kaos & denim", detail: "Kaos longgar dipadukan dengan jeans lurus dan manset terlipat."},
+      {name: "Perjalanan singkat", meta: "Lapis luar", detail: "Kemeja ringan sebagai luaran untuk dua kombinasi pakaian."}
+    ],
+    inquiry: "Saya suka tampilan {offer}. Boleh lihat panduan ukuran dan pilihan warnanya?"
+  },
+  {
+    id: "property",
+    title: "Vista Residence",
+    category: "Properti",
+    goal: "Reservasi",
+    layout: "editorial",
+    paper: "#f4f1e3",
+    ink: "#24382e",
+    accent: "#365d45",
+    pitch: "Perlihatkan perbedaan ruang dan halaman agar calon pembeli tahu rumah mana yang ingin mereka kunjungi.",
+    headline: "Lihat ruangnya sebelum berkunjung.",
+    lead: "Mulai dari cara Anda tinggal. Telusuri ruang kerja, halaman, dan akses masuk sebelum memilih unit untuk dilihat.",
+    section: "Apa yang ingin Anda survei?",
+    offers: [
+      {name: "Rumah kompak", meta: "Dua kamar", detail: "Denah satu lantai dengan ruang keluarga yang menyatu dengan meja makan."},
+      {name: "Rumah tumbuh", meta: "Halaman belakang", detail: "Ruang terbuka untuk berkebun atau menambah teras."},
+      {name: "Kunjungan lokasi", meta: "Survei langsung", detail: "Tinjau akses jalan, arah cahaya, dan jarak antarunit."}
+    ],
+    inquiry: "Saya tertarik dengan {offer}. Kapan saya bisa melihat lokasinya?"
+  },
+  {
+    id: "event",
+    title: "StageUp Event",
+    category: "Acara",
+    goal: "Pendaftaran",
+    layout: "stage",
+    paper: "#201b31",
+    ink: "#fff7ed",
+    accent: "#ffa458",
+    pitch: "Jadwal panggung dan pilihan tiket dalam satu halaman. Pengunjung bisa menentukan sesi sebelum mendaftar.",
+    headline: "Datang untuk musiknya. Tinggal untuk sesi malam.",
+    lead: "Sore dimulai dengan akustik di pelataran. Seusai jeda, panggung utama mengambil alih.",
+    section: "Susun agenda malammu",
+    offers: [
+      {name: "Sesi pelataran", meta: "16.00", detail: "Set akustik pembuka dengan tempat duduk terbuka."},
+      {name: "Panggung utama", meta: "19.00", detail: "Penampilan band dan area berdiri di depan panggung."},
+      {name: "Akses sehari", meta: "Dua sesi", detail: "Ikuti kedua sesi dan ambil jeda di area komunitas."}
+    ],
+    inquiry: "Saya ingin ikut {offer}. Bagaimana cara mendaftar dan mengambil tiket?"
+  },
+  {
+    id: "clinic",
+    title: "Klinik Sehat",
+    category: "Kesehatan",
+    goal: "Reservasi",
+    layout: "guide",
+    paper: "#eff7f3",
+    ink: "#183b35",
+    accent: "#276451",
+    pitch: "Pasien bisa memilih konsultasi pertama atau kontrol, lalu menanyakan jadwal ke resepsionis.",
+    headline: "Rencanakan kunjungan Anda.",
+    lead: "Pilih jenis kunjungan dan tanyakan waktu yang tersedia. Resepsionis akan membantu menyiapkan jadwal.",
+    section: "Jenis kunjungan",
+    offers: [
+      {name: "Konsultasi umum", meta: "Kunjungan pertama", detail: "Tanyakan jam praktik dan dokumen yang perlu dibawa."},
+      {name: "Konsultasi gigi", meta: "Janji temu", detail: "Pilih hari yang sesuai lalu konfirmasi jadwal ke resepsionis."},
+      {name: "Kunjungan lanjutan", meta: "Kontrol", detail: "Sebutkan hari kunjungan sebelumnya saat menanyakan jadwal."}
+    ],
+    inquiry: "Saya ingin menjadwalkan {offer}. Hari dan jam apa yang tersedia?"
+  },
+  {
+    id: "photographer",
+    title: "Raka Visuals",
+    category: "Portofolio",
+    goal: "Reservasi",
+    layout: "stage",
+    paper: "#191d1c",
+    ink: "#f4efe4",
+    accent: "#f0c08f",
+    pitch: "Tampilkan sesi potret, foto produk, dan liputan usaha agar klien bisa menjelaskan foto yang mereka butuhkan.",
+    headline: "Cahaya yang pas untuk ceritamu.",
+    lead: "Untuk potret diri, produk pertama, atau keseharian di studio. Mulai dengan memilih apa yang ingin difoto.",
+    section: "Pilih sesi foto",
+    offers: [
+      {name: "Potret studio", meta: "Personal", detail: "Satu latar dan satu pilihan busana untuk potret profil."},
+      {name: "Produk meja", meta: "Katalog", detail: "Susun daftar produk dan pilih warna latar yang sesuai."},
+      {name: "Cerita usaha", meta: "Di lokasi", detail: "Dokumentasikan tempat kerja, proses, dan orang di balik produk."}
+    ],
+    inquiry: "Saya ingin menjadwalkan {offer}. Bisa bantu menyiapkan brief dan pilihan tanggal?"
+  },
+  {
+    id: "coffee",
+    title: "Atap Temu",
+    category: "Kuliner",
+    goal: "Reservasi",
+    layout: "stage",
+    paper: "#30211e",
+    ink: "#fff6e7",
+    accent: "#f1ba8b",
+    pitch: "Biarkan tamu memilih meja tepi teras untuk berdua atau meja panjang untuk rombongan sebelum reservasi.",
+    headline: "Meja sore di atas kota.",
+    lead: "Mulai dengan kopi dingin saat langit masih terang. Pilih tempat untuk berdua atau satu meja panjang bersama teman.",
+    section: "Pilih suasana",
+    offers: [
+      {name: "Tepi teras", meta: "Untuk dua orang", detail: "Kursi menghadap langit sore di area terbuka."},
+      {name: "Meja bersama", meta: "Untuk rombongan", detail: "Satu meja panjang untuk berbagi kudapan dan mengobrol."},
+      {name: "Sudut teduh", meta: "Semi-indoor", detail: "Tempat duduk beratap jika cuaca berubah."}
+    ],
+    inquiry: "Saya ingin memesan {offer}. Apakah ada meja untuk sore ini?"
+  },
+  {
+    id: "bakery",
+    title: "Golden Crust Bakery",
+    category: "Kuliner",
+    goal: "Pesanan",
+    layout: "menu",
+    paper: "#fff4cf",
+    ink: "#42281e",
+    accent: "#8c4328",
+    pitch: "Perlihatkan isi dan jumlah roti per kotak agar pembeli bisa memilih sarapan kecil atau hadiah untuk dibawa pulang.",
+    headline: "Bawa pulang satu kotak hangat.",
+    lead: "Lapisan croissant, roti susu, dan pilihan kotak untuk dibagi. Tentukan isinya sebelum memesan.",
+    section: "Isi kotakmu",
+    offers: [
+      {name: "Croissant mentega", meta: "Isi 2", detail: "Dua croissant klasik dalam kantong kertas."},
+      {name: "Kotak sarapan", meta: "Isi 4", detail: "Roti susu dan croissant untuk meja sarapan."},
+      {name: "Kotak hadiah", meta: "Isi 6", detail: "Campuran roti pilihan dengan ruang untuk kartu ucapan."}
+    ],
+    inquiry: "Saya ingin memesan {offer}. Bisa diambil pada tanggal pilihan saya?"
+  },
+  {
+    id: "kartika-beauty",
+    title: "Kartika Beauty Studio",
+    category: "Kecantikan",
+    goal: "Reservasi",
+    layout: "editorial",
+    paper: "#fff2ee",
+    ink: "#4a2931",
+    accent: "#884554",
+    pitch: "Pasangkan tiap perawatan dengan durasinya. Pelanggan bisa memilih sesi yang muat di sela hari kerja.",
+    headline: "Sisihkan waktu untuk dirimu.",
+    lead: "Pilih sesi yang muat di sela hari kerja atau jadwalkan persiapan untuk acara khusus.",
+    section: "Lihat menu studio",
+    offers: [
+      {name: "Perawatan wajah", meta: "45 menit", detail: "Sesi perawatan dasar dengan konsultasi singkat sebelum mulai."},
+      {name: "Tata alis", meta: "30 menit", detail: "Diskusikan bentuk yang diinginkan dengan terapis."},
+      {name: "Rias acara", meta: "90 menit", detail: "Bawa referensi busana dan warna riasan untuk acara Anda."}
+    ],
+    inquiry: "Saya ingin reservasi {offer}. Apakah ada jadwal kosong akhir pekan ini?"
+  },
+  {
+    id: "luxefashion",
+    title: "LUXE Atelier",
+    category: "Mode",
+    goal: "Reservasi",
+    layout: "stage",
+    paper: "#262221",
+    ink: "#fff6e5",
+    accent: "#e9c99c",
+    pitch: "Ajak calon pembeli melihat koleksi, mencoba gaun, atau membicarakan busana pesanan dalam sesi pribadi.",
+    headline: "Sebelum gaun itu dijahit.",
+    lead: "Rasakan jatuhnya kain dan bicarakan siluetnya di atelier. Mulailah dari jenis pertemuan yang Anda butuhkan.",
+    section: "Pertemuan di atelier",
+    offers: [
+      {name: "Lihat koleksi", meta: "Sesi pribadi", detail: "Bandingkan bahan dan siluet dari koleksi studio."},
+      {name: "Fitting awal", meta: "Pengukuran", detail: "Bawa sepatu dan referensi potongan untuk pembahasan awal."},
+      {name: "Konsultasi busana", meta: "Pesanan khusus", detail: "Ceritakan acara, pilihan kain, dan waktu pemakaian."}
+    ],
+    inquiry: "Saya ingin membuat janji untuk {offer}. Apa yang perlu saya siapkan?"
+  },
+  {
+    id: "streetwear",
+    title: "DROP CTRL",
+    category: "Mode",
+    goal: "Pesanan",
+    layout: "poster",
+    paper: "#dbf752",
+    ink: "#161d28",
+    accent: "#263ba8",
+    pitch: "Kenalkan koleksi baru lewat warna dan potongan. Pembeli bisa menunjuk barang yang ingin mereka pesan.",
+    headline: "Pilih warna drop berikutnya.",
+    lead: "Topi enam panel, kaos lebar, dan lapisan luar ringan. Lihat potongannya sebelum menitipkan pilihan.",
+    section: "Lihat koleksi drop",
+    offers: [
+      {name: "Six-panel cap", meta: "Biru kobalt", detail: "Topi dengan tali belakang yang dapat disesuaikan."},
+      {name: "Box tee", meta: "Putih tulang", detail: "Kaos berpotongan lebar dengan garis bahu turun."},
+      {name: "Coach jacket", meta: "Hijau lumut", detail: "Luaran ringan dengan kancing depan dan dua saku."}
+    ],
+    inquiry: "Saya tertarik dengan {offer}. Tolong kabari pilihan ukuran dan cara pesannya."
+  },
+  {
+    id: "course",
+    title: "SkillUp Academy",
+    category: "Pendidikan",
+    goal: "Pendaftaran",
+    layout: "guide",
+    paper: "#f5f1ff",
+    ink: "#302447",
+    accent: "#65468d",
+    pitch: "Tunjukkan apa yang akan dibuat peserta di setiap modul, dari membaca brief sampai menyiapkan poster cetak.",
+    headline: "Bikin poster pertamamu dari brief acara.",
+    lead: "Belajar membaca brief, menyusun tipografi, dan menyiapkan berkas poster. Pilih tahap yang ingin kamu pelajari.",
+    section: "Jalur belajar",
+    offers: [
+      {name: "Baca brief", meta: "Modul 1", detail: "Ubah kebutuhan acara menjadi daftar isi dan hierarki pesan."},
+      {name: "Susun poster", meta: "Modul 2", detail: "Padukan judul, foto, dan ruang kosong dalam satu komposisi."},
+      {name: "Siapkan berkas", meta: "Modul 3", detail: "Periksa margin dan ekspor versi cetak serta layar."}
+    ],
+    inquiry: "Saya tertarik dengan kelas desain, terutama modul {offer}. Kapan kelas berikutnya dibuka?"
+  },
+  {
+    id: "saas",
+    title: "FlowDesk AI",
+    category: "Teknologi",
+    goal: "Konsultasi",
+    layout: "guide",
+    paper: "#e7f5ed",
+    ink: "#153c32",
+    accent: "#226248",
+    pitch: "Biarkan calon pengguna memilih bagian yang ingin mereka lihat saat demo, dari kotak masuk tim sampai rekap mingguan.",
+    headline: "Satu tempat untuk melihat giliran kerja.",
+    lead: "Ikuti contoh permintaan pelanggan sejak masuk, ditetapkan ke anggota tim, hingga selesai ditindaklanjuti.",
+    section: "Pilih bagian demo",
+    offers: [
+      {name: "Kotak masuk", meta: "Penerimaan", detail: "Lihat contoh daftar permintaan baru dengan topik dan waktu masuk."},
+      {name: "Pembagian kerja", meta: "Penugasan", detail: "Tentukan siapa yang memegang setiap permintaan dalam contoh tim."},
+      {name: "Rekap mingguan", meta: "Pelaporan", detail: "Bandingkan pekerjaan yang sudah selesai dan yang perlu diteruskan."}
+    ],
+    inquiry: "Saya ingin melihat demo {offer} dengan contoh alur tim saya."
+  },
+  {
+    id: "aiagency",
+    title: "NeuralWorks Studio",
+    category: "Teknologi",
+    goal: "Konsultasi",
+    layout: "poster",
+    paper: "#bce3ff",
+    ink: "#172e44",
+    accent: "#254d7b",
+    pitch: "Ajak pemilik usaha memilih satu pekerjaan berulang sebagai bahan konsultasi, dari mencatat pesanan sampai menyusun laporan.",
+    headline: "Pekerjaan mana yang terus kamu ulang?",
+    lead: "Mulai dari satu tugas harian. Petakan sumber data, aturan pengecekan, dan langkah yang masih memerlukan keputusan orang.",
+    section: "Pilih titik awal",
+    offers: [
+      {name: "Catat pesanan", meta: "Data masuk", detail: "Petakan sumber pesanan dan kolom yang perlu dicatat."},
+      {name: "Ingatkan tim", meta: "Tindak lanjut", detail: "Tentukan pemicu pengingat dan siapa yang menerimanya."},
+      {name: "Susun rekap", meta: "Laporan", detail: "Tentukan data yang dibutuhkan pemilik usaha di akhir pekan."}
+    ],
+    inquiry: "Saya ingin membahas alur {offer}. Informasi proses apa yang perlu saya siapkan?"
+  },
+  {
+    id: "cybertech",
+    title: "SecureOps Cloud",
+    category: "Teknologi",
+    goal: "Konsultasi",
+    layout: "stage",
+    paper: "#192936",
+    ink: "#edf5fa",
+    accent: "#9ce3da",
+    pitch: "Bantu tim memilih topik untuk sesi pengenalan, seperti alur notifikasi atau isi laporan pemantauan.",
+    headline: "Saat ada peringatan, siapa yang melihatnya?",
+    lead: "Lihat contoh pembagian peran saat tim menerima pemberitahuan. Pilih topik yang ingin dibahas dalam sesi pengenalan.",
+    section: "Topik pengenalan",
+    offers: [
+      {name: "Ringkasan aset", meta: "Inventaris", detail: "Tinjau kelompok layanan dan penanggung jawab masing-masing."},
+      {name: "Alur notifikasi", meta: "Koordinasi", detail: "Bahas siapa yang perlu menerima ringkasan peringatan."},
+      {name: "Laporan bulanan", meta: "Evaluasi", detail: "Pilih informasi yang dibutuhkan pengelola dan pemilik bisnis."}
+    ],
+    inquiry: "Saya ingin mengenal bagian {offer}. Bisa jadwalkan sesi pengenalan untuk tim kami?"
+  },
+  {
+    id: "portfolio",
+    title: "Aksa Portfolio",
+    category: "Portofolio",
+    goal: "Konsultasi",
+    layout: "poster",
+    paper: "#efe4ff",
+    ink: "#2b2044",
+    accent: "#6840a0",
+    pitch: "Tampilkan contoh kebutuhan desain agar pemilik usaha bisa memilih identitas merek, poster, atau kemasan untuk dibahas.",
+    headline: "Dari sketsa menjadi wajah sebuah usaha.",
+    lead: "Jelajahi tiga bentuk kerja studio. Pilih kebutuhan yang paling dekat dengan proyek yang sedang kamu rencanakan.",
+    section: "Bidang kerja",
+    offers: [
+      {name: "Identitas kedai", meta: "Merek", detail: "Eksplorasi huruf dan warna untuk papan nama dan kemasan."},
+      {name: "Poster acara", meta: "Kampanye", detail: "Susun identitas acara yang terbaca di jalan dan di layar."},
+      {name: "Label produk", meta: "Kemasan", detail: "Rancang hierarki nama, varian, dan informasi pada satu label."}
+    ],
+    inquiry: "Saya ingin membahas proyek {offer}. Boleh minta daftar bahan untuk brief awal?"
+  },
+  {
+    id: "consultant",
+    title: "Nara Consulting",
+    category: "Jasa",
+    goal: "Konsultasi",
+    layout: "guide",
+    paper: "#f0f1e8",
+    ink: "#2d3728",
+    accent: "#445f3d",
+    pitch: "Beri calon klien pilihan untuk memulai konsultasi dari harga jual, pembagian kerja, atau laporan usaha.",
+    headline: "Mulai dari satu keputusan yang tertunda.",
+    lead: "Bawa satu persoalan yang paling sering muncul di usaha Anda. Kita dapat mulai dari harga, pembagian kerja, atau cara membaca laporan.",
+    section: "Topik pertemuan",
+    offers: [
+      {name: "Susun harga", meta: "Penawaran", detail: "Petakan biaya dan pilihan paket yang saat ini ditawarkan."},
+      {name: "Bagi tanggung jawab", meta: "Operasional", detail: "Lihat pekerjaan harian dan titik serah yang sering terlewat."},
+      {name: "Baca laporan", meta: "Keuangan usaha", detail: "Tentukan pertanyaan bisnis yang ingin dijawab oleh rekap bulanan."}
+    ],
+    inquiry: "Saya ingin membahas topik {offer}. Catatan usaha apa yang sebaiknya saya bawa?"
+  }
 ];
 
-  let activeLandingTemplate = landingTemplates[0];
-  let activeLandingFilter = 'Semua';
-  const landingFilterMap = {
-    Kuliner:'Restoran & Café', Klinik:'Klinik & Healthcare', Mode:'Fashion & Online Shop',
-    Properti:'Properti & Real Estate', Pendidikan:'Course & Education', Teknologi:'SaaS & Tech Startup',
-    Acara:'Event & Community', Portofolio:'Personal Brand & Portfolio'
-  };
-  const landingFilters = ['Semua', ...Object.keys(landingFilterMap)];
+let activeLandingFilter = 'Semua';
+let activeLandingTemplate = landingTemplates[0];
 
-  function miniItems(items){ return (items||[]).map(x=>`<span>${x}</span>`).join(''); }
-  function landingHtml(t){
-    const esc=v=>String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    const palette=t.palette||['#000000','#FAFAFA','#006847'];
-    const bg=palette[0], fg=palette[1], accent=palette[2];
-    const soft=layout=>layout==='beauty-studio' || layout==='bakery-shelf' || layout==='medical-trust' || layout==='property-broker' || layout==='course-roadmap' || layout==='consultant-board' || layout==='portfolio-case' || layout==='fashion-magazine';
-    const dark=!soft(t.layout);
-    const statCards=(items)=>items.map(s=>`<div class="stat"><b>${esc(s)}</b><span>Informasi contoh</span></div>`).join('');
-    const sectionCards=(items)=>items.map((s,i)=>`<div class="section-card"><span>0${i+1}</span><b>${esc(s)}</b><small>Customizable section</small></div>`).join('');
-    const featurePills=(items)=>items.map(f=>`<span>${esc(f)}</span>`).join('');
-    const productCards=(items,icons=['🍜','☕','🥐','🍰'])=>items.map((f,i)=>`<div class="product"><div class="pic">${icons[i%icons.length]}</div><b>${esc(f)}</b><small>Showcase</small></div>`).join('');
-    const vars=`--bg:${bg};--fg:${fg};--accent:${accent};--muted:${dark?'#B8B8B8':'#64748B'};--paper:${dark?'rgba(255,255,255,.07)':'#FFFFFF'};--line:${dark?'rgba(255,255,255,.14)':'rgba(15,23,42,.12)'};`;
-    const base=`*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg)}.font{font-family:'Space Grotesk',Inter,sans-serif}.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;position:relative;z-index:2}.logo{font-family:'Space Grotesk';font-weight:900;font-size:22px;letter-spacing:-.04em}.links{display:flex;gap:22px;color:var(--muted);font-size:13px}.badge{display:inline-flex;padding:9px 14px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);color:var(--accent);font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.11em}.h1{font-family:'Space Grotesk';font-size:clamp(40px,7vw,84px);line-height:.92;margin:18px 0;letter-spacing:-.07em}.desc{font-size:17px;line-height:1.72;color:var(--muted);max-width:660px}.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-block;border:0;border-radius:999px;padding:14px 22px;font-weight:900;background:var(--accent);color:white;box-shadow:0 18px 50px color-mix(in srgb,var(--accent) 22%,transparent)}.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line);box-shadow:none}.stat,.section-card,.product{padding:18px;border-radius:24px;background:var(--paper);border:1px solid var(--line)}.stat b,.section-card b,.product b{display:block}.stat span,.section-card small,.product small{font-size:12px;color:var(--muted)}.section-card span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:12px;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);font-weight:900;margin-bottom:12px}.pills{display:flex;gap:9px;flex-wrap:wrap}.pills span{border-radius:999px;padding:8px 11px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-weight:800;font-size:12px}.mini-note{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:900}.footer{padding:24px 7%;color:var(--muted);border-top:1px solid var(--line);font-size:12px}.asset{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--paper)}.asset:before{content:'';position:absolute;inset:-40%;background:radial-gradient(circle at 25% 20%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 28%),radial-gradient(circle at 85% 80%,rgba(255,255,255,.22),transparent 22%);filter:blur(8px)}.asset>*{position:relative}.proof-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.section-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.ribbon{border-radius:28px;padding:24px;background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}@media(max-width:780px){.links{display:none}.hero,.split,.proof-strip,.section-grid{grid-template-columns:1fr!important}.h1{font-size:42px}.desc{font-size:15px}.nav{padding:0 5%}}`;
-    const contactExample = `<details class="example-action"><summary class="btn">${esc(t.cta)}</summary><p><b>Contoh pesan pelanggan</b><br>Halo ${esc(t.title)}, saya ingin tahu lebih lanjut tentang ${esc(t.features[0])}. Bagaimana langkah berikutnya?</p></details>`;
-    const wrapper=(css,html)=>`<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><title>${esc(t.title)} — contoh desain KAR Labs</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{${vars}}${base}${css}.design-index{position:relative}.design-index summary{padding:.65rem;cursor:pointer}.design-index ul{position:absolute;right:0;width:max-content;max-width:70vw;margin:0;padding:1rem 1.8rem;background:white;color:#273328;box-shadow:0 4px 12px #0002;border-radius:.5rem}.example-action summary{cursor:pointer;list-style:none}.example-action summary:focus-visible{outline:3px solid currentColor;outline-offset:3px}.example-action[open]{flex-basis:100%}.example-action p{padding:1em;border-radius:.6rem;background:#fff;color:#252b23;line-height:1.5;max-width:42ch}</style></head><body><p style="margin:0;padding:12px 7%;background:#111;color:#fff;font:14px/1.6 system-ui">Demo desain KAR Labs. Nama usaha, orang, produk, dan angka adalah ilustrasi; bukan bukti pelanggan. Buka tombol penawaran untuk melihat contoh pesan pelanggan.</p>${html}<footer class="footer">Preview profesional dari KAR Labs.dev — asset, warna, copywriting, section, dan CTA dapat disesuaikan untuk brand client.</footer></body></html>`;
-    const commonNav=(links=['Home','Benefit','Pricing','Contact'])=>`<header class="nav"><div class="logo">${esc(t.title)}</div><details class="design-index"><summary>Bagian desain</summary><ul>${links.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></details></header>`;
-    const heroText=`<div class="copy"><span class="badge">${esc(t.badge)}</span><h1 class="h1">${esc(t.hero)}</h1><p class="desc">${esc(t.desc)}</p><div class="pills">${featurePills(t.features)}</div><div class="btns">${contactExample}<details class="example-action"><summary class="btn alt">Lihat rincian</summary><p>${t.sections.map(esc).join(' · ')}</p></details></div></div>`;
-    const layouts={
-      'fb-editorial':()=>wrapper(`.hero{padding:60px 7%;display:grid;grid-template-columns:1fr .9fr;gap:42px;align-items:center}.menu-board{background:#2b170c;color:#fff7ed;border-radius:42px;padding:30px;box-shadow:18px 18px 0 var(--accent);transform:rotate(-2deg)}.menu-row{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(255,255,255,.25);padding:14px 0}.plate{height:180px;border-radius:34px;background:linear-gradient(135deg,#f59e0b,#7c2d12);display:grid;place-items:center;font-size:72px;margin-bottom:18px}.story{padding:0 7% 72px;display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.story>div{border-radius:30px;padding:24px;background:#fff7ed;color:#2b170c;border:1px solid #fed7aa}`,`${commonNav(['Menu','Cerita','Lokasi','Reservasi'])}<section class="hero">${heroText}<div class="menu-board"><div class="plate">🍽️</div><h2 class="font">Menu Warteg Ami</h2><div class="menu-row"><b>Paket Nasi + Ayam</b><span>25K</span></div><div class="menu-row"><b>Telur Balado + Sayur</b><span>18K</span></div><div class="menu-row"><b>Paket Hemat Kantor</b><span>Mulai 20K</span></div></div></section><section class="story"><div><p class="mini-note">Brand storytelling</p><h2 class="font">Membantu menu harian terlihat jelas, mudah dipilih, dan langsung bisa dipesan lewat WhatsApp.</h2></div><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'coffee-ambient':()=>wrapper(`body{background:#120b06}.hero{padding:52px 7% 70px;display:grid;grid-template-columns:.88fr 1.12fr;gap:36px;align-items:center}.photo-wall{display:grid;grid-template-columns:1fr 1fr;gap:14px}.shot{min-height:170px;border-radius:34px;background:linear-gradient(135deg,#3f1d0b,#d97706);display:grid;place-items:center;font-size:54px;box-shadow:0 22px 70px rgba(217,119,6,.18)}.shot.tall{grid-row:span 2;min-height:360px;background:linear-gradient(180deg,#78350f,#1c120a)}.eventbar{margin:0 7% 70px;border-radius:30px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:22px;display:flex;justify-content:space-between;gap:14px;align-items:center}@media(max-width:780px){.photo-wall{grid-template-columns:1fr}.shot.tall{min-height:190px}.eventbar{display:block}}`,`${commonNav(['Coffee','Seasonal','Events','Member'])}<section class="hero">${heroText}<div class="photo-wall"><div class="shot tall">🌇</div><div class="shot">☕</div><div class="shot">🎶</div></div></section><div class="eventbar"><div><p class="mini-note">Ambience-driven page</p><b>Ngopi Sore, Rooftop Vibe, dan Event Kecil</b><p style="color:var(--muted)">Area untuk menu kopi, reservasi, event komunitas, dan konten ambience.</p></div>${contactExample}</div>`),
-      'bakery-shelf':()=>wrapper(`body{background:#fffbeb;color:#7c2d12}.hero{padding:58px 7%;display:grid;grid-template-columns:1fr .94fr;gap:38px;align-items:center}.shelf{background:#fff7ed;border:1px solid #fcd9a5;border-radius:44px;padding:24px}.shelf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.pic{height:90px;border-radius:22px;background:#fde68a;display:grid;place-items:center;font-size:38px}.banner{margin:0 7% 70px;background:#7c2d12;color:#fffbeb;border-radius:34px;padding:28px;display:flex;justify-content:space-between;align-items:center}@media(max-width:780px){.shelf-grid{grid-template-columns:1fr}.banner{display:block}}`,`${commonNav(['Best Seller','Hampers','Delivery','Pre-Order'])}<section class="hero">${heroText}<div class="shelf"><p class="mini-note">Product shelf</p><h2 class="font">Fresh From Oven</h2><div class="shelf-grid">${productCards(t.features,['🥐','🍰','🍞','🎁'])}</div></div></section><div class="banner"><div><h2 class="font">Hampers & Pre-Order Ready</h2><p>Client bisa langsung pesan lewat WhatsApp dari katalog produk.</p></div>${contactExample}</div>`),
-      'medical-trust':()=>wrapper(`body{background:#eff6ff;color:#0f172a}.hero{padding:64px 7%;display:grid;grid-template-columns:1fr .95fr;gap:38px;align-items:center}.booking{background:white;color:#0f172a;border-radius:38px;padding:26px;box-shadow:0 28px 80px rgba(13,148,136,.18)}.doctor{display:flex;gap:14px;align-items:center;padding:16px;border-radius:22px;background:#f0fdfa;margin:12px 0}.avatar{width:56px;height:56px;border-radius:18px;background:var(--accent);display:grid;place-items:center;color:white;font-size:24px}.trust{padding:0 7% 70px}`,`${commonNav(['Layanan','Dokter','Jadwal','Booking'])}<section class="hero">${heroText}<div class="booking"><p class="mini-note">Appointment ready</p><h2 class="font">Booking Appointment</h2><div class="doctor"><div class="avatar">👩‍⚕️</div><div><b>Dr. Maya</b><p style="margin:4px 0;color:#64748b">Dermatology • 10:00 - 14:00</p></div></div><div class="doctor"><div class="avatar">🦷</div><div><b>Dr. Andini</b><p style="margin:4px 0;color:#64748b">Dental Care • 15:00 - 20:00</p></div></div>${contactExample}</div></section><section class="trust"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'beauty-studio':()=>wrapper(`body{background:#fff1f2;color:#4c0519}.nav{backdrop-filter:blur(16px)}.hero{padding:58px 7% 40px;display:grid;grid-template-columns:.94fr 1.06fr;gap:42px;align-items:center}.beauty-card{border-radius:46px;background:linear-gradient(145deg,#fff,#ffe4e6);border:1px solid rgba(190,18,60,.12);padding:22px;box-shadow:0 30px 90px rgba(244,63,94,.18)}.beauty-visual{min-height:420px;border-radius:36px;background:radial-gradient(circle at 30% 20%,#fecdd3,transparent 28%),linear-gradient(145deg,#fff7f7,#fb7185);display:grid;place-items:center;font-size:92px;position:relative;overflow:hidden}.beauty-visual:after{content:'before  •  treatment  •  after';position:absolute;bottom:20px;left:20px;right:20px;background:rgba(255,255,255,.75);border:1px solid rgba(190,18,60,.12);border-radius:999px;padding:12px;text-align:center;text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:900}.treatments{padding:0 7% 72px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.treatment-menu{background:white;border-radius:34px;padding:24px;border:1px solid rgba(190,18,60,.12)}.treatment-row{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid #ffe4e6}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.result{min-height:145px;border-radius:28px;background:linear-gradient(135deg,#fecdd3,#fff);display:grid;place-items:center;font-size:38px;border:1px solid rgba(190,18,60,.10)}@media(max-width:780px){.treatments{grid-template-columns:1fr}.beauty-visual{min-height:300px}}`,`${commonNav(['Treatment','Result','Promo','Booking'])}<section class="hero">${heroText}<div class="beauty-card"><div class="beauty-visual">✨</div></div></section><section class="treatments"><div class="treatment-menu"><p class="mini-note">Treatment menu</p><h2 class="font">Signature Treatment</h2><div class="treatment-row"><b>Glow Facial</b><span>From 150K</span></div><div class="treatment-row"><b>Eyelash / Brow</b><span>Booking</span></div><div class="treatment-row"><b>Beauty Package</b><span>Promo</span></div>${contactExample}</div><div class="treatment-menu"><p class="mini-note">Result showcase</p><h2 class="font">Before / After Highlight</h2><div class="result-grid"><div class="result">Before</div><div class="result">After</div></div><p style="color:var(--muted);line-height:1.6">Area ini membantu calon customer beauty studio melihat hasil, testimoni, dan langsung booking via WhatsApp.</p></div></section>`),
-      'fashion-magazine':()=>wrapper(`body{background:#fafafa;color:#111827}.hero{padding:48px 7% 30px;display:grid;grid-template-columns:.82fr 1.18fr;gap:34px;align-items:end}.cover{min-height:520px;background:linear-gradient(135deg,#111827,#db2777);border-radius:44px;display:grid;place-items:center;color:white;font-size:92px}.headline{border-top:8px solid var(--fg);border-bottom:8px solid var(--fg);padding:26px 0}.lookgrid{padding:0 7% 70px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.tile{min-height:210px;border-radius:28px;background:#fff;border:1px solid #e5e7eb;padding:18px;display:flex;flex-direction:column;justify-content:end}@media(max-width:780px){.lookgrid{grid-template-columns:1fr 1fr}.cover{min-height:300px}}`,`${commonNav(['Lookbook','Collection','Sale','Cart'])}<section class="hero"><div class="cover">👗</div><div class="headline">${heroText}</div></section><section class="lookgrid">${t.features.concat(t.stats).slice(0,4).map(x=>`<div class="tile"><b>${esc(x)}</b><small>Shop the look</small></div>`).join('')}</section>`),
-      'luxury-lookbook':()=>wrapper(`body{background:#09090b;color:#fafafa}.hero{padding:70px 7%;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}.portrait{min-height:540px;border-radius:999px 999px 42px 42px;background:linear-gradient(180deg,#f5d0fe,#581c87);box-shadow:0 35px 100px rgba(168,85,247,.25);display:grid;place-items:center;font-size:98px}.quote{font-family:'Space Grotesk';font-size:26px;line-height:1.3;color:#d8b4fe}.details{padding:0 7% 72px}@media(max-width:780px){.portrait{min-height:320px}}`,`${commonNav(['Campaign','Collection','Private','Contact'])}<section class="hero"><div>${heroText}<p class="quote">“Luxury page harus terasa tenang, spacious, dan curated.”</p></div><div class="portrait">👜</div></section><section class="details"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'street-drop':()=>wrapper(`body{background:#f8fafc;color:#fff}.nav,.hero,.dropzone{border-bottom:3px solid #fff}.hero{padding:58px 7%;display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}.poster{min-height:430px;background:repeating-linear-gradient(45deg,#111 0 18px,#f43f5e 18px 36px);border:3px solid #fff;box-shadow:12px 12px 0 var(--accent);display:grid;place-items:center;font-size:92px}.dropzone{padding:30px 7% 70px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.dropcard{border:3px solid #fff;padding:22px;min-height:160px;background:#111}@media(max-width:780px){.dropzone{grid-template-columns:1fr}}`,`${commonNav(['Drop','Waitlist','Stock','Checkout'])}<section class="hero">${heroText}<div class="poster">🧢</div></section><section class="dropzone">${t.stats.map(s=>`<div class="dropcard"><h2 class="font">${esc(s)}</h2><p>Hype block untuk limited campaign.</p></div>`).join('')}</section>`),
-      'property-broker':()=>wrapper(`body{background:#f8fafc;color:#0f172a}.hero{padding:52px 7%;display:grid;grid-template-columns:1.1fr .9fr;gap:30px}.property-card{border-radius:42px;overflow:hidden;background:white;box-shadow:0 30px 80px rgba(15,23,42,.12)}.photo{height:310px;background:linear-gradient(135deg,#d6d3d1,#92400e);display:grid;place-items:center;font-size:86px}.lead{padding:24px}.map{margin:0 7% 70px;border-radius:36px;background:#e2e8f0;min-height:260px;display:grid;place-items:center;color:#64748b}`,`${commonNav(['Unit','Fasilitas','Lokasi','Survey'])}<section class="hero">${heroText}<div class="property-card"><div class="photo">🏡</div><div class="lead"><p class="mini-note">Lead form survey</p><b>Nama, budget, jadwal survey, dan unit pilihan.</b><div class="proof-strip" style="margin-top:18px">${statCards(t.stats)}</div></div></div></section><div class="map">Interactive location / facilities preview</div>`),
-      'course-roadmap':()=>wrapper(`body{background:#eef2ff;color:#1e1b4b}.hero{padding:62px 7%;display:grid;grid-template-columns:1fr .85fr;gap:36px;align-items:center}.roadmap{background:white;border-radius:40px;padding:26px;box-shadow:0 25px 80px rgba(79,70,229,.14)}.step{display:grid;grid-template-columns:42px 1fr;gap:14px;margin:18px 0}.num{width:42px;height:42px;border-radius:16px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:900}.mentor{padding:0 7% 70px;display:grid;grid-template-columns:1fr 1fr;gap:16px}`,`${commonNav(['Kurikulum','Mentor','Batch','Daftar'])}<section class="hero">${heroText}<div class="roadmap"><p class="mini-note">Learning roadmap</p><h2 class="font">Alur Belajar</h2>${t.features.map((f,i)=>`<div class="step"><div class="num">${i+1}</div><div><b>${esc(f)}</b><p style="color:var(--muted);margin:4px 0">Materi disusun bertahap.</p></div></div>`).join('')}</div></section><section class="mentor"><div class="stat"><b>Mentor & Support</b><span>Profil mentor dan benefit belajar.</span></div><div class="stat"><b>Batch Information</b><span>Jadwal, kuota, dan harga.</span></div></section>`),
-      'saas-product':()=>wrapper(`body{background:#020617;color:#fafafa}.hero{padding:62px 7%;display:grid;grid-template-columns:.9fr 1.1fr;gap:38px;align-items:center}.app{border-radius:34px;background:#0f172a;border:1px solid rgba(255,255,255,.12);padding:18px;box-shadow:0 30px 100px rgba(0,104,71,.18)}.top{height:44px;border-radius:16px;background:#111827;margin-bottom:14px}.dash{display:grid;grid-template-columns:.72fr 1.28fr;gap:14px}.side,.chart{border-radius:22px;background:rgba(255,255,255,.06);padding:16px}.bars{height:220px;display:flex;gap:10px;align-items:end}.bar{flex:1;border-radius:10px 10px 0 0;background:var(--accent)}.matrix{padding:0 7% 70px}@media(max-width:780px){.dash{grid-template-columns:1fr}}`,`${commonNav(['Features','Demo','Pricing','Login'])}<section class="hero">${heroText}<div class="app"><div class="top"></div><div class="dash"><div class="side"><b>AI Menu</b><p>Inbox</p><p>Workflow</p><p>Reports</p></div><div class="chart"><b>Automation Chart</b><div class="bars">${[45,72,58,88,66,96].map(h=>`<div class="bar" style="height:${h}%"></div>`).join('')}</div></div></div></div></section><section class="matrix"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'ai-orbit':()=>wrapper(`body{background:#ecfeff;color:#0f172a}.hero{padding:64px 7%;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}.orbit{position:relative;min-height:480px;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,#cffafe 23% 62%,transparent 63%);display:grid;place-items:center}.center{width:150px;height:150px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-size:58px}.node{position:absolute;background:white;border:1px solid #a5f3fc;border-radius:999px;padding:12px 16px;font-weight:900}.n1{top:12%;left:35%}.n2{right:4%;top:45%}.n3{bottom:12%;left:20%}.process{padding:0 7% 72px}@media(max-width:780px){.orbit{min-height:320px}}`,`${commonNav(['Audit','Solusi','Proses','Konsultasi'])}<section class="hero">${heroText}<div class="orbit"><div class="center">🤖</div><div class="node n1">Audit</div><div class="node n2">Build</div><div class="node n3">Automate</div></div></section><section class="process"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'cyber-terminal':()=>wrapper(`body{background:#020617;color:#e2e8f0}.hero{padding:62px 7%;display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.terminal{background:#020617;border:1px solid #38bdf8;border-radius:28px;box-shadow:0 0 60px rgba(56,189,248,.2);overflow:hidden}.terminal .head{height:46px;background:#0f172a;display:flex;align-items:center;gap:8px;padding:0 16px}.head span{width:10px;height:10px;background:#38bdf8;border-radius:50%}.log{padding:22px;font-family:monospace;line-height:1.8}.risk{padding:0 7% 70px}`,`${commonNav(['Monitor','Risk','Report','Demo'])}<section class="hero">${heroText}<div class="terminal"><div class="head"><span></span><span></span><span></span></div><div class="log">$ scan --risk<br>&gt; Authentication: secure<br>&gt; Endpoint alert: 2 medium<br>&gt; Weekly report: ready<br>&gt; demo_request: enabled</div></div></section><section class="risk"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'event-stage':()=>wrapper(`body{background:#111827;color:#fff}.hero{padding:70px 7%;display:grid;grid-template-columns:1fr .9fr;gap:40px;align-items:center;background:radial-gradient(circle at 80% 15%,rgba(249,115,22,.45),transparent 28%)}.stage{min-height:420px;border-radius:42px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.03));display:grid;place-items:center;font-size:110px;border:1px solid rgba(255,255,255,.14)}.count{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}.count div{text-align:center;border-radius:18px;background:rgba(255,255,255,.08);padding:16px}.lineup{padding:0 7% 70px}@media(max-width:780px){.count{grid-template-columns:repeat(2,1fr)}}`,`${commonNav(['Lineup','Rundown','Venue','Ticket'])}<section class="hero"><div>${heroText}<div class="count"><div><b>12</b><br><small>Hari</small></div><div><b>08</b><br><small>Jam</small></div><div><b>45</b><br><small>Menit</small></div><div><b>20</b><br><small>Detik</small></div></div></div><div class="stage">🎤</div></section><section class="lineup"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'portfolio-case':()=>wrapper(`body{background:#f5f3ff;color:#111827}.hero{padding:70px 7%;display:grid;grid-template-columns:.8fr 1.2fr;gap:42px;align-items:center}.profile{min-height:440px;border-radius:38px;background:linear-gradient(135deg,#ddd6fe,#7c3aed);display:grid;place-items:center;font-size:96px}.case{padding:0 7% 70px;display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.panel{background:white;border-radius:30px;padding:24px;border:1px solid #ddd6fe}@media(max-width:780px){.case{grid-template-columns:1fr}}`,`${commonNav(['About','Works','Service','Contact'])}<section class="hero"><div class="profile">🧑‍💻</div>${heroText}</section><section class="case"><div class="panel"><p class="mini-note">Featured case study</p><h2 class="font">Project dijelaskan seperti cerita: problem, proses, hasil.</h2><p style="color:var(--muted)">${esc(t.desc)}</p></div><div class="panel">${statCards(t.stats)}</div></section>`),
-      'photo-masonry':()=>wrapper(`body{background:#0f172a;color:#f8fafc}.hero{padding:52px 7%;display:grid;grid-template-columns:.95fr 1.05fr;gap:34px;align-items:center}.masonry{columns:2;column-gap:14px}.photo{break-inside:avoid;border-radius:28px;margin:0 0 14px;background:linear-gradient(135deg,#475569,#cbd5e1);height:140px;display:grid;place-items:center;font-size:42px}.photo.tall{height:240px}.packages{padding:0 7% 70px}@media(max-width:780px){.masonry{columns:1}}`,`${commonNav(['Gallery','Packages','Clients','Booking'])}<section class="hero">${heroText}<div class="masonry"><div class="photo tall">📸</div><div class="photo">🎞️</div><div class="photo">✨</div><div class="photo tall">🖼️</div></div></section><section class="packages"><div class="proof-strip">${statCards(t.stats)}</div></section>`),
-      'consultant-board':()=>wrapper(`body{background:#f8fafc;color:#0f172a}.hero{padding:62px 7%;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}.board{background:white;border:1px solid #e2e8f0;border-radius:36px;padding:26px;box-shadow:0 25px 80px rgba(15,23,42,.08)}.framework{display:grid;gap:14px}.fw{padding:18px;border-radius:22px;background:#ecfdf5;border-left:5px solid var(--accent)}.proof{padding:0 7% 70px}`,`${commonNav(['Framework','Results','Workshop','Consult'])}<section class="hero">${heroText}<div class="board"><p class="mini-note">Consulting framework</p><h2 class="font">Metode kerja yang mudah dipahami client.</h2><div class="framework">${t.features.map((f,i)=>`<div class="fw"><b>0${i+1}. ${esc(f)}</b><p style="margin:5px 0;color:var(--muted)">Area untuk menjelaskan metode kerja.</p></div>`).join('')}</div></div></section><section class="proof"><div class="proof-strip">${statCards(t.stats)}</div></section>`)
-    };
-    return (layouts[t.layout]||layouts['fb-editorial'])();
-  }
+function landingArtwork(design) {
+  return new URL('/public/landing-art/' + design.id + '.webp', location.origin).href;
+}
 
-  function renderLandingFilters(){
-    const holder=$('#landingIndustryFilters'); if(!holder)return;
-    holder.innerHTML = landingFilters.map(f=>`<button class="landing-filter-btn ${f===activeLandingFilter?'active':''}" aria-pressed="${f===activeLandingFilter}" data-filter="${f}">${f}</button>`).join('');
-    $$('.landing-filter-btn',holder).forEach(btn=>btn.onclick=()=>{ activeLandingFilter=btn.dataset.filter; renderLandingTemplates(); holder.querySelector('[aria-pressed="true"]').focus({preventScroll:true}); });
+function landingStylesheet() {
+  return new URL('/public/landing-preview.css?v=1', location.origin).href;
+}
+
+function landingPalette(design) {
+  return `--design-paper:${design.paper}; --design-ink:${design.ink}; --design-accent:${design.accent}`;
+}
+
+function landingHtml(design) {
+  const html = escapeCatalogHtml;
+  const offers = design.offers.map(offer => `
+    <details class="example-action" name="offer">
+      <summary><strong>${html(offer.name)}</strong><span>${html(offer.meta)}</span></summary>
+      <div class="offer-body"><p>${html(offer.detail)}</p>
+        <div class="draft"><small>Contoh pesan pelanggan</small><p>${html(design.inquiry.replace('{offer}', '“' + offer.name + '”'))}</p></div>
+      </div>
+    </details>`).join('');
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${html(design.title)} · Contoh Landing Page</title>
+    <link rel="stylesheet" href="${landingStylesheet()}"></head>
+    <body class="design layout-${design.layout}" style="${landingPalette(design)}"><main>
+      <header class="wordmark"><b>${html(design.title)}</b><span>Contoh desain KAR Labs</span></header>
+      <section class="hero"><img src="${landingArtwork(design)}" alt="">
+        <div class="intro"><h1>${html(design.headline)}</h1><p>${html(design.lead)}</p></div>
+      </section>
+      <section class="offers"><header><h2>${html(design.section)}</h2>
+        <p>Pilih untuk melihat rincian dan contoh pesan.</p></header><div class="offer-list">${offers}</div>
+      </section>
+    </main></body></html>`;
+}
+
+function filteredLandingTemplates() {
+  const goal = $('#landingGoal').value;
+  return landingTemplates.filter(design =>
+    (activeLandingFilter === 'Semua' || design.category === activeLandingFilter) &&
+    (!goal || design.goal === goal));
+}
+
+function renderLandingTemplates() {
+  const grid = $('#landingTemplateGrid');
+  const designs = filteredLandingTemplates();
+  $('#landingCount').textContent = designs.length + ' contoh desain';
+  for (const button of $$('#landingIndustryFilters button')) {
+    const selected = button.dataset.filter === activeLandingFilter;
+    button.setAttribute('aria-pressed', String(selected));
+    button.classList.toggle('active', selected);
   }
-  function filteredLandingTemplates(){
-    if(activeLandingFilter==='Semua') return landingTemplates;
-    return landingTemplates.filter(t => t.category === landingFilterMap[activeLandingFilter]);
+  if (!designs.length) {
+    grid.innerHTML = '<div class="landing-empty"><p>Belum ada contoh untuk kombinasi jenis usaha dan tujuan ini.</p><button type="button" data-clear-filters>Tampilkan semua desain</button></div>';
+    return;
   }
-  let miniatureObserver;
-  function renderLandingTemplates(){
-    const grid=$('#landingTemplateGrid'); if(!grid)return;
-    renderLandingFilters();
-    const data=filteredLandingTemplates();
-    $('#landingCount').textContent = data.length + ' contoh desain';
-    grid.innerHTML = data.map(t => `<article class="landing-template-card">
-      <div class="landing-mini-browser"></div>
-      <div class="landing-design-caption"><p>${t.category}</p><h4>${t.title}</h4>
-      <p>${t.desc}</p><button type="button" class="preview-landing-btn" data-template="${t.id}" aria-label="Buka desain ${t.title}">Buka desain <span aria-hidden="true">↗</span></button></div>
+  const html = escapeCatalogHtml;
+  grid.innerHTML = designs.map(design => `
+    <article class="landing-template-card">
+      <div aria-hidden="true" class="landing-cover cover-${design.layout}" style="${landingPalette(design)}">
+        <img src="${landingArtwork(design)}" loading="lazy" decoding="async" alt="">
+        <span>${html(design.headline)}</span>
+      </div>
+      <div class="landing-design-caption"><p>${html(design.category)} · ${html(design.goal)}</p>
+        <h4>${html(design.title)}</h4><p>${html(design.pitch)}</p>
+        <button type="button" class="preview-landing-btn" data-template="${design.id}" aria-label="Buka desain ${html(design.title)}">Coba desain <span aria-hidden="true">↗</span></button>
+      </div>
     </article>`).join('');
-    miniatureObserver?.disconnect();
-    const pictures = $$('.landing-mini-browser', grid);
-    const samples = new Map(pictures.map((picture, i) => [picture, data[i]]));
-    function mount(picture) {
-      const design = samples.get(picture);
-      const frame = document.createElement('iframe');
-      frame.title = design.title;
-      frame.tabIndex = -1;
-      frame.setAttribute('aria-hidden', 'true');
-      frame.setAttribute('sandbox', '');
-      frame.srcdoc = landingHtml(design);
-      picture.replaceChildren(frame);
-    }
-    if ('IntersectionObserver' in window) {
-      miniatureObserver = new IntersectionObserver(entries => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          miniatureObserver.unobserve(entry.target);
-          mount(entry.target);
-        }
-      }, {rootMargin:'80px'});
-      pictures.forEach(picture => miniatureObserver.observe(picture));
-    } else pictures.forEach(mount);
-    grid.onclick=(event)=>{
-      const btn=event.target.closest('.preview-landing-btn');
-      if(!btn || !grid.contains(btn)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      openLandingPreview(btn.dataset.template, btn);
-    };
-    refreshIcons();
-  }
-  function isMobileViewport(){
-    return window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-  }
-  function mobilePreviewShell(t){
-    const doc = landingHtml(t);
-    const title = `${t.icon || ''} ${t.title || 'Landing Page Preview'}`.trim();
-    return `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} - Mobile Preview</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f8fafc;color:#0f172a;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}.preview-shell{width:100vw;height:100dvh;display:flex;flex-direction:column;background:#f8fafc}.preview-bar{height:52px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;border-bottom:1px solid rgba(15,23,42,.12);background:#ffffff;backdrop-filter:blur(12px)}.preview-title{min-width:0;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preview-meta{font-size:11px;color:#006847;font-weight:800}.preview-open{border:1px solid rgba(0,104,71,.45);background:rgba(0,104,71,.12);color:#006847;border-radius:999px;padding:8px 10px;text-decoration:none;font-size:11px;font-weight:900;white-space:nowrap}.preview-frame-wrap{flex:1;min-height:0;width:100%;max-width:430px;margin:0 auto;background:#fff;box-shadow:0 0 0 1px rgba(15,23,42,.12)}iframe{display:block;width:100%;height:100%;border:0;background:#fff}@media(min-width:768px){.preview-frame-wrap{height:100%;border-left:1px solid rgba(15,23,42,.12);border-right:1px solid rgba(15,23,42,.12)}}<\/style></head><body><main class="preview-shell"><div class="preview-bar"><div style="min-width:0"><div class="preview-meta">Contoh desain</div><div class="preview-title">${title}</div></div><button class="preview-open" type="button" onclick="window.close()">Kembali ke demo</button></div><div class="preview-frame-wrap"><iframe sandbox="" id="mobileLandingPreview" title="${title}"></iframe></div></main><script>document.getElementById('mobileLandingPreview').srcdoc = ${JSON.stringify(doc)};<\/script></body></html>`;
-  }
-  function openLandingPreviewInNewTab(template){
-    const win=window.open('', '_blank');
-    if(win)win.opener=null;
-    if (!win) return false;
-    win.document.open();
-    win.document.write(mobilePreviewShell(template));
-    win.document.close();
-    return true;
-  }
-  function openLandingPreview(id, opener){
-    activeLandingTemplate = landingTemplates.find(t=>t.id===id) || landingTemplates[0];
-    if (isMobileViewport() && !$('#landingPreviewModal').classList.contains('open') && openLandingPreviewInNewTab(activeLandingTemplate)) return;
-    const modal=$('#landingPreviewModal');
-    const title=$('#landingPreviewTitle');
-    const meta=$('#landingPreviewMeta');
-    const frame=$('#landingPreviewFrame');
-    if(!modal || !title || !meta || !frame){ toast('Preview belum siap dimuat. Coba refresh halaman.'); return; }
-    const switcher = $('#landingSwitch');
-    switcher.replaceChildren(...filteredLandingTemplates().map(t => new Option(t.title, t.id)));
-    switcher.value = activeLandingTemplate.id;
-    switcher.onchange = () => openLandingPreview(switcher.value);
-    title.textContent = `${activeLandingTemplate.icon} ${activeLandingTemplate.title}`;
-    meta.textContent = `${activeLandingTemplate.category} • ${activeLandingTemplate.tone}`;
-    frame.srcdoc = landingHtml(activeLandingTemplate);
-    openCatalogDialog(modal, opener);
-  }
-  window.openLandingPreview = openLandingPreview;
-  function closeLandingPreview(){
-    const modal=$('#landingPreviewModal');
-    if(modal) modal.classList.remove('open');
-    document.body.style.overflow='';
-  }
-  function initLanding(){
+}
+
+function landingInquiryUrl(design) {
+  const message = `Halo KAR Labs, saya tertarik dengan contoh Landing Page ${design.title} (${design.category}). Tujuan halaman saya: ${design.goal.toLowerCase()}. Bisa kita bahas penawaran dan isi halaman untuk usaha saya?`;
+  return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
+}
+
+function openLandingPreviewInNewTab(design) {
+  const win = window.open('', '_blank');
+  if (!win) return false;
+  win.opener = null;
+  const title = escapeCatalogHtml(design.title);
+  win.document.open();
+  win.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} · Demo KAR Labs</title>
+    <link rel="stylesheet" href="${landingStylesheet()}"></head><body class="preview-shell">
+    <header><b>${title}</b><a href="${landingInquiryUrl(design)}" target="_blank" rel="noopener noreferrer">Diskusi desain</a>
+      <button type="button">Kembali ke demo</button></header>
+    <iframe sandbox="" title="Contoh halaman ${title}"></iframe></body></html>`);
+  win.document.close();
+  win.document.querySelector('iframe').srcdoc = landingHtml(design);
+  win.document.querySelector('button').onclick = () => win.close();
+  return true;
+}
+
+function openLandingPreview(id, opener) {
+  const design = landingTemplates.find(item => item.id === id);
+  const modal = $('#landingPreviewModal');
+  if (!design || !modal) return;
+  activeLandingTemplate = design;
+  if (!modal.classList.contains('open') && matchMedia('(max-width: 767px)').matches && openLandingPreviewInNewTab(design)) return;
+  const switcher = $('#landingSwitch');
+  switcher.replaceChildren(...filteredLandingTemplates().map(item => new Option(item.title, item.id)));
+  switcher.value = design.id;
+  $('#landingPreviewTitle').textContent = design.title;
+  $('#landingPreviewMeta').textContent = design.category + ' · ' + design.goal;
+  $('#landingInquiry').href = landingInquiryUrl(design);
+  const frame = $('#landingPreviewFrame');
+  frame.title = 'Contoh halaman ' + design.title;
+  frame.srcdoc = landingHtml(design);
+  openCatalogDialog(modal, opener);
+}
+
+function closeLandingPreview() {
+  $('#landingPreviewModal')?.classList.remove('open');
+}
+
+function initLanding() {
+  const filters = $('#landingIndustryFilters');
+  if (!filters) return;
+  const categories = ['Semua', ...new Set(landingTemplates.map(design => design.category))];
+  filters.replaceChildren(...categories.map(category => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'landing-filter-btn';
+    button.dataset.filter = category;
+    button.textContent = category;
+    return button;
+  }));
+  filters.onclick = event => {
+    const button = event.target.closest('button[data-filter]');
+    if (!button) return;
+    activeLandingFilter = button.dataset.filter;
     renderLandingTemplates();
-    const frame = $('#landingPreviewFrame');
-    for (const button of $$('[data-preview-width]')) {
-      button.addEventListener('click', () => {
-        frame.style.maxWidth = button.dataset.previewWidth === 'phone' ? '390px' : '';
-        $$('[data-preview-width]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-      });
+  };
+  $('#landingGoal').onchange = renderLandingTemplates;
+  $('#landingTemplateGrid').onclick = event => {
+    const reset = event.target.closest('[data-clear-filters]');
+    if (reset) {
+      activeLandingFilter = 'Semua';
+      $('#landingGoal').value = '';
+      renderLandingTemplates();
+      filters.querySelector('button').focus();
+      return;
     }
-    const closeBtn=$('#closeLandingPreview'); if(closeBtn) closeBtn.onclick=closeLandingPreview;
-    const modal=$('#landingPreviewModal');
-    if(modal){ modal.addEventListener('click',e=>{ if(e.target.id==='landingPreviewModal') closeLandingPreview(); }); }
-    const openNew=$('#openLandingNewTab');
-    if(openNew){
-      openNew.onclick=()=>{
-        const template = activeLandingTemplate || landingTemplates[0];
-        const win=window.open('', '_blank');
-    if(win)win.opener=null;
-        if(!win){toast('Popup diblokir browser');return;}
-        win.document.open();
-        if(isMobileViewport()){
-          win.document.write(mobilePreviewShell(template));
-        }else{
-          win.document.write(landingHtml(template));
-        }
-        win.document.close();
-      };
-    }
-    document.addEventListener('keydown',e=>{ const m=$('#landingPreviewModal'); if(e.key==='Escape' && m && m.classList.contains('open')) closeLandingPreview(); });
+    const opener = event.target.closest('.preview-landing-btn');
+    if (opener) openLandingPreview(opener.dataset.template, opener);
+  };
+  renderLandingTemplates();
+  $('#landingSwitch').onchange = event => openLandingPreview(event.target.value);
+  const widths = $$('[data-preview-width]');
+  for (const button of widths) {
+    button.onclick = () => {
+      $('#landingPreviewFrame').style.maxWidth = button.dataset.previewWidth === 'phone' ? '390px' : '';
+      widths.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    };
   }
+  $('#closeLandingPreview').onclick = closeLandingPreview;
+  $('#landingPreviewModal').onclick = event => {
+    if (event.target === event.currentTarget) closeLandingPreview();
+  };
+  $('#openLandingNewTab').onclick = () => {
+    if (!openLandingPreviewInNewTab(activeLandingTemplate)) toast('Izinkan tab baru di browser untuk membuka desain.');
+  };
+}

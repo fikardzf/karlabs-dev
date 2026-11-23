@@ -55,8 +55,8 @@
     {id:'landing', icon:'🧩', label:'Landing Page', desc:'Preview website bisnis modern'},
     {id:'product-catalog', icon:'🛍️', label:'Website Katalog Produk', desc:'Brand filter, produk, mobile slider, CTA WhatsApp'},
     {id:'chatbot', icon:'💬', label:'Chatbot WhatsApp', desc:'Keyword response dan quick reply'},
-    {id:'calculator', icon:'🧮', label:'Tool/Calculator', desc:'Finance, health, ads, ongkir, inventory'},
-    {id:'dashboard', icon:'📊', label:'Dashboard Excel', desc:'Preview finance dashboard'},
+    {id:'calculator', icon:'🧮', label:'Kalkulator Bisnis', desc:'Harga jual, titik impas, iklan, persediaan, dan ongkir'},
+    {id:'dashboard', icon:'📊', label:'Dashboard Usaha', desc:'Arus kas, penjualan, persediaan, dan iklan'},
     {id:'pos', icon:'🧾', label:'Point Of Sales', desc:'Kasir, cart, payment, stok, receipt'},
     {id:'workflow', icon:'⚙️', label:'Automasi Workflow', desc:'Visual alur automation'},
     {id:'scraping', icon:'🕷️', label:'Web Scraping', desc:'Simulasi scraping data'}
@@ -82,7 +82,7 @@
       note:'Kata kunci dan pengalihan ke admin disusun dari pertanyaan rutin pelanggan.'
     },
     'Tool/Calculator Online':{
-      fit:['Usaha yang memberikan estimasi biaya','Website edukasi dan perhitungan','Simulasi ongkir, kredit, atau persediaan'],
+      fit:['Penjual yang menghitung harga per produk','Usaha yang memantau biaya iklan dan waktu pesan stok','Toko yang membuat estimasi ongkir'],
       custom:['Rumus dan input','Hasil, grafik, dan tombol kontak','Validasi angka dan format keluaran'],
       output:['Kalkulator responsif','Perhitungan dan visualisasi','Dokumentasi rumus serta penggunaan'],
       note:'Rumus, asumsi, dan batas estimasi disepakati sebelum pengembangan.'
