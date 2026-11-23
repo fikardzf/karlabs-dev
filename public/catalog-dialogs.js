@@ -1,5 +1,11 @@
 'use strict';
 
+function openCatalogDialog(modal, opener) {
+  // WebKit can leave focus on the page when a button is tapped.
+  if (!modal.classList.contains('open')) opener?.focus({preventScroll:true});
+  modal.classList.add('open');
+}
+
 function installCatalogDialogBehavior() {
   const modals=$$('.modal, .pos-receipt');
   const background=$$('header.studio-header, nav:not(header nav), main, footer, .catalog-skip, #backTop');
@@ -39,9 +45,5 @@ function installCatalogDialogBehavior() {
       if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
       else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
     }
-  });
-  $('#transactionForm')?.querySelectorAll('input, select').forEach(field=>{
-    const labels={tanggal:'Tanggal transaksi',tipe:'Jenis transaksi',kategori:'Kategori transaksi',deskripsi:'Deskripsi transaksi',jumlah:'Jumlah transaksi'};
-    field.setAttribute('aria-label',labels[field.name]);
   });
 }

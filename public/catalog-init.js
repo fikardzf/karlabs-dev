@@ -12,7 +12,6 @@
     document.getElementById(target).setAttribute('aria-busy','true');
     try{
       await ensureChartJs();
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)window.Chart.defaults.animation=false;
       if(target==='calculator' && !calculatorsInitialized){ initCalculators(); calculatorsInitialized=true; }
       if(target==='dashboard' && !dashboardInitialized){ initDashboard(); dashboardInitialized=true; }
       if(!document.getElementById(target).hidden)status.hidden=true;

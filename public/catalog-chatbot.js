@@ -6,7 +6,7 @@
     let currentScenario='ecommerce';
     let withAdmin = false;
     let lastTopic = '';
-    let customRules=[];
+    const scenarioRules = new Map();
     const scenarioMap={
       ecommerce:{
         label:'Toko Online',
@@ -155,7 +155,7 @@
       }
 
     };
-    function activeRules(){ return [...customRules,...scenarioMap[currentScenario].rules]; }
+    function activeRules(){ return [...(scenarioRules.get(currentScenario) || []),...scenarioMap[currentScenario].rules]; }
     function escapeHtml(value){ return String(value).replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch])); }
     function now(){ return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
     function bubble(text,type='bot',meta=''){
@@ -212,7 +212,7 @@
     function sendMsg(msg){ if(!String(msg).trim())return; bubble(msg,'user'); input.value=''; quick.innerHTML=''; botReply(msg); }
     function renderRules(){
       const list=$('#keywordRuleList');
-      list.innerHTML=activeRules().map((rule,i)=>`<button class="text-left border border-dark-border bg-black/30 rounded-2xl p-3 hover:border-accent hover:bg-accent/5 transition" data-rule-index="${i}"><div class="flex items-start justify-between gap-2"><b class="text-sm text-white">${escapeHtml(rule.title)}</b><span class="text-[10px] px-2 py-1 rounded-full bg-accent/10 text-accent">test</span></div><p class="text-xs text-gray-500 mt-2">${rule.keys.map(k=>'#'+escapeHtml(k)).join(' ')}</p></button>`).join('');
+      list.innerHTML=activeRules().map((rule,i)=>`<button class="text-left border border-dark-border bg-black/30 rounded-2xl p-3 hover:border-accent hover:bg-accent/5 transition" data-rule-index="${i}"><div class="flex items-start justify-between gap-2"><b class="text-sm text-white">${escapeHtml(rule.title)}</b></div><p class="text-xs text-gray-500 mt-2">${rule.keys.map(k=>'#'+escapeHtml(k)).join(' ')}</p></button>`).join('');
       $$('[data-rule-index]',list).forEach(btn=>btn.onclick=()=>{ const rule=activeRules()[Number(btn.dataset.ruleIndex)]; sendMsg(rule.keys[0]); });
     }
     function loadScenario(name){
@@ -221,9 +221,23 @@
       withAdmin = false;
       lastTopic = '';
       area.dataset.scenario = name;
-      currentScenario=name; customRules=[]; area.innerHTML=''; const select=$('#chatScenarioSelect'); if(select) select.value=name; bubble(scenarioMap[name].menu,'bot','Menu utama'); showQuick(); renderRules(); }
+      currentScenario=name; input.value=''; area.innerHTML=''; const select=$('#chatScenarioSelect'); if(select) select.value=name; bubble(scenarioMap[name].menu,'bot','Menu utama'); showQuick(); renderRules(); }
     const scenarioSelect=$('#chatScenarioSelect'); if(scenarioSelect) scenarioSelect.addEventListener('change',e=>loadScenario(e.target.value));
-    $('#addKeywordRule').onclick=()=>{ const key=$('#customKeyword').value.trim(); const res=$('#customResponse').value.trim(); if(!key||!res){toast('Isi keyword dan balasannya dulu.'); return;} customRules = customRules.filter(rule => rule.keys[0].toLowerCase() !== key.toLowerCase()); customRules.unshift({keys:[key],title:'Custom: '+key,reply:res}); $('#customKeyword').value=''; $('#customResponse').value=''; renderRules(); toast('Custom keyword berhasil ditambahkan!'); sendMsg(key); };
+    $('#addKeywordRule').onclick = () => {
+      const key = $('#customKeyword').value.trim();
+      const reply = $('#customResponse').value.trim();
+      if (!key || !reply) {
+        toast('Isi kata kunci dan balasannya.');
+        $(key ? '#customResponse' : '#customKeyword').focus();
+        return;
+      }
+      const rules = (scenarioRules.get(currentScenario) || []).filter(rule => rule.keys[0].toLowerCase() !== key.toLowerCase());
+      scenarioRules.set(currentScenario, [{keys:[key], title:key, reply}, ...rules]);
+      $('#customKeyword').value = $('#customResponse').value = '';
+      renderRules();
+      toast('Kata kunci siap dicoba dalam skenario ini.');
+      sendMsg(key);
+    };
     $('#resetChatDemo').onclick=()=>loadScenario(currentScenario);
     $('#chatSend').onclick=()=>sendMsg(input.value); input.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg(input.value)});
     loadScenario('ecommerce');

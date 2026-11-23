@@ -5,6 +5,12 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { projects, categories } = require('../config/portfolio.cjs');
 
+const motionVendor = path.join('public', 'motion-vendor');
+fs.mkdirSync(motionVendor, {recursive:true});
+for (const name of ['gsap.min.js', 'ScrollTrigger.min.js']) {
+  fs.copyFileSync(require.resolve('gsap/dist/' + name), path.join(motionVendor, name));
+}
+
 const read = file => fs.readFileSync(file, 'utf8');
 const catalog = read('catalog.html');
 const template = read('templates/project.html');
@@ -38,7 +44,7 @@ const indexSizes = '(max-width: 850px) 45vw, (min-width: 1500px) 320px, 22vw';
 
 function panelLink(p, i, sizes, deferImage = false) {
   const image = `<img src="${art(p)}" ${artSources(p, sizes)} alt="${escape(p.artworkAlt)}" draggable="false" width="960" height="720" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
-  return `<a class="exhibit" href="${url(p)}" data-slug="${p.slug}" data-category="${p.category}" aria-label="Buka demo ${escape(p.title)}">
+  return `<a class="exhibit" href="${url(p)}" data-slug="${p.slug}" data-category="${p.category}" style="--artwork-transition:art-${p.slug}" aria-label="Buka demo ${escape(p.title)}">
     <span class="art-frame">${deferImage ? '<template>' + image + '</template>' : image}</span>
     <span class="art-label"><span class="art-number">${number(i+1)}</span><span class="art-name">${escape(p.title)}</span><span class="art-category">${categories[p.category]}</span></span>
   </a>`;
@@ -72,7 +78,7 @@ home = replaceBlock(home, 'portfolio-gallery', gallery);
 fs.writeFileSync('index.html', home);
 writePage('portfolio', `<!doctype html><html lang="id"><head>
   <style>@media (prefers-reduced-motion:no-preference) { @view-transition { navigation:auto; } }</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Indeks Demo | KAR Labs.dev</title><meta name="description" content="Pilih demo website, alat bisnis, dashboard, dan automasi untuk usaha Anda."><link rel="canonical" href="${origin}/portfolio/"><link rel="icon" href="/public/favicon.svg"><link rel="stylesheet" href="/public/portfolio.css?v=2"></head>
+<title>Indeks Demo | KAR Labs.dev</title><meta name="description" content="Pilih demo website, alat bisnis, dashboard, dan automasi untuk usaha Anda."><link rel="canonical" href="${origin}/portfolio/"><link rel="icon" href="/public/favicon.svg"><link rel="stylesheet" href="/public/portfolio.css?v=6"></head>
 <body class="collection-page"><a class="skip-link" href="#collection">Lewati ke indeks</a>${header}<main class="collection-main" id="collection"><a href="/" class="canvas-crumb">Kembali ke galeri</a><h1>Indeks demo.</h1>
 <div class="filter-bar index-filters" role="group" aria-label="Filter indeks" hidden>${filters}</div>
 <div class="collection-grid">${projects.map((p,i) => panelLink(p,i,indexSizes)).join('\n')}</div></main><script src="/public/portfolio-index.js?v=1" defer></script></body></html>`);
@@ -94,11 +100,11 @@ for (const [i, p] of projects.entries()) {
     header:header.replace('href="https://wa.me/6285777345985"', `href="${inquiry}" data-lead-service="${p.slug}"`), icons, panel, modal, title:escape(p.title), description:escape(p.description), slug:p.slug, canonical:origin+url(p),
     art:art(p), artSources:artSources(p,'(max-width: 650px) 160px, (min-width: 1500px) 310px, 21vw'),
     artworkAlt:escape(p.artworkAlt), category:categories[p.category], number:number(i+1)+' / '+number(projects.length), init:p.init, charts:String(!!p.charts),
-    moduleUrl:'/public/catalog-' + p.module + '.js?v=20261122-final',
+    moduleUrl:'/public/catalog-' + p.module + '.js?v=20261123-motion',
     inquiry, inquiryLabel:escape(p.inquiryLabel),
     capabilities:p.capabilities.map(c=>`<li>${escape(c)}</li>`).join(''), prevTitle:escape(previous.title), nextTitle:escape(next.title),
     prevUrl:url(previous), nextUrl:url(next), routes:JSON.stringify(routes).replace(/</g,'\\u003c'),
-    scripts:['lead-events','catalog-core','catalog-dialogs','portfolio-canvas'].map(name=>`<script src="/public/${name}.js?v=20261121-showroom" defer></script>`).join('\n  ')
+    scripts:['lead-events','catalog-core','catalog-dialogs','portfolio-canvas'].map(name=>`<script src="/public/${name}.js?v=20261123-motion" defer></script>`).join('\n  ')
   };
   writePage(path.join('portfolio',p.slug), template.replace(/\{\{(\w+)\}\}/g, (_, key) => { assert(key in values, key); return values[key]; }));
 }

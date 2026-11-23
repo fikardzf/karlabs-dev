@@ -9,9 +9,23 @@
   const escapeCatalogHtml = value => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const toast = (msg) => { const el=$('#toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(window.__toast); window.__toast=setTimeout(()=>el.classList.remove('show'),3000); };
   let __chartJsPromise = null;
+  function configureChartMotion(Chart) {
+    const preference = matchMedia('(prefers-reduced-motion: reduce)');
+    const normal = {...Chart.defaults.animation, duration:240};
+    function applyPreference() {
+      Chart.defaults.animation = preference.matches ? false : normal;
+      for (const chart of Object.values(Chart.instances)) {
+        chart.stop();
+        chart.update('none');
+      }
+    }
+    applyPreference();
+    preference.addEventListener('change', applyPreference);
+    return Chart;
+  }
   function ensureChartJs(){
-    if(window.Chart) return Promise.resolve(window.Chart);
     if(__chartJsPromise) return __chartJsPromise;
+    if(window.Chart) return __chartJsPromise = Promise.resolve(configureChartMotion(window.Chart));
     __chartJsPromise = new Promise((resolve,reject)=>{
       const script=document.createElement('script');
       const timer=setTimeout(()=>{script.remove();reject(new Error('Chart.js load timed out'));},15000);
@@ -23,7 +37,7 @@
       script.onload=()=>{clearTimeout(timer);window.Chart ? resolve(window.Chart) : reject(new Error('Chart.js loaded without global Chart'));};
       script.onerror=()=>{clearTimeout(timer);script.remove();reject(new Error('Chart.js failed to load'));};
       document.head.appendChild(script);
-    }).catch(error=>{__chartJsPromise=null;throw error;});
+    }).then(configureChartMotion).catch(error=>{__chartJsPromise=null;throw error;});
     return __chartJsPromise;
   }
   const serviceMessages = {

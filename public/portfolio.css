@@ -92,6 +92,12 @@
 .step-controls button { display: grid; place-content: center; width: 44px; height: 44px; border: 1px solid #b0b6aa; border-radius: 50%; color: var(--studio-ink); background: #fff; font: 1.65rem/1 Georgia,serif; padding: 0 0 4px; }
 .step-controls button:hover:not(:disabled) { background: #eff2ea; }
 .step-controls button:disabled { opacity: .35; }
+.single-exhibit .step-controls { justify-content: center; }
+.single-exhibit .step-controls button { display: none; }
+.single-exhibit .gallery-stage { cursor: auto; }
+@media (pointer:coarse) {
+  .filter-bar button, .studio-header .consult-link { min-height: 44px; }
+}
 .studio-links, .studio-footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.4rem var(--studio-inset); border-block: 1px solid var(--studio-rule); font-size: .85rem; background: #f5f6f2; }
 .studio-links ol { display: flex; flex-wrap: wrap; gap: .4rem .65rem; list-style: none; padding: 0; margin: 0; }
 .studio-links #proses { background: transparent!important; }
@@ -127,8 +133,8 @@
 #demo-status:not([hidden]) { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
 .canvas-page .service-panel.active { min-width: 0; }
 @media (prefers-reduced-motion:no-preference) {
-  .is-ready [data-selected] .art-frame img, .canvas-art { view-transition-name: selected-artwork; }
-  ::view-transition-group(selected-artwork) { animation-duration: .42s; animation-timing-function: cubic-bezier(.2,.7,.24,1); }
+  .is-ready [data-selected] .art-frame img, .canvas-art { view-transition-name: var(--artwork-transition); view-transition-class: showroom-art; }
+  ::view-transition-group(.showroom-art) { animation-duration: var(--motion-spatial,420ms); animation-timing-function: var(--motion-out,ease-out); }
 }
 @media (max-width: 850px) {
   .gallery-intro { display: block; }
@@ -241,9 +247,6 @@
   .studio-header .index-link span:last-child { display: none; }
   .studio-header .grid-symbol { width: 15px; height: 15px; }
   .gallery-intro h1 { letter-spacing: -.056em; }
-}
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
-  .gallery-room .gallery-track { translate: var(--look,0px) 0; transition: translate .22s ease-out; }
 }
 
 .collection-main .index-filters { justify-content: start; margin-bottom: 1.5rem; }

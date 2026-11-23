@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { pipeline } = require('node:stream');
 
 const rootArg = process.argv[2];
 const portArg = process.argv[3];
@@ -10,6 +11,7 @@ const port = Number(portArg || process.env.PORT || 5173);
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
@@ -52,7 +54,11 @@ const server = http.createServer((req, res) => {
       'Content-Type': mimeTypes[ext] || 'application/octet-stream',
       'Cache-Control': 'no-store'
     });
-    fs.createReadStream(filePath).pipe(res);
+    pipeline(fs.createReadStream(filePath), res, error => {
+      if (error && error.code !== 'ERR_STREAM_PREMATURE_CLOSE' && error.code !== 'ECONNRESET') {
+        console.error('Static file stream failed:', error.message);
+      }
+    });
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end(`Server error: ${error.message}`);

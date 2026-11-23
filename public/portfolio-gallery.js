@@ -25,6 +25,29 @@
   let drag = null, suppressClick = false;
   let wheelTime = 0, wheelDistance = 0, wheelStepped = false;
   let arrivals = [];
+  let scene, sceneModule, suspended = false;
+  const desktop = matchMedia('(min-width: 851px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+
+  function stopFrame() {
+    if (frame === -1) scene.ticker.remove(desktopFrame);
+    else if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+  }
+  function queueFrame() {
+    if (frame) return;
+    if (scene) {
+      frame = -1;
+      scene.ticker.add(desktopFrame);
+    } else {
+      frame = requestAnimationFrame(now => { frame = 0; animate(now); });
+    }
+  }
+  function desktopFrame() { animate(performance.now()); }
+  function clearArrival() {
+    scene?.cancelArrival();
+    arrivals.forEach(animation => animation.cancel());
+    arrivals = [];
+  }
 
   function paint() {
     const count = visible.length;
@@ -42,6 +65,11 @@
     });
   }
   function animate(now) {
+    if (drag?.active) {
+      paint();
+      stopFrame();
+      return;
+    }
     const dt = Math.min((now - lastTime) / 1000, .025);
     lastTime = now;
     velocity += ((target - camera) * 210 - velocity * 26) * dt;
@@ -49,23 +77,22 @@
     if (Math.abs(camera - target) < .001 && Math.abs(velocity) < .015) {
       camera = target;
       velocity = 0;
-      frame = 0;
+      stopFrame();
       paint();
       return;
     }
     paint();
-    frame = requestAnimationFrame(animate);
+    queueFrame();
   }
   function settle(immediate = false) {
     if (immediate || motion.matches) {
-      cancelAnimationFrame(frame);
-      frame = 0;
+      stopFrame();
       velocity = 0;
       camera = target;
       paint();
     } else if (!frame) {
       lastTime = performance.now();
-      frame = requestAnimationFrame(animate);
+      queueFrame();
     }
   }
   function select(next, immediate = false, updateUrl = true) {
@@ -85,9 +112,10 @@
     room.querySelector('.gallery-count').textContent = [index + 1, visible.length].map(n => String(n).padStart(2, '0')).join(' / ');
     action.href = active.href;
     action.setAttribute('aria-label', 'Buka demo ' + active.querySelector('.art-name').textContent);
-    arrivals.forEach(animation => animation.cancel());
-    arrivals = [];
-    if (changed && !immediate && !motion.matches && caption.animate) {
+    clearArrival();
+    if (changed && !immediate && !motion.matches && scene) {
+      scene.arrive(active.querySelector('.art-frame'), direction);
+    } else if (changed && !immediate && !motion.matches && caption.animate) {
       const timing = { duration: 300, easing: 'cubic-bezier(.2,.75,.3,1)' };
       arrivals.push(active.querySelector('.art-frame').animate([
         { transform: 'translateY(4px) scale(.99)' }, { transform: 'none' }
@@ -117,7 +145,12 @@
       panel.href = url;
       return match;
     });
-    steps.forEach(button => button.disabled = visible.length < 2);
+    const single = visible.length === 1;
+    room.classList.toggle('single-exhibit', single);
+    stage.tabIndex = single ? -1 : 0;
+    stage.setAttribute('aria-label', single ? 'Galeri proyek' : 'Galeri proyek, gunakan tombol panah untuk menjelajah');
+    room.querySelector('.gallery-controls > span').textContent = single ? 'Satu demo dalam kategori ini' : 'Geser untuk menjelajah';
+    steps.forEach(button => button.disabled = single);
     select(Math.max(0, visible.findIndex(p => p.dataset.slug === slug)), true, updateUrl);
   }
   room.classList.add('is-ready');
@@ -139,50 +172,47 @@
   stage.addEventListener('keydown', e => {
     if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key) || visible.length < 2) return;
     e.preventDefault();
-    const next = e.key === 'Home' ? 0 : e.key === 'End' ? visible.length - 1 : target + (e.key === 'ArrowLeft' ? -1 : 1);
+    const start = target - wrap(target, visible.length);
+    const next = e.key === 'Home' ? start : e.key === 'End' ? start + visible.length - 1 : target + (e.key === 'ArrowLeft' ? -1 : 1);
     select(next);
     if (e.target.closest('.exhibit')) visible[wrap(next, visible.length)].focus({ preventScroll:true });
   });
   stage.addEventListener('dragstart', e => e.preventDefault());
   stage.addEventListener('pointerdown', e => {
-    if (!e.isPrimary || e.button !== 0) return;
+    if (!e.isPrimary || e.button !== 0 || visible.length < 2) return;
     suppressClick = false;
-    drag = { id:e.pointerId, x:e.clientX, y:e.clientY, start:camera, time:performance.now(), active:false };
+    drag = { id:e.pointerId, x:e.clientX, y:e.clientY, stride:Math.min(stage.clientWidth * .72, 500), start:camera, time:performance.now(), active:false };
   });
-  const finePointer = matchMedia('(hover:hover) and (pointer:fine)');
-  stage.addEventListener('pointerleave', () => stage.style.removeProperty('--look'));
   stage.addEventListener('pointermove', e => {
-    if (!drag && finePointer.matches && !motion.matches) {
-      const box = stage.getBoundingClientRect();
-      stage.style.setProperty('--look', (0.5 - (e.clientX - box.left) / box.width) * 9 + 'px');
-    }
     if (!drag || e.pointerId !== drag.id || visible.length < 2) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!drag.active) {
-      if (Math.abs(dx) < 7) return;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 7) return;
       if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; }
+      drag.start = camera;
       velocity = 0;
       stage.setPointerCapture(e.pointerId);
       drag.active = true;
       suppressClick = true;
-      cancelAnimationFrame(frame);
-      frame = 0;
+      stopFrame();
       stage.classList.add('is-dragging');
     }
-    const position = drag.start - dx / Math.min(stage.clientWidth * .72, 500);
+    const position = drag.start - dx / drag.stride;
     camera = visible.length === 2 ? Math.max(0, Math.min(1, position)) : position;
-    paint();
+    queueFrame();
   });
   function release(e) {
     if (!drag || e.pointerId !== drag.id) return;
-    if (drag.active) {
-      const travel = camera - drag.start;
-      const boost = Math.min(1.4, 260 / Math.max(80, performance.now() - drag.time));
+    const gesture = drag;
+    drag = null;
+    if (gesture.active) {
+      stopFrame();
+      const travel = camera - gesture.start;
+      const boost = Math.min(1.4, 260 / Math.max(80, performance.now() - gesture.time));
       const next = e.type === 'pointercancel' ? target : Math.round(camera + travel * boost);
       select(visible.length === 2 ? Math.max(0, Math.min(1, next)) : next);
       stage.classList.remove('is-dragging');
     }
-    drag = null;
   }
   window.addEventListener('pointerup', release);
   window.addEventListener('pointercancel', release);
@@ -208,9 +238,43 @@
       wheelStepped = true;
     }
   }, { passive:false });
-  motion.addEventListener('change', () => {
-    arrivals.forEach(animation => animation.cancel());
+  function resetMovement() {
+    if (drag && stage.hasPointerCapture(drag.id)) stage.releasePointerCapture(drag.id);
+    drag = null;
+    stage.classList.remove('is-dragging');
+    clearArrival();
     settle(true);
+  }
+  async function syncScene() {
+    if (!desktop.matches || suspended || document.hidden) {
+      resetMovement();
+      scene?.destroy();
+      scene = null;
+      return;
+    }
+    if (scene) return;
+    try {
+      sceneModule ??= import('./gallery-scene.mjs?v=1');
+      const api = await sceneModule;
+      if (!desktop.matches || suspended || document.hidden) { api.suspend(); return; }
+      if (scene) return;
+      stopFrame();
+      clearArrival();
+      scene = api.createScene(room);
+      if (drag?.active || camera !== target) queueFrame();
+    } catch {
+      // Native snapping and links also work when the optional scene cannot load.
+      sceneModule = null;
+    }
+  }
+  motion.addEventListener('change', resetMovement);
+  desktop.addEventListener('change', syncScene);
+  document.addEventListener('visibilitychange', syncScene);
+  window.addEventListener('pagehide', () => { suspended = true; syncScene(); });
+  window.addEventListener('pageshow', () => {
+    suspended = false;
+    syncScene();
   });
+  if (document.readyState === 'complete') syncScene();
 })();
 

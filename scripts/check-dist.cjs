@@ -1,5 +1,6 @@
 const fs = require('fs');
 const required = [
+  'dist/public/gallery-scene.mjs', 'dist/public/motion-vendor/gsap.min.js', 'dist/public/motion-vendor/ScrollTrigger.min.js',
   'dist/index.html','dist/catalog.html','dist/robots.txt','dist/sitemap.xml','dist/favicon.svg',
   'dist/public/tailwind.css','dist/public/index.js','dist/public/lead-events.js','dist/public/consultation.js','dist/public/catalog.css','dist/public/catalog-init.js','dist/public/catalog-pos.js',
   'dist/public/packages.js','dist/public/site.css','dist/public/site.js','dist/public/home.css','dist/public/brand/apple-touch-icon.png',
