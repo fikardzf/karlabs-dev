@@ -62,8 +62,6 @@
         #proses .grid > div { background:rgba(241,245,249,.3)!important; border-color:rgba(15,23,42,.08)!important; border-radius:.8rem!important; }
         #proses .grid > div:hover { border-color:rgba(0,104,71,.55)!important; transform:translateY(-4px); }
 
-        .pricing-electric-card { background:rgba(241,245,249,.36)!important; border:1px solid rgba(15,23,42,.09)!important; border-radius:.85rem!important; }
-        .pricing-electric-card:hover { border-color:rgba(0,104,71,.75)!important; box-shadow:0 0 34px rgba(0,104,71,.12)!important; }
         .pricing-highlight { transform:scale(1.035); border:1px solid var(--accent)!important; background:linear-gradient(180deg,rgba(0,104,71,.1),rgba(241,245,249,.42))!important; }
 
         #faq .space-y-4 > div { background:rgba(241,245,249,.35)!important; border-color:rgba(15,23,42,.09)!important; border-radius:.75rem!important; }

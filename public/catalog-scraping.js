@@ -4,15 +4,15 @@
   const cafeSamples = posDemoProducts.map((p, i) => ({nama:p.name, harga:p.price, stok:p.stock, rating:[4.6,4.8,4.7,4.5,4.2,4.9][i]}));
   function sourceRows() { return $('#scrapeSource').value === 'cafe' ? cafeSamples : scrapingResult; }
   function exportRows(rows) {
-    return rows.map((x,i) => ({No:i+1, Nama:x.nama, Harga:x.harga, Rating:x.rating, Stok:x.stok}));
+    return rows.map(x => ({No:scrapeData.indexOf(x)+1, Nama:x.nama, Harga:x.harga, Rating:x.rating, Stok:x.stok}));
   }
   function initScraping(){
     showScrapeSamples(sourceRows().slice(0, 3));
     $('#startScraping').onclick=simulateScraping;
-    $('#downloadScrapeCsv').onclick=()=>downloadCSV(exportRows(scrapeData),'scraping_result.csv');
+    $('#downloadScrapeCsv').onclick=()=>downloadCSV(exportRows(selectedScrapeRows()),'scraping_result.csv');
     $('#copyScrape').onclick=async()=>{
       if(!scrapeData.length){toast('Belum ada data contoh. Jalankan simulasi terlebih dahulu.');return;}
-      try{await navigator.clipboard.writeText(JSON.stringify(scrapeData,null,2));toast('Data contoh berhasil disalin.');}
+      try{await navigator.clipboard.writeText(JSON.stringify(selectedScrapeRows(),null,2));toast('Data pilihan berhasil disalin.');}
       catch{toast('Browser tidak mengizinkan salin data. Gunakan Unduh CSV sebagai alternatif.');}
     };
     function resetScrape(){
@@ -83,9 +83,6 @@
         $('#scrapeState').textContent = 'Tabel siap diperiksa';
         $('#scrapeResultBox').classList.remove('hidden');
         $('#scrapeTotalResult').textContent = scrapeData.length;
-        const sample = exportRows(scrapeData.slice(0, 3));
-        $('#scrapeCsvPreview').textContent = [Object.keys(sample[0]), ...sample.map(Object.values)]
-          .map(row => row.map(csvCell).join(',')).join('\n');
         renderScrapeTable();
         toast(`${scrapeData.length} produk contoh siap diunduh.`);
       }
@@ -93,10 +90,20 @@
     window.__scrapeTimer = setInterval(readPage, 470);
     readPage();
   }
-  function renderScrapeTable(){
+  function selectedScrapeRows(){
     const term=$('#scrapeSearch').value.trim().toLowerCase();
     const data=scrapeData.filter(x=>x.nama.toLowerCase().includes(term));
     data.sort((a,b)=>{const key=scrapeSort.key,av=key==='no'?scrapeData.indexOf(a):a[key],bv=key==='no'?scrapeData.indexOf(b):b[key];return av===bv?0:av>bv?scrapeSort.dir:-scrapeSort.dir;});
+    return data;
+  }
+  function renderScrapeTable(){
+    const data=selectedScrapeRows();
+    const sample=exportRows(data.slice(0,3));
+    $('#scrapeCsvPreview').textContent = sample.length
+      ? [Object.keys(sample[0]), ...sample.map(Object.values)].map(row => row.map(csvCell).join(',')).join('\n')
+      : 'Belum ada baris yang cocok dengan pencarian.';
+    $('#downloadScrapeCsv').disabled = $('#copyScrape').disabled = !data.length;
+    $('#downloadScrapeCsv').textContent = 'Unduh CSV ('+data.length+')';
     const size=Number($('#scrapePageSize').value),totalPages=Math.max(1,Math.ceil(data.length/size));
     scrapePage=Math.min(scrapePage,totalPages);const start=(scrapePage-1)*size;
     $('#scrapeTable').innerHTML=data.slice(start,start+size).map((x,i)=>`<tr class="border-t border-dark-border hover:bg-accent/5"><td class="p-3">${scrapeData.indexOf(x)+1}</td><td class="p-3">${x.nama}</td><td class="p-3 text-right">${fmtNum(x.harga)}</td><td class="p-3 text-right">${x.rating}</td><td class="p-3 text-right">${x.stok}</td></tr>`).join('')||'<tr><td colspan="5" class="p-3">Tidak ada data yang cocok. Hapus pencarian untuk melihat hasil contoh.</td></tr>';

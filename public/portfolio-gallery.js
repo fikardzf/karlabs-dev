@@ -16,7 +16,6 @@
   const descriptions = JSON.parse(document.querySelector('#exhibit-descriptions').textContent);
   const action = room.querySelector('#open-project');
   const caption = room.querySelector('.selection');
-  const steps = [...room.querySelectorAll('[data-step]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const params = new URL(location.href).searchParams;
   const wrap = (n, length) => ((n % length) + length) % length;
@@ -108,8 +107,6 @@
     }
     room.querySelector('#selected-title').textContent = active.querySelector('.art-name').textContent;
     room.querySelector('#selected-desc').textContent = descriptions[active.dataset.slug];
-    room.querySelector('output .sr-only').textContent = active.querySelector('.art-name').textContent + ', ';
-    room.querySelector('.gallery-count').textContent = [index + 1, visible.length].map(n => String(n).padStart(2, '0')).join(' / ');
     action.href = active.href;
     action.setAttribute('aria-label', 'Buka demo ' + active.querySelector('.art-name').textContent);
     clearArrival();
@@ -135,7 +132,6 @@
   }
   function applyFilter(value, slug, updateUrl = true) {
     filter = value;
-    document.querySelector('.index-link').href = value === 'all' ? '/portfolio/' : '/portfolio/?filter=' + value;
     filters.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === value)));
     visible = panels.filter(panel => {
       const match = value === 'all' || panel.dataset.category === value;
@@ -148,9 +144,8 @@
     const single = visible.length === 1;
     room.classList.toggle('single-exhibit', single);
     stage.tabIndex = single ? -1 : 0;
-    stage.setAttribute('aria-label', single ? 'Galeri proyek' : 'Galeri proyek, gunakan tombol panah untuk menjelajah');
-    room.querySelector('.gallery-controls > span').textContent = single ? 'Satu demo dalam kategori ini' : 'Geser untuk menjelajah';
-    steps.forEach(button => button.disabled = single);
+    if (single) stage.removeAttribute('aria-keyshortcuts');
+    else stage.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Home End');
     select(Math.max(0, visible.findIndex(p => p.dataset.slug === slug)), true, updateUrl);
   }
   room.classList.add('is-ready');
@@ -168,7 +163,6 @@
     panels.forEach(revealImage);
   }
   filters.forEach(button => button.addEventListener('click', () => applyFilter(button.dataset.filter)));
-  steps.forEach(button => button.addEventListener('click', () => select(target + Number(button.dataset.step))));
   stage.addEventListener('keydown', e => {
     if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key) || visible.length < 2) return;
     e.preventDefault();
@@ -254,7 +248,7 @@
     }
     if (scene) return;
     try {
-      sceneModule ??= import('./gallery-scene.mjs?v=1');
+      sceneModule ??= import('./gallery-scene.mjs?v=2');
       const api = await sceneModule;
       if (!desktop.matches || suspended || document.hidden) { api.suspend(); return; }
       if (scene) return;

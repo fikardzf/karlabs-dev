@@ -8,7 +8,6 @@
   const project = routes.find(p => p.slug === demo.querySelector('.service-panel').id);
   const filter = new URL(location.href).searchParams.get('filter');
   if (filter === project.category) {
-    document.querySelector('.index-link').href = '/portfolio/?filter=' + encodeURIComponent(filter);
     document.querySelector('.studio-brand').href = '/?filter=' + encodeURIComponent(filter) + '&project=' + project.slug;
     const group = routes.filter(p => p.category === filter);
     const i = group.indexOf(project);

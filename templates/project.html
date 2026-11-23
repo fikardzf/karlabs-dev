@@ -16,11 +16,11 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/public/favicon.svg">
   <link rel="apple-touch-icon" href="/public/brand/apple-touch-icon.png">
-  <link rel="stylesheet" href="/public/tailwind.css?v=20261121-gallery">
+  <link rel="stylesheet" href="/public/tailwind.css?v=20261123-exhibit">
   <link rel="stylesheet" href="/public/catalog.css?v=20261121-gallery">
   <link rel="stylesheet" href="/public/site.css?v=20261123-motion">
-  <link rel="stylesheet" href="/public/portfolio.css?v=6">
-  <link rel="stylesheet" href="/public/demo-studio.css?v=4">
+  <link rel="stylesheet" href="/public/portfolio.css?v=9">
+  <link rel="stylesheet" href="/public/demo-studio.css?v=20261123-hitung">
   {{icons}}
 </head>
 <body class="canvas-page" data-project="{{slug}}">
@@ -28,11 +28,11 @@
   {{header}}
   <main class="canvas-main">
     <div class="canvas-crumb"><a data-gallery-back href="/?project={{slug}}">Galeri demo</a> <span aria-hidden="true">/</span> {{category}}</div>
-    <div class="canvas-heading">
-      <div><p class="folio-meta">Demo interaktif <span>/</span> {{number}}</p><h1>{{title}}</h1><p>{{description}}</p>
+    <div class="canvas-heading exhibit-opening">
+      <div class="canvas-mount"><img class="canvas-art" style="--artwork-transition:art-{{slug}}" src="{{art}}" {{artSources}} alt="{{artworkAlt}}" width="960" height="720"></div>
+      <div class="canvas-label"><p class="folio-meta">{{category}} <span>/</span> {{number}}</p><h1>{{title}}</h1><p>{{description}}</p>
         <div class="canvas-actions"><a href="#canvas-demo" class="ink-button">Coba demo</a></div>
       </div>
-      <img class="canvas-art" style="--artwork-transition:art-{{slug}}" src="{{art}}" {{artSources}} alt="{{artworkAlt}}" width="960" height="720">
     </div>
     <ul class="canvas-capabilities" aria-label="Yang bisa dicoba">{{capabilities}}</ul>
     <div id="canvas-demo" tabindex="-1" data-init="{{init}}" data-module="{{moduleUrl}}" data-charts="{{charts}}">
