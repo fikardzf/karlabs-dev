@@ -27,7 +27,7 @@ function initProductCatalog() {
   function render() {
     const term = search.value.trim().toLocaleLowerCase('id-ID');
     const products = collection.filter(p => (!category.value || p.category === category.value) &&
-      [p.name,p.color,p.category].join(' ').toLocaleLowerCase('id-ID').includes(term));
+      [p.id,p.name,p.color,p.category].join(' ').toLocaleLowerCase('id-ID').includes(term));
     if (sort.value === 'asc') products.sort((a,b) => a.price - b.price);
     if (sort.value === 'desc') products.sort((a,b) => b.price - a.price);
     grid.innerHTML = products.map(p => `<article class="product-demo-card">${photo(p, 'fashion-photo')}
@@ -67,7 +67,9 @@ function initProductCatalog() {
   }
 
   function updateChoice() {
-    $('#productMessage').textContent = `${quantity.value} × ${selected.name}, ukuran ${size.value} · ${fmtRp(selected.price * Number(quantity.value))}`;
+    const summary = `${quantity.value} × ${selected.name}, ukuran ${size.value} · ${fmtRp(selected.price * Number(quantity.value))}`;
+    $('#productMessage').textContent = summary;
+    $('#productDetailWhatsApp').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo KAR Labs, saya ingin membuat katalog usaha dengan pilihan produk seperti contoh ini: ' + summary + '.')}`;
   }
 
   function openDetail(product) {
@@ -78,7 +80,6 @@ function initProductCatalog() {
     size.replaceChildren(...product.sizes.map(value => new Option(value, value)));
     quantity.selectedIndex = 0;
     updateChoice();
-    $('#productDetailWhatsApp').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo KAR Labs, saya ingin membuat katalog pakaian dengan pilihan ukuran seperti demo ' + product.name + '.')}`;
     dialog.showModal();
   }
 

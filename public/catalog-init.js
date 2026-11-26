@@ -9,10 +9,13 @@
     const status=$('#chartFeatureStatus'), retry=$('#retryChartFeature');
     status.hidden=false;retry.hidden=true;
     $('#chartFeatureMessage').textContent='Memuat grafik demo. Fitur lain tetap dapat dipilih.';
-    document.getElementById(target).setAttribute('aria-busy','true');
+    const panel = document.getElementById(target);
+    panel.inert = !dashboardInitialized;
+    panel.setAttribute('aria-busy','true');
     try{
       await ensureChartJs();
       if(target==='dashboard' && !dashboardInitialized){ initDashboard(); dashboardInitialized=true; }
+      panel.inert=false;
       if(!document.getElementById(target).hidden)status.hidden=true;
     }catch(err){
       if(!document.getElementById(target).hidden){
@@ -58,6 +61,8 @@
     }
     activateTarget(false);
     window.addEventListener('hashchange',()=>{
+      document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
+      document.querySelectorAll('.modal.open, .pos-receipt.open').forEach(modal => modal.classList.remove('open'));
       if(location.hash==='#serviceDiscovery'){navigation++;return;}
       activateTarget(true);
     });

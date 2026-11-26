@@ -425,19 +425,34 @@ function openLandingPreviewInNewTab(design) {
   const win = window.open('', '_blank');
   if (!win) return false;
   win.opener = null;
-  const title = escapeCatalogHtml(design.title);
-  win.document.open();
-  win.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} · Demo KAR Labs</title>
-    <link rel="stylesheet" href="${landingStylesheet()}"></head><body class="preview-shell">
-    <header><b>${title}</b><a href="${landingInquiryUrl(design)}" target="_blank" rel="noopener noreferrer">Diskusi desain</a>
-      <button type="button">Kembali ke demo</button></header>
-    <iframe sandbox="" title="Contoh halaman ${title}"></iframe></body></html>`);
-  win.document.close();
-  win.document.querySelector('iframe').srcdoc = landingHtml(design);
-  win.document.querySelector('button').onclick = () => win.close();
+  win.location.replace('/public/landing-preview.html?design='+encodeURIComponent(design.id));
   return true;
 }
+
+function initStandaloneLanding() {
+  const shell = document.querySelector('.preview-shell');
+  if (!shell) return;
+  const design = landingTemplates.find(item => item.id === new URLSearchParams(location.search).get('design'));
+  if (!design) return;
+  document.title = design.title + ' · Demo KAR Labs';
+  shell.querySelector('header b').textContent = design.title;
+  shell.querySelector('[data-unavailable]').hidden = true;
+  const link = shell.querySelector('[data-design-inquiry]');
+  link.href = landingInquiryUrl(design);
+  link.hidden = false;
+  const back = shell.querySelector('button');
+  back.hidden = false;
+  back.onclick = () => {
+    window.close();
+    if (!window.closed) location.replace('/portfolio/landing/#canvas-demo');
+  };
+  const frame = shell.querySelector('iframe');
+  frame.title = 'Contoh halaman '+design.title;
+  frame.srcdoc = landingHtml(design);
+  frame.hidden = false;
+}
+
+initStandaloneLanding();
 
 function openLandingPreview(id, opener) {
   const design = landingTemplates.find(item => item.id === id);
