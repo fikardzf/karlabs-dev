@@ -299,6 +299,7 @@
 .report-charts { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: 1rem 2.25rem; }
 .report-charts figure, .report-ledger { border-top: 1px solid #c5cfc9; padding-top: .8rem; }
 .report-charts figure { min-width: 0; margin: 0; }
+#exportFinanceCsv:hover { transform:none; }
 .report-charts figcaption, .report-ledger-head h5 { font-weight: 700; }
 .report-charts figure > div { height: clamp(12rem,21vw,16rem); position: relative; margin-block: .5rem; }
 .report-sheet [hidden] { display: none!important; }
@@ -408,3 +409,4 @@
   .calc-fields { grid-template-columns:1fr; }
   .calc-menu b { font-size:.86rem; }
 }
+#chatArea .chat-bubble, #keywordRuleList button { min-width:0; overflow-wrap:anywhere; }

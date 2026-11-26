@@ -27,6 +27,7 @@
       $('#scrapeLogs').replaceChildren();$('#scrapeTable').replaceChildren();
     }
     $('#resetScrapingDemo').onclick = () => { resetScrape(); toast('Simulasi direset. Pilih halaman untuk mulai lagi.'); };
+    $('#scrapePages').onchange = resetScrape;
     $('#scrapeSource').onchange = () => {
       const cafe = $('#scrapeSource').value === 'cafe';
       $('#scrapePages').replaceChildren(...(cafe ? [1,2,3] : [3,5,10]).map(n => new Option(String(n), String(n))));
@@ -40,7 +41,7 @@
     $('#scrapeNext').onclick=()=>{scrapePage++;renderScrapeTable()};
     $$('.sortable').forEach(th=>{
       const button=document.createElement('button');button.type='button';button.textContent=th.textContent;th.replaceChildren(button);
-      button.onclick=()=>{const k=th.dataset.sort;scrapeSort.dir=scrapeSort.key===k?-scrapeSort.dir:1;scrapeSort.key=k;renderScrapeTable();};
+      button.onclick=()=>{const k=th.dataset.sort;scrapeSort.dir=scrapeSort.key===k?-scrapeSort.dir:1;scrapeSort.key=k;scrapePage=1;renderScrapeTable();};
     });
   }
   function addLog(msg){ const d=document.createElement('div'); d.textContent=msg; $('#scrapeLogs').appendChild(d); $('#scrapeLogs').scrollTop=$('#scrapeLogs').scrollHeight; }

@@ -100,7 +100,7 @@ for (const [i, p] of projects.entries()) {
     header:header.replace('href="https://wa.me/6285777345985"', `href="${inquiry}" data-lead-service="${p.slug}"`), icons, panel, modal, title:escape(p.title), description:escape(p.description), slug:p.slug, canonical:origin+url(p),
     art:art(p), artSources:artSources(p,'(max-width: 650px) 28vw, (min-width: 1500px) 360px, 24vw'),
     artworkAlt:escape(p.artworkAlt), category:categories[p.category], number:number(i+1)+' / '+number(projects.length), init:p.init, charts:String(!!p.charts),
-    moduleUrl:'/public/catalog-' + p.module + '.js?v=' + ({dashboard:'20261123-laporan', landing:'20261123-desain', workflow:'20261123-alur', calculators:'20261123-hitung'}[p.module] || '20261123-koleksi'),
+    moduleUrl:'/public/catalog-' + p.module + '.js?v=20261126-audit',
     inquiry, inquiryLabel:escape(p.inquiryLabel),
     capabilities:p.capabilities.map(c=>`<li>${escape(c)}</li>`).join(''), prevTitle:escape(previous.title), nextTitle:escape(next.title),
     prevUrl:url(previous), nextUrl:url(next), routes:JSON.stringify(routes).replace(/</g,'\\u003c'),

@@ -1,19 +1,94 @@
 'use strict';
 
 let kprChart, bmiGauge;
-  function hitungKPR(hargaRumah, dpPersen, tenorTahun, bungaPersen){ const dp=hargaRumah*(dpPersen/100); const pinjaman=hargaRumah-dp; const tenorBulan=tenorTahun*12; const bungaBulanan=bungaPersen/100/12; let cicilan=pinjaman/tenorBulan; if(bungaBulanan>0){ cicilan=pinjaman*(bungaBulanan*Math.pow(1+bungaBulanan,tenorBulan))/(Math.pow(1+bungaBulanan,tenorBulan)-1); } const totalBayar=cicilan*tenorBulan; const totalBunga=totalBayar-pinjaman; return {dp,pinjaman,cicilan,totalBunga,totalBayar}; }
-  function blurMoney(id){ const el=$('#'+id); if(el) el.addEventListener('blur',e=>e.target.value=fmtNum(parseRp(e.target.value))); }
-  function updateKPR(){ const harga=parseRp($('#kprHarga').value); const dp=Number($('#kprDp').value), tenor=Number($('#kprTenor').value), bunga=Number($('#kprBunga').value); $('#dpLabel').textContent=dp+'%'; $('#tenorLabel').textContent=tenor+' tahun'; $('#bungaLabel').textContent=bunga+'%'; const r=hitungKPR(harga,dp,tenor,bunga); $('#kprDpResult').textContent=fmtRp(r.dp); $('#kprLoanResult').textContent=fmtRp(r.pinjaman); $('#kprMonthlyResult').textContent=fmtRp(r.cicilan); $('#kprInterestResult').textContent=fmtRp(r.totalBunga); $('#kprTotalResult').textContent=fmtRp(r.totalBayar); if (!window.Chart) return; const data=[r.pinjaman,Math.max(r.totalBunga,0)]; if(kprChart){ kprChart.data.datasets[0].data=data; kprChart.update(); } else { kprChart=new Chart($('#kprChart'),{type:'pie',data:{labels:['Pokok Pinjaman','Total Bunga'],datasets:[{data,backgroundColor:['#006847','#06B6D4'],borderColor:'#ffffff'}]},options:{plugins:{legend:{labels:{color:'#334155'}}}}}); } }
-  function updateBMI(){ const w=Number($('#bmiWeight').value.replace(',','.')), hCm=Number($('#bmiHeight').value.replace(',','.')), h=hCm/100, age=Number($('#healthAge').value), gender=$('#healthGender').value, activity=Number($('#activityLevel').value||1.2); if (!(w > 0 && hCm > 0 && age > 0)) {
-      for (const id of ['bmiValue','bmrValue','tdeeValue','idealWeight']) $('#'+id).textContent = '—';
-      $('#bmiStatus').textContent = 'Isi usia, berat, dan tinggi di atas nol.';
-      $('#bmiPointer').hidden = true;
-      if (bmiGauge) { bmiGauge.destroy(); bmiGauge = null; }
-      return;
-    }
-    $('#bmiPointer').hidden = false;
-    const bmi=w/(h*h); let status='Normal ✅', color='#006847'; if(bmi<18.5){status='Underweight ⚠️'; color='#92400e'} else if(bmi>=25&&bmi<30){status='Overweight ⚠️'; color='#9a3412'} else if(bmi>=30){status='Obese ⚠️'; color='#b42318'} $('#bmiValue').textContent=(isFinite(bmi)?bmi:0).toFixed(1); $('#bmiStatus').textContent='Status: '+status; $('#bmiStatus').style.color=color; const s=gender==='male'?5:-161; const bmr=(10*w)+(6.25*hCm)-(5*age)+s; const tdee=bmr*activity; $('#bmrValue').textContent=fmtNum(bmr); $('#tdeeValue').textContent=fmtNum(tdee); const pos=Math.max(0,Math.min(100,((bmi-12)/(40-12))*100)); $('#bmiPointer').style.left=pos+'%'; const min=18.5*h*h,max=24.9*h*h; $('#idealWeight').textContent=Math.round(min)+'-'+Math.round(max)+' kg'; if (!window.Chart) return; if(bmiGauge){ bmiGauge.data.datasets[0].data=[Math.min(bmi,40),Math.max(0,40-bmi)]; bmiGauge.data.datasets[0].backgroundColor=[color,'#dbe5e1']; bmiGauge.update(); } else { bmiGauge=new Chart($('#bmiGauge'),{type:'doughnut',data:{labels:['BMI','Sisa'],datasets:[{data:[Math.min(bmi,40),Math.max(0,40-bmi)],backgroundColor:[color,'#dbe5e1'],borderWidth:0,circumference:180,rotation:270}]},options:{plugins:{legend:{display:false}},cutout:'70%'}}); } }
 
+function mortgagePrice() {
+  const text = $('#kprHarga').value.trim();
+  if (!/^(?:\d+|\d{1,3}(?:\.\d{3})+)$/.test(text)) return null;
+  const price = Number(text.replace(/\./g,''));
+  return price >= 1 && price <= 999999999999999 ? price : null;
+}
+
+function updateKPR() {
+  const price = mortgagePrice();
+  const downPercent = Number($('#kprDp').value);
+  const years = Number($('#kprTenor').value);
+  const rate = Number($('#kprBunga').value);
+  $('#dpLabel').textContent = downPercent+'%';
+  $('#tenorLabel').textContent = years+' tahun';
+  $('#bungaLabel').textContent = calcDecimal(rate)+'%';
+  $('#kprHarga').setAttribute('aria-invalid',String(price === null));
+  $('#kprFeedback').textContent = price === null ? 'Isi harga Rp1 sampai Rp999.999.999.999.999, misalnya 500.000.000.' : '';
+  if (price === null) {
+    for (const key of ['Dp','Loan','Monthly','Interest','Total']) $('#kpr'+key+'Result').textContent = '—';
+    kprChart?.destroy();
+    kprChart = null;
+    return;
+  }
+  const down = price * downPercent / 100;
+  const loan = price - down;
+  const months = years * 12;
+  const monthlyRate = rate / 1200;
+  const monthly = monthlyRate ? loan * monthlyRate / -Math.expm1(-months * Math.log1p(monthlyRate)) : loan / months;
+  const total = monthly * months;
+  const interest = total - loan;
+  for (const [key,amount] of Object.entries({Dp:down,Loan:loan,Monthly:monthly,Interest:interest,Total:total})) {
+    $('#kpr'+key+'Result').textContent = fmtRp(amount);
+  }
+  if (!window.Chart) return;
+  const data = [loan,interest];
+  if (kprChart) {
+    kprChart.data.datasets[0].data = data;
+    kprChart.update();
+  } else {
+    kprChart = new Chart($('#kprChart'),{type:'pie',data:{labels:['Pokok pinjaman','Total bunga'],
+      datasets:[{data,backgroundColor:['#006847','#06B6D4'],borderColor:'#fff'}]},options:{plugins:{legend:{labels:{color:'#334155'}}}}});
+  }
+}
+
+function updateBMI() {
+  const read = id => {
+    const text = $('#'+id).value.trim();
+    return /^\d+(?:[.,]\d{1,2})?$/.test(text) ? Number(text.replace(',','.')) : NaN;
+  };
+  const weight = read('bmiWeight'), heightCm = read('bmiHeight'), age = read('healthAge');
+  const ranges = {bmiWeight:weight >= 1 && weight <= 600, bmiHeight:heightCm >= 50 && heightCm <= 300,
+    healthAge:Number.isInteger(age) && age >= 18 && age <= 120};
+  for (const [id,valid] of Object.entries(ranges)) $('#'+id).setAttribute('aria-invalid',String(!valid));
+  const bmr = 10*weight + 6.25*heightCm - 5*age + ($('#healthGender').value === 'male' ? 5 : -161);
+  if (Object.values(ranges).includes(false) || bmr <= 0) {
+    for (const id of ['bmiValue','bmrValue','tdeeValue','idealWeight']) $('#'+id).textContent = '—';
+    $('#bmiStatus').textContent = bmr <= 0 && !Object.values(ranges).includes(false)
+      ? 'Kombinasi angka ini di luar jangkauan rumus contoh.'
+      : 'Rentang simulasi dewasa: usia 18–120 tahun, berat 1–600 kg, tinggi 50–300 cm.';
+    $('#bmiPointer').hidden = true;
+    bmiGauge?.destroy();
+    bmiGauge = null;
+    return;
+  }
+  const height = heightCm / 100, bmi = weight / (height*height);
+  const [status,color] = bmi < 18.5 ? ['Underweight','#92400e'] : bmi < 25 ? ['Normal','#006847']
+    : bmi < 30 ? ['Overweight','#9a3412'] : ['Obese','#b42318'];
+  $('#bmiValue').textContent = bmi.toFixed(1);
+  $('#bmiStatus').textContent = 'Status: '+status;
+  $('#bmiStatus').style.color = color;
+  $('#bmrValue').textContent = fmtNum(bmr);
+  $('#tdeeValue').textContent = fmtNum(bmr*Number($('#activityLevel').value));
+  $('#bmiPointer').hidden = false;
+  $('#bmiPointer').style.left = Math.max(0,Math.min(100,(bmi-12)/28*100))+'%';
+  $('#idealWeight').textContent = Math.round(18.5*height*height)+'–'+Math.round(24.9*height*height)+' kg';
+  if (!window.Chart) return;
+  const data = [Math.min(bmi,40),Math.max(0,40-bmi)];
+  if (bmiGauge) {
+    bmiGauge.data.datasets[0].data = data;
+    bmiGauge.data.datasets[0].backgroundColor = [color,'#dbe5e1'];
+    bmiGauge.update();
+  } else {
+    bmiGauge = new Chart($('#bmiGauge'),{type:'doughnut',data:{labels:['BMI','Sisa'],datasets:[{
+      data,backgroundColor:[color,'#dbe5e1'],borderWidth:0,circumference:180,rotation:270
+    }]},options:{plugins:{legend:{display:false}},cutout:'70%'}});
+  }
+}
 
 const calculatorSamples = {
   bep: {
@@ -102,7 +177,7 @@ const businessCalculations = {
     };
   },
   inventory({invDemand:demand, invOrderCost:orderCost, invHolding:holding, invLead:lead, invDaily:daily, invSafety:safety}) {
-    const waiting = daily * lead;
+    const waiting = Math.round(daily * 100) * lead / 100;
     const lot = holding > 0 && demand > 0 && orderCost > 0 ? Math.max(1,Math.round(Math.sqrt(2*demand*orderCost/holding))) : 0;
     return {primary:Math.ceil(waiting+safety), reading:lot ? 'Ambang ini mencakup penjualan selama ' + fmtNum(lead) + ' hari menunggu pemasok dan ' + calcUnits(safety) + ' cadangan.'
       : 'Ambang stok tetap bisa dihitung. Untuk jumlah ekonomis, isi kebutuhan tahunan, biaya pesan, dan biaya simpan di atas nol.',
@@ -248,11 +323,16 @@ function initCalculators() {
   }
   const housePrice = $('#kprHarga');
   housePrice.inputMode = 'numeric';
-  housePrice.maxLength = 18;
-  housePrice.addEventListener('input',()=>{
-    housePrice.value = housePrice.value.replace(/[^0-9.]/g,'');
+  housePrice.maxLength = 19;
+  const feedback = document.createElement('p');
+  feedback.id = 'kprFeedback';
+  feedback.setAttribute('role','status');
+  housePrice.closest('label').after(feedback);
+  housePrice.setAttribute('aria-describedby',feedback.id);
+  housePrice.addEventListener('blur',()=>{
+    const amount = mortgagePrice();
+    if (amount !== null) housePrice.value = fmtNum(amount);
   });
-  blurMoney('kprHarga');
   for (const id of ['kprHarga','kprDp','kprTenor','kprBunga']) $('#'+id).addEventListener('input',updateKPR);
   $('#kprHitung').onclick = updateKPR;
   for (const id of ['bmiWeight','bmiHeight','healthGender','healthAge','activityLevel']) $('#'+id).addEventListener('input',updateBMI);

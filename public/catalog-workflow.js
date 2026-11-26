@@ -347,8 +347,11 @@ function initWorkflow() {
     $('#workflowGuideStatus').textContent = workflowCatalog[currentPreset].required+' sudah dilengkapi. Pemeriksaan bisa dilanjutkan.';
     $('#nextWorkflowStep').focus();
   };
-  $('#workflowApprove').onclick = ()=>{
-    if ($('#workflowApprove').hidden || workflowStep !== workflowCatalog[currentPreset].nodes.length-1) return;
+  $('#workflowApprove').onkeydown = event=>{
+    if (event.repeat && (event.key === 'Enter' || event.key === ' ')) event.preventDefault();
+  };
+  $('#workflowApprove').onclick = event=>{
+    if (event.detail > 1 || $('#workflowApprove').hidden || workflowStep !== workflowCatalog[currentPreset].nodes.length-1) return;
     workflowReviews++;
     renderWorkflowCase();
     if ($('#workflowApprove').hidden) $('#workflowReviewStatus').focus({preventScroll:true});

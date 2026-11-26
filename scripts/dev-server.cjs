@@ -25,9 +25,15 @@ const mimeTypes = {
 };
 
 function safeResolve(urlPath) {
-  const cleanPath = decodeURIComponent(urlPath.split('?')[0]).replace(/^\/+/, '');
+  let cleanPath;
+  try {
+    cleanPath = decodeURIComponent(urlPath.split('?')[0]).replace(/^\/+/, '');
+  } catch {
+    return null;
+  }
   const target = path.resolve(root, cleanPath || 'index.html');
-  if (!target.startsWith(root)) return null;
+  const relative = path.relative(root, target);
+  if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) return null;
   return target;
 }
 
@@ -61,7 +67,7 @@ const server = http.createServer((req, res) => {
     });
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end(`Server error: ${error.message}`);
+    res.end('Server error');
   }
 });
 

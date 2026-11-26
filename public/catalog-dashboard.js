@@ -73,6 +73,7 @@ const sumField = (rows, key) => rows.reduce((sum, row) => sum + row[key], 0);
 
 function cashPeriodRows() {
   const sorted = [...reportTransactions].sort((a,b) => a.tanggal.localeCompare(b.tanggal));
+  if (!sorted.length) return [];
   const period = $('#financePeriod').value;
   const weekStart = Date.parse(sorted.at(-1).tanggal) - 6 * 86400000;
   return sorted.filter(t => period === 'week' ? Date.parse(t.tanggal) >= weekStart : t.tanggal.startsWith(period));
@@ -109,7 +110,9 @@ function buildCashReport() {
       'Saldo berjalan dimulai dari nol pada awal periode pilihan. Perhitungan ini tidak memakai saldo pembukaan toko.',
       `Model laba terpisah memakai transaksi masuk berkategori Penjualan (${fmtRp(sales)}) dan asumsi modal barang 42%. Margin kotor model 58%. Pembayaran bahan sudah diwakili asumsi modal tersebut.`,
       `Dengan anggaran gaji, utilitas, promosi, dan kemasan dianggap tetap sebesar ${fmtRp(operatingCost)}, estimasi hasil setelah biaya itu ${fmtRp(sales * grossMargin - operatingCost)}. Omzet impas model = anggaran tersebut ÷ 58% = ${fmtRp(operatingCost/grossMargin)}. Kategori lain hanya masuk buku kas.`],
-    table:'Catatan kas harian', tableNote:`${reportDate(dates[0])} – ${reportDate(dates.at(-1))}. Saldo berjalan dimulai dari nol untuk periode ini.`,
+    table:'Catatan kas harian', tableNote:dates.length
+      ? `${reportDate(dates[0])} – ${reportDate(dates.at(-1))}. Saldo berjalan dimulai dari nol untuk periode ini.`
+      : 'Belum ada transaksi dalam periode ini. Pilih periode lain atau tambahkan transaksi contoh.',
     rows, columns:[['Tanggal',reportDate],['Kategori'],['Deskripsi'],['Tipe'],['Jumlah',fmtRp],['Saldo',fmtRp]],
     bar:{title:'Uang masuk dan keluar per hari', labels:dates.map(reportDate), series:[['Masuk',[...days.values()].map(d=>d.masuk)],['Keluar',[...days.values()].map(d=>d.keluar)]], money:true},
     second:{title:largest ? 'Pembagian pengeluaran' : 'Belum ada pengeluaran pada periode ini', labels:[...expenses.keys()], values:[...expenses.values()], money:true}
@@ -272,6 +275,7 @@ function updateDashboard() {
   $('#financeTable').innerHTML = report.rows.map(row=>'<tr>'+report.columns.map(([key,format])=>
     `<td>${html(format ? format(row[key]) : row[key])}</td>`).join('')+'</tr>').join('');
   currentDashboardRows = report.rows.map(row=>Object.fromEntries(report.columns.map(([key])=>[key,row[key] ?? ''])));
+  $('#exportFinanceCsv').disabled = !currentDashboardRows.length;
   $('#chartOneTitle').textContent = report.bar.title;
   $('#chartTwoTitle').textContent = report.second.title;
   financeBar?.destroy();
@@ -316,15 +320,21 @@ function initDashboard() {
   const modal = $('#transactionModal');
   $('#addTransaction').onclick = ()=>openCatalogDialog(modal,$('#addTransaction'));
   $('.close-modal',modal).onclick = ()=>modal.classList.remove('open');
+  $('#transactionForm').oninput = event=>{
+    for (const control of event.currentTarget.elements) control.setCustomValidity('');
+  };
   $('#transactionForm').onsubmit = event=>{
     event.preventDefault();
     const form = event.currentTarget;
     const fields = new FormData(form);
     const amount = Number(fields.get('jumlah'));
-    if (!form.reportValidity() || !Number.isSafeInteger(amount) || amount < 1) {
-      toast('Isi nominal dengan bilangan bulat rupiah yang valid.');
-      return;
+    for (const name of ['kategori','deskripsi']) {
+      form.elements[name].setCustomValidity(fields.get(name).trim() ? '' : 'Isi teks yang menjelaskan transaksi.');
     }
+    const recorded = sumField(reportTransactions.filter(t=>t.tipe === fields.get('tipe')), 'jumlah');
+    form.elements.jumlah.setCustomValidity(Number.isSafeInteger(recorded + amount) ? '' : 'Jumlah melebihi batas ketelitian laporan.');
+    form.elements.tanggal.setCustomValidity(/^\d{4}-\d{2}-\d{2}$/.test(fields.get('tanggal')) ? '' : 'Gunakan tahun empat digit.');
+    if (!form.reportValidity()) return;
     const date = fields.get('tanggal');
     const period = $('#financePeriod');
     reportTransactions.push({tanggal:date, tipe:fields.get('tipe'), kategori:fields.get('kategori').trim(),

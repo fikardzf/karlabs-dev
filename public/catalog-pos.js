@@ -3,11 +3,15 @@
   let posCart=[],posPayment='Cash',posOrderSequence=0,receiptNumber=null;
   const heldOrders=[];
   function posCartQty(id){return posCart.find(x=>x.id===id)?.qty||0}
+  function posRemaining(product) {
+    const reserved = heldOrders.reduce((sum, order) => sum + (order.cart.find(item => item.id === product.id)?.qty || 0), 0);
+    return product.stock - reserved - posCartQty(product.id);
+  }
   function renderPosProducts(){
     const grid=$('#posProductGrid'); if(!grid)return;
     const term=($('#posSearch')?.value||'').trim().toLowerCase();
     grid.innerHTML=posDemoProducts.filter(p=>p.name.toLowerCase().includes(term)||p.category.toLowerCase().includes(term)).map(p=>{
-      const remaining=p.stock-posCartQty(p.id), state=remaining<=0?'out':remaining<=3?'low':'';
+      const remaining=posRemaining(p), state=remaining<=0?'out':remaining<=3?'low':'';
       return `<button class="pos-product-card" data-pos-add="${p.id}" ${remaining<=0?'disabled':''}><img class="pos-menu-photo" src="/public/demo-menu/${p.id}.webp" width="480" height="480" loading="lazy" alt="">${posCartQty(p.id) ? `<span class="pos-picked">${posCartQty(p.id)} dipilih</span>` : ''}<b class="block text-sm">${p.name}</b><span class="block text-accent font-bold text-sm mt-1">${fmtRp(p.price)}</span><span class="pos-stock ${state}">${remaining<=0?'Stok habis':`Stok ${remaining}`}</span></button>`;
     }).join('') || '<div class="col-span-full text-center text-gray-500 py-10">Menu tidak ditemukan. <button type="button" id="posClearSearch" class="quiet-search">Hapus pencarian</button></div>';
     const clear = $('#posClearSearch');
@@ -20,8 +24,8 @@
   }
   function addPosProduct(id){
     const product=posDemoProducts.find(p=>p.id===id); if(!product)return;
-    const item=posCart.find(x=>x.id===id); const qty=item?.qty||0;
-    if(qty>=product.stock){toast('Stok produk demo tidak mencukupi.');return;}
+    const item=posCart.find(x=>x.id===id);
+    if(posRemaining(product)<=0){toast('Stok produk demo tidak mencukupi.');return;}
     const restoreFocus = document.activeElement?.dataset.posAdd === id;
     if(item)item.qty++; else posCart.push({...product,qty:1}); renderPos(id);
     if (restoreFocus) {
@@ -31,11 +35,11 @@
   }
   function updatePosQty(id,delta){
     const item=posCart.find(x=>x.id===id); if(!item)return;
-    if(delta>0 && item.qty>=item.stock){toast('Jumlah sudah mencapai stok tersedia.');return;}
+    if(delta>0 && posRemaining(item)<=0){toast('Jumlah sudah mencapai stok tersedia.');return;}
     const control = delta > 0 ? 'plus' : 'minus';
     const restoreFocus = document.activeElement === $(`[data-pos-${control}="${id}"]`);
     item.qty+=delta; if(item.qty<=0)posCart=posCart.filter(x=>x.id!==id); renderPos(id);
-    if (restoreFocus) ($(`[data-pos-${control}="${id}"]`) || $(`[data-pos-add="${id}"]`))?.focus({preventScroll:true});
+    if (restoreFocus) ($(`[data-pos-${control}="${id}"]`) || $(`[data-pos-add="${id}"]:not(:disabled)`) || $('#posSearch')).focus({preventScroll:true});
   }
   function posTotals(){
     const subtotal=posCart.reduce((sum,x)=>sum+x.price*x.qty,0), rate=Number($('#posDiscount')?.value||0)/100, discount=Math.round(subtotal*rate), taxable=Math.max(0,subtotal-discount), tax=Math.round(taxable*.11), total=taxable+tax;

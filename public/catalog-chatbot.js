@@ -158,11 +158,13 @@
     function activeRules(){ return [...(scenarioRules.get(currentScenario) || []),...scenarioMap[currentScenario].rules]; }
     function escapeHtml(value){ return String(value).replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch])); }
     function now(){ return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
-    function bubble(text,type='bot',meta=''){
+    function bubble(text,type='bot',meta='',slot=null){
       const wrap=document.createElement('div'); wrap.className='flex '+(type==='user'?'justify-end':'justify-start');
       const div=document.createElement('div'); div.className='chat-bubble '+type;
       div.innerHTML=`${meta?`<div class="text-[10px] uppercase tracking-wide opacity-60 font-bold mb-1">${escapeHtml(meta)}</div>`:''}${escapeHtml(text).replace(/\n/g,'<br>')}<div class="text-[10px] opacity-55 mt-2 text-right">${now()}</div>`;
-      wrap.appendChild(div); area.appendChild(wrap); area.scrollTop=area.scrollHeight;
+      wrap.appendChild(div);
+      if (slot) slot.replaceWith(wrap); else area.appendChild(wrap);
+      area.scrollTop=area.scrollHeight;
     }
     function typing() {
       const el = document.createElement('div');
@@ -185,35 +187,48 @@
         return btn;
       }));
     }
-    function findAnswer(msg){ const m=String(msg).toLowerCase(); const matched=activeRules().find(rule=>rule.keys.some(k=>m.includes(k.toLowerCase())) || m.includes(rule.title.toLowerCase())); return matched || null; }
-    function botReply(msg) {
-      const matched = findAnswer(msg);
+    function findAnswer(msg) {
+      const raw = msg.trim().toLowerCase();
+      const words = value => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+      const phrase = words(raw);
+      const rules = activeRules();
+      const exact = rules.find(rule => rule.title.toLowerCase() === raw || (phrase && words(rule.title) === phrase));
+      if (exact) return exact;
+      const sentence = ' '+phrase+' ';
+      return rules.find(rule => rule.keys.some(key => {
+        const term = words(key);
+        return term && sentence.includes(' '+term+' ');
+      }));
+    }
+    function botReply(msg, exampleRule) {
+      const matched = exampleRule || findAnswer(msg);
       const indicator = typing();
+      const reply = (text,meta) => bubble(text,'bot',meta,indicator);
       const timer = setTimeout(() => {
         pendingReplies.delete(timer);
-        indicator.remove();
+        if (exampleRule) withAdmin = false;
         if (withAdmin && msg === 'Kembali ke bot') {
           withAdmin = false;
-          bubble('Kamu bisa memilih pertanyaan lain.', 'bot', 'Balasan otomatis aktif');
+          reply('Kamu bisa memilih pertanyaan lain.', 'Balasan otomatis aktif');
         } else if (withAdmin) {
-          bubble(`Usaha: ${scenarioMap[currentScenario].label}. Topik: ${lastTopic || 'Pertanyaan umum'}. Tindak lanjut: admin meninjau percakapan.`, 'bot', 'Ringkasan untuk admin contoh');
+          reply(`Usaha: ${scenarioMap[currentScenario].label}. Topik: ${lastTopic || 'Pertanyaan umum'}. Tindak lanjut: admin meninjau percakapan.`, 'Ringkasan untuk admin contoh');
         } else if (/\badmin\b/i.test(msg) || matched?.keys.includes('admin')) {
           withAdmin = true;
-          bubble('Percakapan masuk antrean simulasi. Lihat ringkasan yang akan diterima admin.', 'bot', 'Pengalihan contoh');
+          reply('Percakapan masuk antrean simulasi. Lihat ringkasan yang akan diterima admin.', 'Pengalihan contoh');
         } else if (matched) {
           lastTopic = matched.title;
-          bubble(matched.reply, 'bot', 'Kata kunci · ' + matched.keys[0]);
+          reply(matched.reply, 'Kata kunci · ' + matched.keys[0]);
         }
-        else bubble('Belum ada jawaban untuk pertanyaan ini. Pilih salah satu saran pesan atau tambahkan kata kunci sendiri.', 'bot', 'Balasan contoh');
+        else reply('Belum ada jawaban untuk pertanyaan ini. Pilih salah satu saran pesan atau tambahkan kata kunci sendiri.', 'Balasan contoh');
         if (!pendingReplies.size) showQuick();
       }, 520);
       pendingReplies.add(timer);
     }
-    function sendMsg(msg){ if(!String(msg).trim())return; bubble(msg,'user'); input.value=''; quick.innerHTML=''; botReply(msg); }
+    function sendMsg(msg, rule){ if(!String(msg).trim())return; bubble(msg,'user'); input.value=''; quick.innerHTML=''; botReply(msg, rule); }
     function renderRules(){
       const list=$('#keywordRuleList');
       list.innerHTML=activeRules().map((rule,i)=>`<button class="text-left border border-dark-border bg-black/30 rounded-2xl p-3 hover:border-accent hover:bg-accent/5 transition" data-rule-index="${i}"><div class="flex items-start justify-between gap-2"><b class="text-sm text-white">${escapeHtml(rule.title)}</b></div><p class="text-xs text-gray-500 mt-2">${rule.keys.map(k=>'#'+escapeHtml(k)).join(' ')}</p></button>`).join('');
-      $$('[data-rule-index]',list).forEach(btn=>btn.onclick=()=>{ const rule=activeRules()[Number(btn.dataset.ruleIndex)]; sendMsg(rule.keys[0]); });
+      $$('[data-rule-index]',list).forEach(btn=>btn.onclick=()=>{ const rule=activeRules()[Number(btn.dataset.ruleIndex)]; sendMsg(rule.keys[0],rule); });
     }
     function loadScenario(name){
       pendingReplies.forEach(timer => clearTimeout(timer));
@@ -237,7 +252,7 @@
       $('#customKeyword').value = $('#customResponse').value = '';
       renderRules();
       toast('Kata kunci siap dicoba dalam skenario ini.');
-      sendMsg(key);
+      sendMsg(key,scenarioRules.get(currentScenario)[0]);
     };
     $('#resetChatDemo').onclick=()=>loadScenario(currentScenario);
     $('#chatSend').onclick=()=>sendMsg(input.value); input.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg(input.value)});
